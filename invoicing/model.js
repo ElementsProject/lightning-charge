@@ -3,13 +3,14 @@ import nanoid from 'nanoid'
 const debug = require('debug')('lightning-strike')
 
 module.exports = ({ db, ln }) => {
+  const peerid = ln.getinfo().then(info => info.id)
 
   const newInvoice = async ({ msatoshi, metadata, webhook }) => {
     const id = nanoid()
         , { rhash, bolt11: payreq } = await ln.invoice(msatoshi, id, 'ln-strike')
         , invoice = {
             id, metadata, msatoshi: ''+msatoshi
-          , rhash, payreq
+          , rhash, payreq, peerid: await peerid
           , completed: false
           , created_at: Date.now()
           }

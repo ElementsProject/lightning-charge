@@ -2,6 +2,7 @@
 exports.up = db =>
   db.schema.createTable('invoice', t => {
     t.string    ('id').primary()
+    t.string    ('peerid').notNullable()
     t.bigInteger('msatoshi').notNullable()
     t.string    ('rhash').notNullable()
     t.string    ('payreq').notNullable()
