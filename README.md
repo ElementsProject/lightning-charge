@@ -14,7 +14,7 @@ $ cp example.env .env
 $ edit .env
 
 # setup sqlite schema
-$ knex migrate:latest
+$ DB_PATH=sqlite.db knex migrate:latest
 
 # run server
 $ npm start
@@ -56,9 +56,11 @@ Register a URL as a web hook to be notified once the invoice is paid.
 
 *Body parameters:* `url`.
 
-Returns `201 Created` on success. Once the payment is made, an empty POST request will be made to the provided URL.
+Returns `201 Created` on success. Once the payment is made, a POST request with the updated invoice will be made to the provided URL.
 
-For security reasons, the provided `url` should contain a secret token used to verify the authenticity of the request (e.g. `HMAC(secret_key, rhash)`).
+For security reasons, the provided `url` should contain a secret token used to verify the authenticity of the request (you can use something like `HMAC(secret_key, rhash)`,
+see example implementation in woocommerce-gateway-lightning [here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/4051a70147a01b4387598a9facd9c00cae4981f8/woocommerce-gateway-lightning.php#L182-L193)
+and [here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/4051a70147a01b4387598a9facd9c00cae4981f8/woocommerce-gateway-lightning.php#L119)).
 
 ### `GET /payment-stream`
 
