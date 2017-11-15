@@ -1,7 +1,7 @@
 {
   "name": "lightning-strike",
   "version": "0.1.0",
-  "description": "Lightning REST API layer",
+  "description": "Lightning REST API server",
   "license": "MIT",
   "scripts": {
     "start": "./start.sh"

@@ -1,16 +1,17 @@
-# Lightning Strike REST API
+# Lightning Strike
 
-REST API for the integration of Lightning payments into e-commerce websites, built on top of c-lightning.
+REST API for accepting Lightning payments, built on top of c-lightning.
 
 ## Install & Setup
 
 ```bash
 # install
-$ git clone ... lightning-strike && cd lightning-strike
+$ git clone https://github.com/ElementsProject/lightning-strike.git && cd lightning-strike
 $ npm install
 
 # configure
-$ cp example.env .env && edit .env
+$ cp example.env .env
+$ edit .env
 
 # setup sqlite schema
 $ knex migrate:latest
@@ -19,11 +20,11 @@ $ knex migrate:latest
 $ npm start
 ```
 
-## API
-
-Invoices have the following fields: `id`, `msatoshi`, `metadata`, `rhash`, `payreq`, `created_at`, `completed` and `completed_at`.
+## REST API
 
 All endpoints accept and return data in JSON format.
+
+Invoices have the following properties: `id`, `msatoshi`, `rhash`, `peerid`, `payreq`, `created_at`, `completed`, `completed_at` and `metadata`.
 
 ### `POST /invoice`
 
@@ -71,9 +72,9 @@ $ curl http://localhost:8009/invoice -X POST -d msatoshi=5000 -d metadata[custom
 
 {"id":"07W98EUsBtCiyF7BnNcKe","msatoshi":"5000","metadata":{"customer_id":9817,"product_id":7189},"rhash":"3e449cc84d6b2b39df8e375d3cec0d2910e822346f782dc5eb97fea595c175b5","payreq":"lntb500n1pdq55z6pp58ezfejzddv4nnhuwxawnemqd9ygwsg35dauzm30tjll2t9wpwk6sdq0d3hz6um5wf5kkegcqpxpc06kpsp56fjh0jslhatp6kzmp8yxsgdjcfqqckdrrv0n840zqpx496qu5xenrzedlyatesl98dzdt5qcgkjd3l6vhax425jetq2h3gqz2enhk","completed":false,"created_at":1510625370087}
 
-# ... with json
+# create invoice with json
 $ curl http://localhost:8009/invoice -X POST -H 'Content-Type: application/json' \
-  -d '{"msatoshi":5000,"metadata":{"customer_id":9817,"products":[593,182]}
+  -d '{"msatoshi":5000,"metadata":{"customer_id":9817,"products":[593,182]}'
 
 # fetch an invoice
 $ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe
@@ -85,7 +86,7 @@ $ curl http://localhost:8009/invoices
 $ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe/webhook -X POST -d url=https://requestb.in/pfqcmgpf
 
 # long-poll payment notification for a specific invoice
-$ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe/wait
+$ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe/wait?timeout=120
 
 # stream all incoming payments
 $ curl http://localhost:8009/payment-stream
