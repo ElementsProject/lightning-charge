@@ -24,13 +24,20 @@ $ npm start
 
 All endpoints accept and return data in JSON format.
 
-Invoices have the following properties: `id`, `msatoshi`, `rhash`, `peerid`, `payreq`, `created_at`, `completed`, `completed_at` and `metadata`.
+Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `peerid`, `rhash`, `payreq`, `created_at`, `completed`, `completed_at` and `metadata`.
 
 ### `POST /invoice`
 
 Create a new invoice.
 
-*Body parameters*: `msatoshi` and `metadata` (arbitrary order-related metadata, *optional*).
+*Body parameters*: `msatoshi`, `currency`, `amount` and `metadata`.
+
+You can either specify the amount as `msatoshi` (1 msatoshi = 0.001 satoshis),
+or provide a `currency` and `amount` to be converted according to the current exchange rates.
+You should not specify both.
+If a currency and amount were provided, they'll be available under `quoted_{currency|amount}`.
+
+You can optionally specify `metadata` with arbitrary order-related meta-data.
 
 Returns `201 Created` and the invoice on success.
 
@@ -69,28 +76,31 @@ Returns live invoice payment updates as a [server-sent events](https://developer
 ## Examples
 
 ```bash
-# create new invoice
+# Create new invoice
 $ curl http://localhost:8009/invoice -X POST -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
-
 {"id":"07W98EUsBtCiyF7BnNcKe","msatoshi":"5000","metadata":{"customer_id":9817,"product_id":7189},"rhash":"3e449cc84d6b2b39df8e375d3cec0d2910e822346f782dc5eb97fea595c175b5","payreq":"lntb500n1pdq55z6pp58ezfejzddv4nnhuwxawnemqd9ygwsg35dauzm30tjll2t9wpwk6sdq0d3hz6um5wf5kkegcqpxpc06kpsp56fjh0jslhatp6kzmp8yxsgdjcfqqckdrrv0n840zqpx496qu5xenrzedlyatesl98dzdt5qcgkjd3l6vhax425jetq2h3gqz2enhk","completed":false,"created_at":1510625370087}
 
-# create invoice with json
+# Create EUR-denominated invoice
+$ curl http://localhost:8009/invoice -X POST -d currency=EUR -d amount=0.5
+{"id":"kGsKjn9jbwgqxQzNgQYhE","msatoshi":"7576148","quoted_currency":"EUR","quoted_amount":"0.5", ...}
+
+# Create invoice with json
 $ curl http://localhost:8009/invoice -X POST -H 'Content-Type: application/json' \
   -d '{"msatoshi":5000,"metadata":{"customer_id":9817,"products":[593,182]}'
 
-# fetch an invoice
+# Fetch an invoice
 $ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe
 
-# fetch all invoices
+# Fetch all invoices
 $ curl http://localhost:8009/invoices
 
-# register a web hook
+# Register a web hook
 $ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe/webhook -X POST -d url=https://requestb.in/pfqcmgpf
 
-# long-poll payment notification for a specific invoice
+# Long-poll payment notification for a specific invoice
 $ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe/wait?timeout=120
 
-# stream all incoming payments
+# Stream all incoming payments
 $ curl http://localhost:8009/payment-stream
 ```
 

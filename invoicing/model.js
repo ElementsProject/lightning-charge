@@ -1,15 +1,21 @@
 import nanoid from 'nanoid'
+import { toMsat } from '../lib/exchange-rate'
 
 const debug = require('debug')('lightning-strike')
 
 module.exports = ({ db, ln }) => {
   const peerid = ln.getinfo().then(info => info.id)
 
-  const newInvoice = async ({ msatoshi, metadata, webhook }) => {
+  const newInvoice = async ({ msatoshi, currency, amount, metadata, webhook }) => {
+    // @TODO validation: either msat or currency/amount are required, specifying both should error.
+
+    if (!msatoshi) msatoshi = await toMsat(currency, amount)
+
     const id = nanoid()
         , { rhash, bolt11: payreq } = await ln.invoice(msatoshi, id, 'ln-strike')
         , invoice = {
             id, metadata, msatoshi: ''+msatoshi
+          , quoted_currency: currency, quoted_amount: amount
           , rhash, payreq, peerid: await peerid
           , completed: false
           , created_at: Date.now()
