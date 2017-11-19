@@ -30,7 +30,7 @@ module.exports = ({ db, ln }) => {
       db('invoice').where({ id }).first().then(r => r ? formatInvoice(r) : null)
 
   const markPaid = id =>
-    db('invoice').where({ id }).update({ completed: true, completed_at: Date.now() })
+    db('invoice').where({ id, completed: false }).update({ completed: true, completed_at: Date.now() })
 
   const getLastPaid = _ =>
     db('invoice')
