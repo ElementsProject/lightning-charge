@@ -4,7 +4,7 @@ import LightningClient from 'lightning-client'
 process.on('unhandledRejection', err => { throw err })
 
 const app = require('express')()
-    , db  = require('knex')({ client: 'sqlite3', connection: process.env.DB_PATH })
+    , db  = require('knex')({ client: 'sqlite3', connection: process.env.DB_PATH, useNullAsDefault: true })
     , ln  = new LightningClient(process.env.LN_PATH)
 
 app.set('port', process.env.PORT || 9112)
