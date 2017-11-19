@@ -27,7 +27,7 @@ module.exports = ({ db, ln }) => {
     db('invoice').then(rows => rows.map(formatInvoice))
 
   const fetchInvoice = id =>
-      db('invoice').where({ id }).first().then(r => r ? formatInvoice(r) : null)
+      db('invoice').where({ id }).first().then(r => r && formatInvoice(r))
 
   const markPaid = id =>
     db('invoice').where({ id, completed: false }).update({ completed: true, completed_at: Date.now() })
