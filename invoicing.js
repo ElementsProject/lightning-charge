@@ -13,17 +13,13 @@ module.exports = app => {
   app.get('/invoices', wrap(async (req, res) =>
     res.send(await listInvoices())))
 
-  app.get('/invoice/:invoice', wrap(async (req, res) => {
-    const invoice = await fetchInvoice(req.params.invoice)
-    if (invoice) res.send(invoice)
-    else res.sendStatus(404)
-  }))
+  app.get('/invoice/:invoice', (req, res) =>
+    res.send(req.invoice))
 
   app.post('/invoice', wrap(async (req, res) => {
     const invoice = await newInvoice(req.body)
     res.status(201).send(invoice)
   }))
-
 
   app.get('/invoice/:invoice/wait', wrap(async (req, res) => {
     if (req.invoice.completed) return res.send(req.invoice)
