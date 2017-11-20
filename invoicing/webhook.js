@@ -1,9 +1,16 @@
 import request from 'superagent'
+import wrap from '../lib/promise-wrap'
 
 const debug = require('debug')('lightning-strike')
 
-module.exports = ({ model, payListen }) => {
-  const { getHooks, logHook } = model
+module.exports = app => {
+  const { payListen, model: { addHook, getHooks, logHook } } = app
+
+  app.post('/invoice/:invoice/webhook', wrap(async (req, res) => {
+    if (req.invoice.completed) return res.sendStatus(405)
+    await addHook(req.params.invoice, req.body.url)
+    res.sendStatus(201)
+  }))
 
   async function execHooks(invoice) {
     debug('execHooks(%s)', invoice.id)
