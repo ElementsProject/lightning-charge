@@ -8,7 +8,6 @@ meta(name='viewport', content='width=device-width, initial-scale=1')
 if !completed
   meta(name='invoice-poll-url', content=settings.url+'checkout/'+id+'/wait')
   meta(name='invoice-expiry', content=created_at + 15 * 60 * 1000)
-
   //- invoices don't really expire yet, just for the looks & feel
 
 mixin css(path)
@@ -34,7 +33,7 @@ mixin css(path)
       .qr.col-sm-4: img(src=qr)
       .pay.col-sm-8
         pre= payreq
-        a.btn.btn-lg.btn-primary(href=`lightning:${payreq}`) Pay with wallet
+        a.btn.btn-lg.btn-primary(href=`lightning:${payreq}`)= opt.button || 'Pay with wallet'
 
         p.expiry.text-muted Invoice expires in #[span]
   else
