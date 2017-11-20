@@ -1,0 +1,44 @@
+doctype html5
+
+title Lightning Strike Checkout
+meta(charset='utf-8')
+base(href=settings.url)
+meta(name='viewport', content='width=device-width, initial-scale=1')
+
+if !completed
+  meta(name='invoice-poll-url', content=settings.url+'checkout/'+id+'/wait')
+  meta(name='invoice-expiry', content=created_at + 15 * 60 * 1000)
+
+  //- invoices don't really expire yet, just for the looks & feel
+
+mixin css(path)
+  link(rel='stylesheet', href=settings.static_url+path)
+
++css('bootstrap.min.css')
++css('styl/checkout.css')
+
+- opt = metadata && metadata.checkout || {}
+
+.checkout.container
+  .row
+    .desc.col-sm-6
+      h3= opt.title || 'Lightning Payment'
+      h4= opt.desc || 'Pay with Lightning'
+    .amounts.col-sm-6
+      if quoted_currency
+        h3 #{ quoted_amount } #{ quoted_currency }
+      h4 #{ msatoshi } milli-satoshis
+
+  if !completed
+    .row
+      .qr.col-sm-4: img(src=qr)
+      .pay.col-sm-8
+        pre= payreq
+        a.btn.btn-lg.btn-primary(href=`lightning:${payreq}`) Pay with wallet
+
+        p.expiry.text-muted Invoice expires in #[span]
+  else
+    p.thankyou= opt.thank_you || 'Thank you! Your payment has been received.'
+
+if !completed
+  script(src=settings.static_url+'checkout.js')

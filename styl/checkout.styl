@@ -1,0 +1,53 @@
+body
+  @media (min-height:900px)
+    background #eee
+
+.checkout
+  max-width 750px
+  padding 2em 3em
+  font-size 15px
+
+  @media (max-width:767px)
+    text-align center
+
+  @media (min-height:900px)
+    margin-top 5em
+    border-radius 3px
+    background #fff
+
+  h3, h4
+    font-size 17px
+  h3
+    font-weight bold
+  h4
+    color #777
+
+  pre
+    display block
+    word-break break-all
+    white-space normal
+
+  .amounts
+    @media (min-width:768px)
+      text-align right
+
+  .qr
+    @media (min-width:768px)
+      float right
+    @media (max-width:767px)
+      margin-bottom 1em
+    img
+      max-width 100%
+
+  .pay
+    @media (min-width:768px)
+      float left
+
+  .expiry
+    display none
+
+  .thankyou
+    margin-top 2em
+
+  .btn-primary
+    margin 1em 0

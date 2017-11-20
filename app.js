@@ -21,6 +21,7 @@ app.use(require('body-parser').urlencoded({ extended: true }))
 
 require('./invoicing')(app)
 require('./webhook')(app)
+require('./checkout')(app)
 
 app.listen(app.settings.port, app.settings.host, _ =>
   console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`))

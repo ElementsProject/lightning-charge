@@ -1,0 +1,40 @@
+import path    from 'path'
+import express from 'express'
+import qruri   from 'qruri'
+import wrap    from './lib/promise-wrap'
+
+module.exports = app => {
+  const { payListen } = app
+
+  app.set('url', process.env.URL || `http://localhost:${app.settings.port}/`)
+  app.set('static_url', process.env.STATIC_URL || app.settings.url + '/static')
+  app.set('view engine', 'pug')
+  app.set('views', path.join(__dirname, 'views'))
+
+  app.use('/static', (r => (
+    r.get('/checkout.js', require('browserify-middleware')('./client/checkout.js'))
+  , r.use(require('stylus').middleware({ src: './styl', serve: true }))
+  , r.use('/styl', express.static('./styl'))
+  , r.use('/', express.static('./static'))
+  , r
+  ))(express.Router()))
+
+  app.get('/checkout/:invoice', (req, res) => {
+    const opt = req.invoice.metadata && req.invoice.metadata.checkout || {}
+
+    if (req.invoice.completed && opt.redirect_url)
+      return res.redirect(opt.redirect_url)
+
+    res.render('checkout', { ...req.invoice, qr: makeQR(req.invoice) })
+  })
+
+  // like /invoice/:invoice/wait, but user-accessible, doesn't reveal the full invoice fields,
+  // and with a fixed timeout.
+  app.get('/checkout/:invoice/wait', wrap(async (req, res) => {
+    const completed = (req.invoice.completed || await payListen.register(req.invoice.id, 120000))
+    res.sendStatus(completed ? 204 : 402)
+  }))
+
+}
+
+const makeQR = ({ payreq }) => qruri(`lightning:${payreq}`, { mode: 'alphanumeric', margin: 2 })
