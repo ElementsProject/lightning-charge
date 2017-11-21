@@ -16,7 +16,7 @@ const poll_url   = document.querySelector('meta[name=invoice-poll-url]').content
 function updateExpiry() {
   const left = (expires_at - Date.now())/1000|0
   if (left > 0) document.querySelector('.expiry span').innerHTML = formatDur(left)
-  else document.querySelector('.expiry').innerHTML = 'Invoice expired!'
+  else document.querySelector('.expiry').innerHTML = '' // 'Invoice expired!'
 }
 
 function formatDur(x) {
