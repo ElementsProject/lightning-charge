@@ -37,16 +37,15 @@ module.exports = ({ db, ln }) => {
   const fetchInvoice = id =>
       db('invoice').where({ id }).first().then(r => r && format(r))
 
-  const markPaid = id =>
-    db('invoice').where({ id, completed: false }).update({ completed: true, completed_at: now()  })
+  const markPaid = id => Promise.all([
+    db('vars').where({ key: 'last-paid-invoice' }).update({ value: id })
+  , db('invoice').where({ id, completed: false }).update({ completed: true, completed_at: now() })
+  ]).then(rets => rets[1])
 
 
   const getLastPaid = _ =>
-    db('invoice')
-      .where({ completed: true })
-      .orderBy('completed_at', 'desc')
-      .first('id')
-      .then(r => r && r.id)
+    db('vars').where({ key: 'last-paid-invoice' })
+      .first().then(r => r && r.value)
 
   const addHook = (invoice_id, url) =>
     db('invoice_webhook').insert({ invoice_id, url, created_at: Date.now() })
