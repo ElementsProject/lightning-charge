@@ -1,7 +1,9 @@
 import nanoid from 'nanoid'
 import { toMsat } from './lib/exchange-rate'
 
-const debug = require('debug')('lightning-strike')
+const debug  = require('debug')('lightning-strike')
+    , format = invoice => ({ ...invoice, completed: !!invoice.completed, metadata: JSON.parse(invoice.metadata) })
+    , now    = _ => Date.now() / 1000 | 0
 
 module.exports = ({ db, ln }) => {
   const peerid = ln.getinfo().then(info => info.id)
@@ -16,9 +18,9 @@ module.exports = ({ db, ln }) => {
         , invoice = {
             id, metadata, msatoshi: ''+msatoshi
           , quoted_currency: currency, quoted_amount: amount
-          , rhash, payreq, peerid: await peerid
+          , rhash, payreq, peerid: (await peerid)
           , completed: false
-          , created_at: Date.now()
+          , created_at: now()
           }
 
     debug('saving invoice:', invoice)
@@ -30,13 +32,14 @@ module.exports = ({ db, ln }) => {
   }
 
   const listInvoices = _ =>
-    db('invoice').then(rows => rows.map(formatInvoice))
+    db('invoice').then(rows => rows.map(format))
 
   const fetchInvoice = id =>
-      db('invoice').where({ id }).first().then(r => r && formatInvoice(r))
+      db('invoice').where({ id }).first().then(r => r && format(r))
 
   const markPaid = id =>
-    db('invoice').where({ id, completed: false }).update({ completed: true, completed_at: Date.now() })
+    db('invoice').where({ id, completed: false }).update({ completed: true, completed_at: now()  })
+
 
   const getLastPaid = _ =>
     db('invoice')
@@ -62,4 +65,3 @@ module.exports = ({ db, ln }) => {
          , addHook, getHooks, logHook }
 }
 
-const formatInvoice = invoice => ({ ...invoice, completed: !!invoice.completed, metadata: JSON.parse(invoice.metadata) })
