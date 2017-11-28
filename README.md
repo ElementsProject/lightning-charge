@@ -57,6 +57,8 @@ Waits for the invoice to be paid, then returns `200 OK` and the invoice.
 
 If `timeout` (defaults to 30s) is reached before the invoice is paid, returns `402 Payment Required`.
 
+If the invoice is expired, returns `410 Gone`.
+
 ### `POST /invoice/:id/webhook`
 
 Register a URL as a web hook to be notified once the invoice is paid.
@@ -64,6 +66,8 @@ Register a URL as a web hook to be notified once the invoice is paid.
 *Body parameters:* `url`.
 
 Returns `201 Created` on success. Once the payment is made, a POST request with the updated invoice will be made to the provided URL.
+
+If the invoice is already paid, returns `405 Method Not Allowed`. If the invoice is expired, returns `410 Gone`.
 
 For security reasons, the provided `url` should contain a secret token used to verify the authenticity of the request (you can use something like `HMAC(secret_key, rhash)`,
 see example implementation in woocommerce-gateway-lightning [here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/4051a70147a01b4387598a9facd9c00cae4981f8/woocommerce-gateway-lightning.php#L182-L193)

@@ -25,7 +25,7 @@ module.exports = app => {
 
   app.get('/invoice/:invoice/wait', wrap(async (req, res) => {
     if (req.invoice.completed) return res.send(req.invoice)
-    if (req.invoice_expired) return res.sendStatus(410)
+    if (req.invoice_expired)   return res.sendStatus(410)
 
     const timeout = Math.min(+req.query.timeout || 300, 1800)*1000
         , paid    = await payListen.register(req.params.invoice, timeout)
