@@ -31,6 +31,7 @@ module.exports = app => {
   // like /invoice/:invoice/wait, but user-accessible, doesn't reveal the full invoice fields,
   // and with a fixed timeout.
   app.get('/checkout/:invoice/wait', wrap(async (req, res) => {
+    if (req.invoice_expired) return res.sendStatus(410)
     const completed = (req.invoice.completed || await payListen.register(req.invoice.id, 60000))
     res.sendStatus(completed ? 204 : 402)
   }))

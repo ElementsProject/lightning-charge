@@ -7,7 +7,9 @@ module.exports = app => {
 
   app.param('invoice', wrap(async (req, res, next, id) => {
     req.invoice = await fetchInvoice(req.params.invoice)
-    req.invoice ? next() : res.sendStatus(404)
+    if (!req.invoice) return res.sendStatus(404)
+    req.invoice_expired = !req.invoice.completed && req.invoice.expires_at && req.invoice.expires_at < Date.now()/1000
+    next()
   }))
 
   app.get('/invoices', wrap(async (req, res) =>
@@ -23,6 +25,7 @@ module.exports = app => {
 
   app.get('/invoice/:invoice/wait', wrap(async (req, res) => {
     if (req.invoice.completed) return res.send(req.invoice)
+    if (req.invoice_expired) return res.sendStatus(410)
 
     const timeout = Math.min(+req.query.timeout || 300, 1800)*1000
         , paid    = await payListen.register(req.params.invoice, timeout)
