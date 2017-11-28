@@ -7,7 +7,7 @@ meta(name='viewport', content='width=device-width, initial-scale=1')
 
 if !completed
   meta(name='invoice-poll-url', content=settings.url+'checkout/'+id+'/wait')
-  meta(name='invoice-expiry', content=created_at + 15 * 60 * 1000)
+  meta(name='invoice-expiry', content=expires_at)
   //- invoices don't really expire yet, just for the looks & feel
 
 mixin css(path)

@@ -5,22 +5,27 @@ const debug  = require('debug')('lightning-strike')
     , format = invoice => ({ ...invoice, completed: !!invoice.completed, metadata: JSON.parse(invoice.metadata) })
     , now    = _ => Date.now() / 1000 | 0
 
+const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Strike invoice'
+
 module.exports = ({ db, ln }) => {
   const peerid = ln.getinfo().then(info => info.id)
 
-  const newInvoice = async ({ msatoshi, currency, amount, metadata, webhook }) => {
-    // @TODO validation: either msat or currency/amount are required, specifying both should error.
+  const newInvoice = async props => {
+    // @TODO validation
+    const { currency, amount, expiry, metadata, webhook } = props
 
-    if (!msatoshi) msatoshi = await toMsat(currency, amount)
+        , id          = nanoid()
+        , msatoshi    = props.msatoshi ? ''+props.msatoshi : await toMsat(currency, amount)
+        , description = props.description || defaultDesc
 
-    const id = nanoid()
-        , { rhash, bolt11: payreq } = await ln.invoice(msatoshi, id, 'ln-strike')
+        , { rhash, bolt11, expiry_time } = await ln.invoice(msatoshi, id, description, expiry)
+
         , invoice = {
-            id, metadata, msatoshi: ''+msatoshi
+            id, description, metadata, msatoshi
           , quoted_currency: currency, quoted_amount: amount
-          , rhash, payreq, peerid: (await peerid)
+          , rhash, payreq: bolt11, peerid: (await peerid)
+          , expires_at: expiry_time, created_at: now()
           , completed: false
-          , created_at: now()
           }
 
     debug('saving invoice:', invoice)
