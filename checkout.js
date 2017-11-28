@@ -28,7 +28,7 @@ module.exports = app => {
     if (req.invoice.completed && opt.redirect_url)
       return res.redirect(opt.redirect_url)
 
-    res.render('checkout', { ...req.invoice, qr: makeQR(req.invoice) })
+    res.render('checkout', { ...req.invoice, expired: req.invoice_expired, qr: makeQR(req.invoice) })
   })
 
   // like /invoice/:invoice/wait, but user-accessible, doesn't reveal the full invoice fields,

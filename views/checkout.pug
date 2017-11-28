@@ -30,7 +30,13 @@ mixin css(path)
       else
         h3 #{ formatMsat(msatoshi) }
 
-  if !completed
+  if completed
+    p.thankyou= opt.thank_you || 'Thank you! Your payment has been received.'
+
+  else if expired
+    p.expired= opt.expired || 'Your invoice has expired. Please try again.'
+
+  else
     .row
       .qr.col-sm-4: img(src=qr)
       .pay.col-sm-8
@@ -38,8 +44,5 @@ mixin css(path)
         a.btn.btn-lg.btn-primary(href=`lightning:${payreq}`)= opt.button || 'Pay with wallet'
 
         p.expiry.text-muted Invoice expires in #[span]
-  else
-    p.thankyou= opt.thank_you || 'Thank you! Your payment has been received.'
 
-if !completed
-  script(src=settings.static_url+'checkout.js')
+    script(src=settings.static_url+'checkout.js')
