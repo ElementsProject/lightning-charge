@@ -1,6 +1,7 @@
 import path    from 'path'
 import express from 'express'
 import qruri   from 'qruri'
+import moveDec from 'move-decimal-point'
 import wrap    from './lib/promise-wrap'
 
 module.exports = app => {
@@ -10,6 +11,8 @@ module.exports = app => {
   app.set('static_url', process.env.STATIC_URL || app.settings.url + '/static/')
   app.set('view engine', 'pug')
   app.set('views', path.join(__dirname, 'views'))
+
+  app.locals.formatMsat = msat => moveDec(msat, -8) + ' mBTC'
 
   app.use('/static', (r => (
     r.get('/checkout.js', require('browserify-middleware')('./client/checkout.js'))
