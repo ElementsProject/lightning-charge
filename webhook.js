@@ -8,6 +8,7 @@ module.exports = app => {
 
   app.post('/invoice/:invoice/webhook', wrap(async (req, res) => {
     if (req.invoice.completed) return res.sendStatus(405)
+    if (req.invoice_expired)   return res.sendStatus(410)
     await addHook(req.params.invoice, req.body.url)
     res.sendStatus(201)
   }))
