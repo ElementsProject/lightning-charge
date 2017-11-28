@@ -41,4 +41,4 @@ module.exports = app => {
 
 }
 
-const makeQR = ({ payreq }) => qruri(`lightning:${payreq}`, { mode: 'alphanumeric', margin: 2 })
+const makeQR = ({ payreq }) => qruri(`lightning:${payreq}`, { mode: 'alphanumeric', margin: 0 })
