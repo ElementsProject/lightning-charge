@@ -1,4 +1,4 @@
 #!/bin/bash
 
-source .env
+[ -f .env ] && source .env
 babel-node app.js
