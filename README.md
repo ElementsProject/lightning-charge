@@ -24,7 +24,7 @@ $ npm start
 
 All endpoints accept and return data in JSON format.
 
-Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `peerid`, `rhash`, `payreq`, `created_at`, `completed`, `completed_at` and `metadata`.
+Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `peerid`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `completed`, `completed_at` and `metadata`.
 
 ### `POST /invoice`
 
