@@ -5,15 +5,17 @@ REST API for accepting Lightning payments, built on top of c-lightning.
 ## Install & Setup
 
 ```bash
-# install
+# Install
 $ git clone https://github.com/ElementsProject/lightning-strike.git && cd lightning-strike
 $ npm install
 
-# configure
-$ cp example.env .env
-$ edit .env
+# Configure
+$ cp example.env .env && edit .env
 
-# setup sqlite schema
+# defaults should work, except for API_TOKEN which you must set. you can use:
+$ sed -i s/API_TOKEN=.*/API_TOKEN=`tr -cd "[:alnum:]" < /dev/urandom | head -c 64`/ .env
+
+# Setup sqlite schema
 $ DB_PATH=sqlite.db knex migrate:latest
 
 # run server
@@ -23,6 +25,9 @@ $ npm start
 ## REST API
 
 All endpoints accept and return data in JSON format.
+
+Authentication is done using HTTP basic authentication headers, with `api-token` as the username and
+the value of the `API_TOKEN` environment variable (configure in `.env`) as the password.
 
 Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `peerid`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `completed`, `completed_at` and `metadata`.
 
@@ -80,32 +85,34 @@ Returns live invoice payment updates as a [server-sent events](https://developer
 ## Examples
 
 ```bash
+$ STRIKE=$(source .env && echo http://api-token:$API_TOKEN@localhost:$PORT)
+
 # Create new invoice
-$ curl http://localhost:8009/invoice -X POST -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
+$ curl -X POST $STRIKE/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
 {"id":"07W98EUsBtCiyF7BnNcKe","msatoshi":"5000","metadata":{"customer_id":9817,"product_id":7189},"rhash":"3e449cc84d6b2b39df8e375d3cec0d2910e822346f782dc5eb97fea595c175b5","payreq":"lntb500n1pdq55z6pp58ezfejzddv4nnhuwxawnemqd9ygwsg35dauzm30tjll2t9wpwk6sdq0d3hz6um5wf5kkegcqpxpc06kpsp56fjh0jslhatp6kzmp8yxsgdjcfqqckdrrv0n840zqpx496qu5xenrzedlyatesl98dzdt5qcgkjd3l6vhax425jetq2h3gqz2enhk","completed":false,"created_at":1510625370087}
 
 # Create EUR-denominated invoice
-$ curl http://localhost:8009/invoice -X POST -d currency=EUR -d amount=0.5
+$ curl -X POST $STRIKE/invoice -d currency=EUR -d amount=0.5
 {"id":"kGsKjn9jbwgqxQzNgQYhE","msatoshi":"7576148","quoted_currency":"EUR","quoted_amount":"0.5", ...}
 
 # Create invoice with json
-$ curl http://localhost:8009/invoice -X POST -H 'Content-Type: application/json' \
+$ curl -X POST $STRIKE/invoice -H 'Content-Type: application/json' \
   -d '{"msatoshi":5000,"metadata":{"customer_id":9817,"products":[593,182]}'
 
 # Fetch an invoice
-$ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe
+$ curl $STRIKE/invoice/07W98EUsBtCiyF7BnNcKe
 
 # Fetch all invoices
-$ curl http://localhost:8009/invoices
+$ curl $STRIKE/invoices
 
 # Register a web hook
-$ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe/webhook -X POST -d url=https://requestb.in/pfqcmgpf
+$ curl -X POST $STRIKE/invoice/07W98EUsBtCiyF7BnNcKe/webhook -d url=https://requestb.in/pfqcmgpf
 
 # Long-poll payment notification for a specific invoice
-$ curl http://localhost:8009/invoice/07W98EUsBtCiyF7BnNcKe/wait?timeout=120
+$ curl $STRIKE/invoice/07W98EUsBtCiyF7BnNcKe/wait?timeout=120
 
 # Stream all incoming payments
-$ curl http://localhost:8009/payment-stream
+$ curl $STRIKE/payment-stream
 ```
 
 ## License

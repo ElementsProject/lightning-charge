@@ -1,5 +1,9 @@
 import wrap from './lib/promise-wrap'
 
+if (!process.env.API_TOKEN) throw new Error('please configure the API_TOKEN environment variable')
+
+const auth = require('./lib/auth')('api-token', process.env.API_TOKEN)
+
 module.exports = app => {
   const { payListen, model: { newInvoice, fetchInvoice, listInvoices } } = app
 
@@ -10,16 +14,16 @@ module.exports = app => {
     next()
   }))
 
-  app.get('/invoices', wrap(async (req, res) =>
+  app.get('/invoices', auth, wrap(async (req, res) =>
     res.send(await listInvoices())))
 
-  app.get('/invoice/:invoice', (req, res) =>
+  app.get('/invoice/:invoice', auth, (req, res) =>
     res.send(req.invoice))
 
-  app.post('/invoice', wrap(async (req, res) =>
+  app.post('/invoice', auth, wrap(async (req, res) =>
     res.status(201).send(await newInvoice(req.body))))
 
-  app.get('/invoice/:invoice/wait', wrap(async (req, res) => {
+  app.get('/invoice/:invoice/wait', auth, wrap(async (req, res) => {
     if (req.invoice.completed) return res.send(req.invoice)
     if (req.invoice_expired)   return res.sendStatus(410)
 
@@ -31,7 +35,7 @@ module.exports = app => {
     // @TODO remove listener on client disconnect
   }))
 
-  app.get('/payment-stream', (req, res, next) => {
+  app.get('/payment-stream', auth, (req, res, next) => {
     res.set({
       'Content-Type':  'text/event-stream'
     , 'Cache-Control': 'no-cache'
