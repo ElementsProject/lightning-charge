@@ -17,7 +17,9 @@ mixin css(path)
 
 - opt = metadata && metadata.checkout || {}
 
-.checkout.container
+body: .checkout.container
+  script window.parent != window && (document.body.className += ' iframed')
+
   .row
     .desc.col-sm-6
       h3= opt.title || 'Lightning Payment'

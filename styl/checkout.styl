@@ -1,6 +1,8 @@
 body
-  @media (min-height:900px)
-    background #eee
+  background #eee
+
+  &.iframed
+    background transparent
 
 .checkout
   max-width 750px
@@ -10,7 +12,7 @@ body
   @media (max-width:767px)
     text-align center
 
-  @media (min-height:900px)
+  body:not(.iframed) &
     margin-top 5em
     border-radius 3px
     background #fff
