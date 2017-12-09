@@ -35,7 +35,7 @@ Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `qu
 
 Create a new invoice.
 
-*Body parameters*: `msatoshi`, `currency`, `amount` and `metadata`.
+*Body parameters*: `msatoshi`, `currency`, `amount`, `description` and `metadata`.
 
 You can either specify the amount as `msatoshi` (1 msatoshi = 0.001 satoshis),
 or provide a `currency` and `amount` to be converted according to the current exchange rates.
