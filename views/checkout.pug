@@ -49,4 +49,9 @@ body: .checkout.container
 
     script(src=settings.static_url+'checkout.js')
 
-  script window.parent != window && window.parent.postMessage({ type: 'height', value: document.body.scrollHeight }, '*')
+  script.
+    if (window.parent != window) {
+      function updateHeight() { window.parent.postMessage({ type: 'height', value: document.body.scrollHeight }, '*') }
+      updateHeight()
+      window.addEventListener('resize', updateHeight)
+    }
