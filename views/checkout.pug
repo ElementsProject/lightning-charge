@@ -48,3 +48,5 @@ body: .checkout.container
         p.expiry.text-muted Invoice expires in #[span]
 
     script(src=settings.static_url+'checkout.js')
+
+  script window.parent != window && window.parent.postMessage({ type: 'height', value: document.body.scrollHeight }, '*')
