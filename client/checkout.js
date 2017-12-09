@@ -1,13 +1,27 @@
 const $ = s => document.querySelector(s)
 
-const poll_url   = $('meta[name=invoice-poll-url]').content
-    , expires_at = $('meta[name=invoice-expiry]').content;
+const invoice_id = $('meta[name=invoice-id]').content
+    , poll_url   = $('meta[name=invoice-poll-url]').content
+    , expires_at = $('meta[name=invoice-expiry]').content
+    , iframed    = window.parent !== window
+
+function paid() {
+  if (iframed) {
+    document.body.style.display = 'none'
+    window.parent.postMessage({ type: 'completed', invoice: invoice_id }, '*')
+  }
+  else location.reload()
+}
+
+function expired() {
+  location.reload()
+}
 
 (function poll() {
   const req = new XMLHttpRequest()
   req.addEventListener('load', ev =>
-    ev.target.status === 204 ? location.reload() // invoice paid
-  : ev.target.status === 410 ? location.reload() // invoice expired
+    ev.target.status === 204 ? paid()
+  : ev.target.status === 410 ? expired()
   : ev.target.status === 402 ? poll() // long polling timed-out, re-poll immediately
   : setTimeout(poll, 10000)) // unknown response, re-poll after delay
 
