@@ -1,7 +1,7 @@
 import request from 'superagent'
 import wrap from './lib/promise-wrap'
 
-const debug = require('debug')('lightning-strike')
+const debug = require('debug')('lightning-kite')
 
 module.exports = app => {
   const { payListen, model: { addHook, getHooks, logHook } } = app

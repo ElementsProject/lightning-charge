@@ -1,4 +1,4 @@
-# Lightning Strike
+# Lightning Kite
 
 REST API for accepting Lightning payments, built on top of c-lightning.
 
@@ -6,7 +6,7 @@ REST API for accepting Lightning payments, built on top of c-lightning.
 
 ```bash
 # Install
-$ git clone https://github.com/ElementsProject/lightning-strike.git && cd lightning-strike
+$ git clone https://github.com/ElementsProject/lightning-kite && cd lightning-kite
 $ npm install
 
 # Configure
@@ -85,34 +85,34 @@ Returns live invoice payment updates as a [server-sent events](https://developer
 ## Examples
 
 ```bash
-$ STRIKE=$(source .env && echo http://api-token:$API_TOKEN@localhost:$PORT)
+$ KITE=$(source .env && echo http://api-token:$API_TOKEN@localhost:$PORT)
 
 # Create new invoice
-$ curl -X POST $STRIKE/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
+$ curl -X POST $KITE/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
 {"id":"07W98EUsBtCiyF7BnNcKe","msatoshi":"5000","metadata":{"customer_id":9817,"product_id":7189},"rhash":"3e449cc84d6b2b39df8e375d3cec0d2910e822346f782dc5eb97fea595c175b5","payreq":"lntb500n1pdq55z6pp58ezfejzddv4nnhuwxawnemqd9ygwsg35dauzm30tjll2t9wpwk6sdq0d3hz6um5wf5kkegcqpxpc06kpsp56fjh0jslhatp6kzmp8yxsgdjcfqqckdrrv0n840zqpx496qu5xenrzedlyatesl98dzdt5qcgkjd3l6vhax425jetq2h3gqz2enhk","completed":false,"created_at":1510625370087}
 
 # Create EUR-denominated invoice
-$ curl -X POST $STRIKE/invoice -d currency=EUR -d amount=0.5
+$ curl -X POST $KITE/invoice -d currency=EUR -d amount=0.5
 {"id":"kGsKjn9jbwgqxQzNgQYhE","msatoshi":"7576148","quoted_currency":"EUR","quoted_amount":"0.5", ...}
 
 # Create invoice with json
-$ curl -X POST $STRIKE/invoice -H 'Content-Type: application/json' \
+$ curl -X POST $KITE/invoice -H 'Content-Type: application/json' \
   -d '{"msatoshi":5000,"metadata":{"customer_id":9817,"products":[593,182]}'
 
 # Fetch an invoice
-$ curl $STRIKE/invoice/07W98EUsBtCiyF7BnNcKe
+$ curl $KITE/invoice/07W98EUsBtCiyF7BnNcKe
 
 # Fetch all invoices
-$ curl $STRIKE/invoices
+$ curl $KITE/invoices
 
 # Register a web hook
-$ curl -X POST $STRIKE/invoice/07W98EUsBtCiyF7BnNcKe/webhook -d url=https://requestb.in/pfqcmgpf
+$ curl -X POST $KITE/invoice/07W98EUsBtCiyF7BnNcKe/webhook -d url=https://requestb.in/pfqcmgpf
 
 # Long-poll payment notification for a specific invoice
-$ curl $STRIKE/invoice/07W98EUsBtCiyF7BnNcKe/wait?timeout=120
+$ curl $KITE/invoice/07W98EUsBtCiyF7BnNcKe/wait?timeout=120
 
 # Stream all incoming payments
-$ curl $STRIKE/payment-stream
+$ curl $KITE/payment-stream
 ```
 
 ## License
