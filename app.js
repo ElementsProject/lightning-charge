@@ -1,9 +1,6 @@
 import LightningClient from 'lightning-client'
 import PaymentListener from './lib/payment-listener'
 
-// strict handling for uncaught promise rejections
-process.on('unhandledRejection', err => { throw err })
-
 const app = require('express')()
     , db  = require('knex')({ client: 'sqlite3', connection: process.env.DB_PATH, useNullAsDefault: true })
     , ln  = new LightningClient(process.env.LN_PATH)
@@ -25,3 +22,6 @@ require('./checkout')(app)
 
 app.listen(app.settings.port, app.settings.host, _ =>
   console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`))
+
+// strict handling for uncaught promise rejections
+process.on('unhandledRejection', err => { throw err })
