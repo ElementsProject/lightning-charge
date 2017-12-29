@@ -29,7 +29,7 @@ All endpoints accept and return data in JSON format.
 Authentication is done using HTTP basic authentication headers, with `api-token` as the username and
 the value of the `API_TOKEN` environment variable (configure in `.env`) as the password.
 
-Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, ``rhash`, `payreq`, `description`, `created_at`, `expires_at`, `completed`, `completed_at` and `metadata`.
+Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `completed`, `completed_at` and `metadata`.
 
 ### `POST /invoice`
 
