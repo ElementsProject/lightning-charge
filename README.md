@@ -39,7 +39,6 @@ Create a new invoice.
 
 You can either specify the amount as `msatoshi` (1 msatoshi = 0.001 satoshis),
 or provide a `currency` and `amount` to be converted according to the current exchange rates.
-You should not specify both.
 If a currency and amount were provided, they'll be available under `quoted_{currency|amount}`.
 
 You can optionally specify `metadata` with arbitrary order-related meta-data.
@@ -58,11 +57,11 @@ Get the specified invoice.
 
 Long-polling invoice payment notification.
 
-Waits for the invoice to be paid, then returns `200 OK` and the invoice.
+Waits for the invoice to be paid, then returns `200 OK` and the updated invoice.
 
 If `timeout` (defaults to 30s) is reached before the invoice is paid, returns `402 Payment Required`.
 
-If the invoice is expired, returns `410 Gone`.
+If the invoice is expired and can no longer be paid, returns `410 Gone`.
 
 ### `POST /invoice/:id/webhook`
 
@@ -88,15 +87,15 @@ Returns live invoice payment updates as a [server-sent events](https://developer
 $ CHARGE=$(source .env && echo http://api-token:$API_TOKEN@localhost:$PORT)
 
 # Create new invoice
-$ curl -X POST $CHARGE/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
+$ curl $CHARGE/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
 {"id":"07W98EUsBtCiyF7BnNcKe","msatoshi":"5000","metadata":{"customer_id":9817,"product_id":7189},"rhash":"3e449cc84d6b2b39df8e375d3cec0d2910e822346f782dc5eb97fea595c175b5","payreq":"lntb500n1pdq55z6pp58ezfejzddv4nnhuwxawnemqd9ygwsg35dauzm30tjll2t9wpwk6sdq0d3hz6um5wf5kkegcqpxpc06kpsp56fjh0jslhatp6kzmp8yxsgdjcfqqckdrrv0n840zqpx496qu5xenrzedlyatesl98dzdt5qcgkjd3l6vhax425jetq2h3gqz2enhk","completed":false,"created_at":1510625370087}
 
 # Create EUR-denominated invoice
-$ curl -X POST $CHARGE/invoice -d currency=EUR -d amount=0.5
+$ curl $CHARGE/invoice -d currency=EUR -d amount=0.5
 {"id":"kGsKjn9jbwgqxQzNgQYhE","msatoshi":"7576148","quoted_currency":"EUR","quoted_amount":"0.5", ...}
 
 # Create invoice with json
-$ curl -X POST $CHARGE/invoice -H 'Content-Type: application/json' \
+$ curl $CHARGE/invoice -H 'Content-Type: application/json' \
   -d '{"msatoshi":5000,"metadata":{"customer_id":9817,"products":[593,182]}'
 
 # Fetch an invoice
@@ -106,7 +105,7 @@ $ curl $CHARGE/invoice/07W98EUsBtCiyF7BnNcKe
 $ curl $CHARGE/invoices
 
 # Register a web hook
-$ curl -X POST $CHARGE/invoice/07W98EUsBtCiyF7BnNcKe/webhook -d url=https://requestb.in/pfqcmgpf
+$ curl $CHARGE/invoice/07W98EUsBtCiyF7BnNcKe/webhook -d url=https://requestb.in/pfqcmgpf
 
 # Long-poll payment notification for a specific invoice
 $ curl $CHARGE/invoice/07W98EUsBtCiyF7BnNcKe/wait?timeout=120
