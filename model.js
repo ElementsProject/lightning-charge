@@ -1,11 +1,11 @@
 import nanoid from 'nanoid'
 import { toMsat } from './lib/exchange-rate'
 
-const debug  = require('debug')('lightning-kite')
+const debug  = require('debug')('lightning-charge')
     , format = invoice => ({ ...invoice, completed: !!invoice.completed, metadata: JSON.parse(invoice.metadata) })
     , now    = _ => Date.now() / 1000 | 0
 
-const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Kite invoice'
+const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge invoice'
 
 module.exports = ({ db, ln }) => {
   const peerid = ln.getinfo().then(info => info.id)
