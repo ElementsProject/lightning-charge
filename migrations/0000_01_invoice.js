@@ -5,7 +5,6 @@ exports.up = db =>
     t.string ('msatoshi').notNullable()
     t.string ('quoted_currency').nullable()
     t.string ('quoted_amount').nullable()
-    t.string ('peerid').notNullable()
     t.string ('rhash').notNullable().unique()
     t.string ('payreq').notNullable()
     t.bool   ('completed').notNullable()

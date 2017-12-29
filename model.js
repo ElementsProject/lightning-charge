@@ -8,8 +8,6 @@ const debug  = require('debug')('lightning-charge')
 const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge invoice'
 
 module.exports = ({ db, ln }) => {
-  const peerid = ln.getinfo().then(info => info.id)
-
   const newInvoice = async props => {
     // @TODO validation
     const { currency, amount, expiry, metadata, webhook } = props
@@ -23,7 +21,7 @@ module.exports = ({ db, ln }) => {
         , invoice = {
             id, description, metadata, msatoshi
           , quoted_currency: currency, quoted_amount: amount
-          , rhash, payreq: bolt11, peerid: (await peerid)
+          , rhash, payreq: bolt11
           , expires_at: expiry_time, created_at: now()
           , completed: false
           }
