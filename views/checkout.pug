@@ -53,7 +53,7 @@ body: .checkout.container
 
   script.
     if (window.parent != window) {
-      function updateHeight() { window.parent.postMessage({ type: 'height', value: document.body.scrollHeight }, '*') }
+      function updateHeight() { window.parent.postMessage({ type: 'height', value: document.body.scrollHeight, invoice: '#{ id }' }, '*') }
       updateHeight()
       window.addEventListener('resize', updateHeight)
     }
