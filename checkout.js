@@ -1,6 +1,6 @@
 import path    from 'path'
 import express from 'express'
-import qruri   from 'qruri'
+import qrcode  from 'qrcode'
 import moveDec from 'move-decimal-point'
 import wrap    from './lib/promise-wrap'
 
@@ -22,14 +22,14 @@ module.exports = app => {
   , r
   ))(express.Router()))
 
-  app.get('/checkout/:invoice', (req, res) => {
+  app.get('/checkout/:invoice', wrap(async (req, res) => {
     const opt = req.invoice.metadata && req.invoice.metadata.checkout || {}
 
     if (req.invoice.completed && opt.redirect_url)
       return res.redirect(opt.redirect_url)
 
-    res.render('checkout', { ...req.invoice, expired: req.invoice_expired, qr: makeQR(req.invoice) })
-  })
+    res.render('checkout', { ...req.invoice, expired: req.invoice_expired, qr: await makeQR(req.invoice) })
+  }))
 
   // like /invoice/:invoice/wait, but user-accessible, doesn't reveal the full invoice fields,
   // and with a fixed timeout.
@@ -41,4 +41,4 @@ module.exports = app => {
 
 }
 
-const makeQR = ({ payreq }) => qruri(`lightning:${payreq}`, { mode: 'alphanumeric', margin: 0 })
+const makeQR = ({ payreq }) => qrcode.toDataURL(`lightning:${payreq}`, { margin: 1 })

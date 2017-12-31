@@ -18,7 +18,7 @@
     "move-decimal-point": "0.0.4",
     "nanoid": "^1.0.1",
     "pug": "^2.0.0-rc.4",
-    "qruri": "0.0.3",
+    "qrcode": "^1.2.0",
     "sqlite3": "^3.1.13",
     "superagent": "^3.8.1"
   },
