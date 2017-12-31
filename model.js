@@ -49,16 +49,15 @@ module.exports = ({ db, ln }) => {
       .first().then(r => r && r.value)
 
   const addHook = (invoice_id, url) =>
-    db('invoice_webhook').insert({ invoice_id, url, created_at: Date.now() })
+    db('invoice_webhook').insert({ invoice_id, url, created_at: now() })
 
   const getHooks = invoice_id =>
     db('invoice_webhook').where({ invoice_id })
 
   const logHook = (id, err, res) =>
     db('invoice_webhook').where({ id }).update(
-      !err ? { requested_at: Date.now(), success: true,  resp_code: res.status }
-           : { requested_at: Date.now(), success: false, resp_error: err }
-    )
+      !err ? { requested_at: now(), success: true,  resp_code: res.status }
+           : { requested_at: now(), success: false, resp_error: err })
 
   return { newInvoice, listInvoices, fetchInvoice
          , getLastPaid, markPaid
