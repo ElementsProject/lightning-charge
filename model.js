@@ -5,24 +5,22 @@ const debug  = require('debug')('lightning-charge')
     , format = invoice => ({ ...invoice, completed: !!invoice.completed, metadata: JSON.parse(invoice.metadata) })
     , now    = _ => Date.now() / 1000 | 0
 
-const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge invoice'
+const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge Invoice'
 
 module.exports = ({ db, ln }) => {
   const newInvoice = async props => {
     // @TODO validation
-    const { currency, amount, expiry, metadata, webhook } = props
+    const { currency, amount, expiry, description, metadata, webhook } = props
 
-        , id          = nanoid()
-        , msatoshi    = props.msatoshi ? ''+props.msatoshi : await toMsat(currency, amount)
-        , description = props.description || defaultDesc
-
-        , { rhash, bolt11, expiry_time } = await ln.invoice(msatoshi, id, description, expiry)
+        , id       = nanoid()
+        , msatoshi = props.msatoshi ? ''+props.msatoshi : await toMsat(currency, amount)
+        , lninv    = await ln.invoice(msatoshi, id, description || defaultDesc, expiry)
 
         , invoice = {
             id, description, metadata, msatoshi
           , quoted_currency: currency, quoted_amount: amount
-          , rhash, payreq: bolt11
-          , expires_at: expiry_time, created_at: now()
+          , rhash: lninv.rhash, payreq: lninv.bolt11
+          , expires_at: lninv.expiry_time, created_at: now()
           , completed: false
           }
 
