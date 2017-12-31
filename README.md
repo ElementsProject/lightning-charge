@@ -37,6 +37,12 @@ $ docker run [...] -e API_TOKEN=myLongRandomToken -e NODE_ENV=production
 
 To run in `regtest` mode, add `-e BITCOIND_ARGS='-regtest' -e LIGHTNINGD_ARGS='--network=regtest'` to the `docker run` command.
 
+## Client Libraries
+
+- [lightning-charge-client-js](https://github.com/ElementsProject/lightning-charge-client-js)
+
+- [lightning-charge-client-php](https://github.com/ElementsProject/lightning-charge-client-php)
+
 ## REST API
 
 All endpoints accept and return data in JSON format.
