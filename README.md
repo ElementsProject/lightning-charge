@@ -15,9 +15,6 @@ $ cp example.env .env && edit .env
 # defaults should work, except for API_TOKEN which you must set. you can use:
 $ sed -i s/API_TOKEN=.*/API_TOKEN=`tr -cd "[:alnum:]" < /dev/urandom | head -c 64`/ .env
 
-# Setup sqlite schema
-$ DB_PATH=sqlite.db knex migrate:latest
-
 # run server
 $ npm start
 ```
