@@ -7,8 +7,8 @@ import wrap    from './lib/promise-wrap'
 module.exports = app => {
   const { payListen } = app
 
-  app.set('url', process.env.URL || `http://localhost:${app.settings.port}/`)
-  app.set('static_url', process.env.STATIC_URL || app.settings.url + '/static/')
+  app.set('url', process.env.URL || '/')
+  app.set('static_url', process.env.STATIC_URL || app.settings.url + 'static/')
   app.set('view engine', 'pug')
   app.set('views', path.join(__dirname, 'views'))
 
