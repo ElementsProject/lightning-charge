@@ -2,8 +2,8 @@ import LightningClient from 'lightning-client'
 import PaymentListener from './lib/payment-listener'
 
 const app = require('express')()
-    , db  = require('knex')({ client: 'sqlite3', connection: process.env.DB_PATH, useNullAsDefault: true })
-    , ln  = new LightningClient(process.env.LN_PATH)
+    , db  = require('knex')(require('./knexfile'))
+    , ln  = new LightningClient(process.env.LN_PATH || require('path').join(process.env.HOME, '/.lightning'))
 
 app.model     = require('./model')({ db, ln })
 app.payListen = new PaymentListener(ln.rpcPath, app.model)
