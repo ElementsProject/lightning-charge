@@ -32,11 +32,13 @@ Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `qu
 
 Create a new invoice.
 
-*Body parameters*: `msatoshi`, `currency`, `amount`, `description` and `metadata`.
+*Body parameters*: `msatoshi`, `currency`, `amount`, `description`, `expiry` and `metadata`.
 
 You can either specify the amount as `msatoshi` (1 msatoshi = 0.001 satoshis),
 or provide a `currency` and `amount` to be converted according to the current exchange rates.
 If a currency and amount were provided, they'll be available under `quoted_{currency|amount}`.
+
+Use `expiry` to set the invoice expiry time (in seconds), defaults to one hour.
 
 You can optionally specify `metadata` with arbitrary order-related meta-data.
 
