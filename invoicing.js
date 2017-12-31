@@ -5,7 +5,7 @@ if (!process.env.API_TOKEN) throw new Error('please configure the API_TOKEN envi
 const auth = require('./lib/auth')('api-token', process.env.API_TOKEN)
 
 module.exports = app => {
-  const { payListen, model: { newInvoice, fetchInvoice, listInvoices } } = app
+  const { payListen, model: { newInvoice, fetchInvoice, listInvoices, delExpired } } = app
 
   app.param('invoice', wrap(async (req, res, next, id) => {
     req.invoice = await fetchInvoice(req.params.invoice)
@@ -46,4 +46,9 @@ module.exports = app => {
     payListen.on('payment', onPay)
     req.on('close', _ => payListen.removeListener('payment', onPay))
   })
+
+  ;(async function expiryJob() {
+    await delExpired()
+    setTimeout(expiryJob, 14400000) // 4 hours
+  })()
 }

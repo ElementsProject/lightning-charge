@@ -38,15 +38,30 @@ module.exports = ({ db, ln }) => {
   const fetchInvoice = id =>
       db('invoice').where({ id }).first().then(r => r && format(r))
 
+  const delInvoice = async id => {
+    await ln.delinvoice(id)
+    await db('invoice').where({ id }).delete()
+  }
+
   const markPaid = id => Promise.all([
     db('vars').where({ key: 'last-paid-invoice' }).update({ value: id })
   , db('invoice').where({ id, completed: false }).update({ completed: true, completed_at: now() })
   ]).then(rets => rets[1])
 
-
   const getLastPaid = _ =>
     db('vars').where({ key: 'last-paid-invoice' })
       .first().then(r => r && r.value)
+
+  const delExpired = _ =>
+    db('invoice').select('id')
+      // fetch unpaid invoices expired over a day ago
+      .where({ completed: false })
+      .where('expires_at', '<', now() - 86400)
+      // make sure they're really unpaid
+      .then(invs => Promise.all(invs.map(i => ln.listinvoice(i.id))))
+      .then(invs => invs.filter(i => !i[0].complete).map(i => i[0].label))
+      // finally, delete them
+      .then(invs => Promise.all(invs.map(delInvoice)))
 
   const addHook = (invoice_id, url) =>
     db('invoice_webhook').insert({ invoice_id, url, created_at: now() })
@@ -60,7 +75,7 @@ module.exports = ({ db, ln }) => {
            : { requested_at: now(), success: false, resp_error: err })
 
   return { newInvoice, listInvoices, fetchInvoice
-         , getLastPaid, markPaid
+         , getLastPaid, markPaid, delExpired
          , addHook, getHooks, logHook }
 }
 
