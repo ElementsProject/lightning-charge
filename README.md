@@ -4,20 +4,38 @@ REST API for accepting Lightning payments, built on top of c-lightning.
 
 ## Install & Setup
 
+Setup [c-lightning](https://github.com/ElementsProject/lightning), then:
+
 ```bash
 # Install
 $ git clone https://github.com/ElementsProject/lightning-charge && cd lightning-charge
 $ npm install
 
-# Configure
-$ cp example.env .env && edit .env
+# Configure (defaults should work, except for API_TOKEN which you must set)
+$ cp example.env .env
+$ sed -i s/API_TOKEN=.*/API_TOKEN=`tr -cd "[:alnum:]" < /dev/urandom | head -c 40`/ .env
 
-# defaults should work, except for API_TOKEN which you must set. you can use:
-$ sed -i s/API_TOKEN=.*/API_TOKEN=`tr -cd "[:alnum:]" < /dev/urandom | head -c 64`/ .env
-
-# run server
+# Start Lightning Charge
 $ npm start
 ```
+
+Alternatively, you can set everything up using docker (comes bundled with bitcoind+lightningd+charge):
+
+```bash
+$ touch sqlite.db
+$ echo export API_TOKEN=`tr -cd "[:alnum:]" < /dev/urandom | head -c 40` > .env
+
+$ docker run -v `pwd`/lightning:/root/.lightning \
+             -v `pwd`/bitcoin:/root/.bitcoin \
+             -v `pwd`/sqlite.db:/opt/lightning-charge/sqlite.db \
+             -v `pwd`/.env:/opt/lightning-charge/.env \
+             shesek/lightning-charge
+
+# Instead of mounting an `.env` file, configuration options can also be specified directly via `-e`:
+$ docker run [...] -e API_TOKEN=myLongRandomToken -e NODE_ENV=production
+```
+
+To run in `regtest` mode, add `-e BITCOIND_ARGS='-regtest' -e LIGHTNINGD_ARGS='--network=regtest'` to the `docker run` command.
 
 ## REST API
 
