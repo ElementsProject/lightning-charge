@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-ENV BITCOIND_ARGS='-testnet'
+ENV BITCOIND_ARGS='-testnet -prune=550'
 ENV LIGHTNINGD_ARGS='--network=testnet'
 ENV LIGHTNINGD_VERSION=master
 
@@ -32,4 +32,4 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 ENTRYPOINT /opt/lightning-charge/docker-entrypoint.sh
-EXPOSE 9112
+EXPOSE 9112 9735
