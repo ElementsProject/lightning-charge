@@ -20,7 +20,7 @@ RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd &
     git checkout $LIGHTNINGD_VERSION && \
     make && cp lightningd/lightning* cli/lightning-cli /usr/bin/
 
-# nodejs 8 & node-canvas dependencies
+# nodejs 8
 RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
     echo deb http://deb.nodesource.com/node_8.x xenial main | tee /etc/apt/sources.list.d/nodesource.list && \
     apt-get update -qq && \
