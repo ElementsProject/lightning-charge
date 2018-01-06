@@ -2,9 +2,7 @@ import wrap from './lib/promise-wrap'
 
 if (!process.env.API_TOKEN) throw new Error('please configure the API_TOKEN environment variable')
 
-const auth = require('./lib/auth')('api-token', process.env.API_TOKEN)
-
-module.exports = (app, payListen, model) => {
+module.exports = (app, payListen, model, auth) => {
   const { newInvoice, fetchInvoice, listInvoices, delExpired } = model
 
   app.param('invoice', wrap(async (req, res, next, id) => {
