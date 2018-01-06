@@ -43,14 +43,14 @@ module.exports = ({ db, ln }) => {
     await db('invoice').where({ id }).delete()
   }
 
-  const markPaid = id => Promise.all([
-    db('vars').where({ key: 'last-paid-invoice' }).update({ value: id })
-  , db('invoice').where({ id, completed: false }).update({ completed: true, completed_at: now() })
-  ]).then(rets => rets[1])
+  const markPaid = (id, pay_index) =>
+    db('invoice').where({ id, completed: false })
+                 .update({ completed: true, completed_at: now(), pay_index })
 
   const getLastPaid = _ =>
-    db('vars').where({ key: 'last-paid-invoice' })
-      .first().then(r => r && r.value)
+    db('invoice').where({ completed: true })
+                 .max('pay_index as index')
+                 .first().then(r => r.index)
 
   const delExpired = _ =>
     db('invoice').select('id')

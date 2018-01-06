@@ -8,6 +8,7 @@ exports.up = db =>
     t.string ('rhash').notNullable().unique()
     t.string ('payreq').notNullable()
     t.bool   ('completed').notNullable()
+    t.integer('pay_index').nullable()
     t.string ('description').nullable()
     t.string ('metadata').nullable()
     t.integer('created_at').notNullable()
