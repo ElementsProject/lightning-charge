@@ -1,16 +1,11 @@
-import knex from 'knex'
-import express from 'express'
-import Lightning from 'lightning-client'
-import PaymentListener from './lib/payment-listener'
-
-const db = knex(require('./knexfile'))
-    , ln = new Lightning(process.env.LN_PATH || require('path').join(process.env.HOME, '.lightning'))
+const db = require('knex')(require('./knexfile'))
+    , ln = require('lightning-client')(process.env.LN_PATH || require('path').join(process.env.HOME, '.lightning'))
 
 const model = require('./model')(db, ln)
     , auth  = require('./lib/auth')('api-token', process.env.API_TOKEN)
-    , payListen = new PaymentListener(ln.rpcPath, model)
+    , payListen = require('./lib/payment-listener')(ln.rpcPath, model)
 
-const app = express()
+const app = require('express')()
 
 app.set('port', process.env.PORT || 9112)
 app.set('host', process.env.HOST || 'localhost')
