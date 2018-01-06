@@ -4,7 +4,9 @@
   "description": "Lightning REST API server",
   "license": "MIT",
   "scripts": {
-    "start": "./start.sh"
+    "start": "start.sh",
+    "test": "test/runner.sh",
+    "testenv": "test/testenv.sh"
   },
   "dependencies": {
     "basic-auth": "^2.0.0",
@@ -30,6 +32,9 @@
     "babel-register": "^6.26.0",
     "browserify": "^14.5.0",
     "browserify-middleware": "^8.0.0",
-    "stylus": "^0.54.5"
+    "stylus": "^0.54.5",
+    "mocha": "^4.1.0",
+    "supertest": "^3.0.0",
+    "get-port-cli": "^1.1.0"
   }
 }
