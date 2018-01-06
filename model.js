@@ -7,16 +7,15 @@ const debug  = require('debug')('lightning-charge')
 
 const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge Invoice'
 
-module.exports = ({ db, ln }) => {
+module.exports = (db, ln) => {
   const newInvoice = async props => {
-    // @TODO validation
     const { currency, amount, expiry, description, metadata, webhook } = props
 
-        , id       = nanoid()
+    const id       = nanoid()
         , msatoshi = props.msatoshi ? ''+props.msatoshi : await toMsat(currency, amount)
         , lninv    = await ln.invoice(msatoshi, id, description || defaultDesc, expiry)
 
-        , invoice = {
+    const invoice = {
             id, description, metadata, msatoshi
           , quoted_currency: currency, quoted_amount: amount
           , rhash: lninv.rhash, payreq: lninv.bolt11

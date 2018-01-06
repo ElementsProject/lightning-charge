@@ -4,9 +4,7 @@ import qrcode  from 'qrcode'
 import moveDec from 'move-decimal-point'
 import wrap    from './lib/promise-wrap'
 
-module.exports = app => {
-  const { payListen } = app
-
+module.exports = (app, payListen) => {
   app.set('url', process.env.URL || '/')
   app.set('static_url', process.env.STATIC_URL || app.settings.url + 'static/')
   app.set('view engine', 'pug')

@@ -3,8 +3,8 @@ import wrap from './lib/promise-wrap'
 
 const debug = require('debug')('lightning-charge')
 
-module.exports = app => {
-  const { payListen, model: { addHook, getHooks, logHook } } = app
+module.exports = (app, payListen, model) => {
+  const { addHook, getHooks, logHook } = model
 
   app.post('/invoice/:invoice/webhook', wrap(async (req, res) => {
     if (req.invoice.completed) return res.sendStatus(405)
