@@ -20,8 +20,10 @@ fi
 
 DIR=`mktemp -d`
 BTC_DIR=$DIR/bitcoin
-LN_ALICE_PATH=$DIR/lightning-alice # used as the backend for Lightning Charge
-LN_BOB_PATH=$DIR/lightning-bob     # used to send payments to Lightning Charge
+
+# Alice is the backend for Charge, Bob is paying customer
+LN_ALICE_PATH=$DIR/lightning-alice
+LN_BOB_PATH=$DIR/lightning-bob
 
 CHARGE_DB=$DIR/charge.sqlite
 CHARGE_PORT=`get-port`
@@ -32,11 +34,11 @@ alias btc="bitcoin-cli --datadir=$BTC_DIR"
 alias lna="lightning-cli --lightning-dir=$LN_ALICE_PATH"
 alias lnb="lightning-cli --lightning-dir=$LN_BOB_PATH"
 
-echo Creating test envirnoment in $DIR
+echo Creating test envirnoment in $DIR > $dbgout
 
 # Setup bitcoind
 
-echo Setting up bitcoind
+echo Setting up bitcoind >&2
 mkdir -p $BTC_DIR
 cat >$BTC_DIR/bitcoin.conf <<EOL
 regtest=1
@@ -48,33 +50,33 @@ EOL
 
 bitcoind -datadir=$BTC_DIR $BITCOIND_OPTS &
 
-echo - Waiting for bitcoind to warm up...
+echo - Waiting for bitcoind to warm up... > $dbgout
 sed $sedq '/init message: Done loading/ q' <(tail -F -n+0 $BTC_DIR/regtest/debug.log 2> /dev/null)
 
-echo - Generating some blocks...
+echo - Generating some blocks... > $dbgout
 btc generate 432 > /dev/null
 
 # Setup lightningd
 
-echo Setting up lightningd
+echo Setting up lightningd >&2
 
 LN_OPTS="$LN_OPTS --network=regtest --bitcoind-poll=1s --bitcoin-datadir=$BTC_DIR --log-file=debug.log"
 lightningd $LN_OPTS --port=`get-port` --lightning-dir=$LN_ALICE_PATH  &> $dbgout &
 lightningd $LN_OPTS --port=`get-port` --lightning-dir=$LN_BOB_PATH &> $dbgout &
 
-echo - Waiting for lightningd to warm up...
+echo - Waiting for lightningd to warm up... > $dbgout
 sed $sedq '/Hello world/ q' <(tail -F -n+0 $LN_ALICE_PATH/debug.log 2> /dev/null)
 sed $sedq '/Hello world/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log 2> /dev/null)
 
-echo - Funding lightning wallet...
+echo - Funding lightning wallet... > $dbgout
 lnb addfunds $(btc getrawtransaction $(btc sendtoaddress $(lnb newaddr | jq -r .address) 1)) | jq -c . > $dbgout
 btc generate 1 > /dev/null
 
-echo - Connecting peers...
+echo - Connecting peers... > $dbgout
 aliceid=`lna getinfo | jq -r .id`
 lnb connect $aliceid 127.0.0.1 `lna getinfo | jq -r .port` | jq -c . > $dbgout
 
-echo - Setting up channel...
+echo - Setting up channel... > $dbgout
 lnb fundchannel $aliceid 500000 | jq -c . > $dbgout
 btc generate 1 > /dev/null
 
@@ -85,12 +87,12 @@ sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -F -n+
 
 # Setup Lightning Charge
 
-echo Setting up Lightning Charge
+echo Setting up Lightning Charge >&2
 
-echo - Initializing sqlite schema
+echo - Initializing sqlite schema > $dbgout
 DB_PATH=$CHARGE_DB knex migrate:latest > $DIR/db-migration.log
 
-echo - Starting Lightning Charge API server
+echo - Starting Lightning Charge API server > $dbgout
 LN_PATH=$LN_ALICE_PATH DB_PATH=$CHARGE_DB API_TOKEN=$CHARGE_TOKEN PORT=$CHARGE_PORT \
 NODE_ENV=test babel-node app.js > $DIR/charge.log &
 
@@ -99,4 +101,4 @@ sed $sedq '/HTTP server running/ q' <(tail -F -n+0 $DIR/charge.log 2> /dev/null)
 
 curl --silent --fail $CHARGE_URL/invoices > /dev/null
 
-echo All services up and running
+echo All services up and running > $dbgout
