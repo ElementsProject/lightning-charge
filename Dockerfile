@@ -26,5 +26,5 @@ WORKDIR /opt/lightning-charge
 COPY package*.json ./
 RUN npm install
 COPY . .
-ENTRYPOINT /opt/lightning-charge/scripts/docker-entrypoint.sh
+CMD /opt/lightning-charge/scripts/docker-entrypoint.sh
 EXPOSE 9112 9735
