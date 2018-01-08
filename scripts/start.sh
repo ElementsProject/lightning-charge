@@ -1,3 +1,8 @@
 #!/bin/bash
 [ -f .env ] && source .env
-babel-node app.js
+
+if [ -f src/app.js ]; then
+  babel-node src/app.js
+else
+  node dist/app.js
+fi

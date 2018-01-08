@@ -27,5 +27,4 @@ Object.keys(args).filter(k => k.length > 1)
   .forEach(k => process.env[envify(k)] = args[k])
 
 require('babel-polyfill')
-require('babel-register')
-require('../app')
+require('../dist/app')
