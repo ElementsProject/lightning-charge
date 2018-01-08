@@ -4,37 +4,28 @@ REST API for accepting Lightning payments, built on top of c-lightning.
 
 ## Getting Started
 
-### Installation
-
-Setup [c-lightning](https://github.com/ElementsProject/lightning#getting-started), then:
+Setup [bitcoind](https://bitcoin.org/en/full-node#linux-instructions)
+and [c-lightning](https://github.com/ElementsProject/lightning#getting-started), then:
 
 ```bash
-# Install
-$ git clone https://github.com/ElementsProject/lightning-charge && cd lightning-charge
-$ npm install
+$ npm install -g lightning-charge
+$ charged --ln-path ~/.lightning --db-path charge.db --api-token mySecretToken --port 9112
 
-# Configure
-$ cp example.env .env
-# defaults should work, except for API_TOKEN which is required. LN_PATH is assumed to be ~/.lightning
-$ sed -i s/API_TOKEN=$/API_TOKEN=`head -c 20 /dev/urandom | base64 | tr -d '+/='`/ .env
-
-# Start
-$ npm start
+# configuration options may alternatively be provided using environment variables:
+$ LN_PATH=~/.lightning DB_PATH=charge.db API_TOKEN=mySecretToken PORT=9112 charged
 ```
 
-### Running with Docker
+See `$ charged --help` for the full list of available options.
 
-You can set everything up with docker (comes bundled with bitcoind+lightningd+charge):
+### Docker
+
+Deploy with docker, comes bundled with `bitcoind`+`lightningd`+`charged`:
 
 ```bash
-$ touch sqlite.db
-$ echo export API_TOKEN=`head -c 20 /dev/urandom | base64 | tr -d '+/='` > .env
-
-$ docker run -v `pwd`/lightning:/root/.lightning \
-             -v `pwd`/bitcoin:/root/.bitcoin \
-             -v `pwd`/sqlite.db:/opt/lightning-charge/sqlite.db \
-             -v `pwd`/.env:/opt/lightning-charge/.env \
-             -p 9112:9112 \
+$ touch charge.db
+$ docker run -v $HOME/.lightning:/root/.lightning -v $HOME/.bitcoin:/root/.bitcoin \
+             -v `pwd`/charge.db:/opt/charged/sqlite.db \
+             -p 9112 -e API_TOKEN=mySecretToken \
              shesek/lightning-charge
 ```
 
@@ -43,7 +34,7 @@ Runs in `testnet` mode by default, set `NETWORK` to override.
 If you want to experiment in regtest mode and don't care about persisting data, this should do:
 
 ```bash
-$ docker run -e NETWORK=regtest -e API_TOKEN=1 -p 9112:9112 shesek/lightning-charge
+$ docker run -e NETWORK=regtest -e API_TOKEN=myToken -p 9112 shesek/lightning-charge
 ```
 
 ### Client libraries
@@ -182,7 +173,7 @@ To prevent the test environment files from being deleted after completing the te
 To setup a testing environment without running the tests, run `npm run testenv`.
 This will display information about the running services and keep them alive for further inspection.
 
-Tests can also be run inside docker: `$ docker run shesek/lightning-charge npm test`
+Tests can also be run using docker: `$ docker run shesek/lightning-charge npm test`
 
 ## License
 

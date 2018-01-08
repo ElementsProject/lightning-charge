@@ -87,7 +87,7 @@ sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -F -n+
 
 # Setup Lightning Charge
 
-echo Setting up Lightning Charge >&2
+echo Setting up charged >&2
 
 echo - Initializing sqlite schema > $dbgout
 DB_PATH=$CHARGE_DB knex migrate:latest > $DIR/db-migration.log

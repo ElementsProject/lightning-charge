@@ -3,6 +3,9 @@
   "version": "0.2.0-beta",
   "description": "A simple drop-in solution for accepting lightning payments.",
   "license": "MIT",
+  "bin": {
+    "charged": "./scripts/charged"
+  },
   "scripts": {
     "start": "./scripts/start.sh",
     "test": "./scripts/test.sh",
@@ -16,6 +19,7 @@
     "express": "^4.16.2",
     "knex": "^0.14.0",
     "lightning-client": "github:shesek/lightning-client-js",
+    "meow": "^4.0.0",
     "morgan": "^1.9.0",
     "move-decimal-point": "0.0.4",
     "nanoid": "^1.0.1",

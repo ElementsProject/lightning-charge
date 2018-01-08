@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+const args = require('meow')(`
+    Usage
+      $ charged [options]
+
+    Options
+      -t, --api-token <token>   API access token (any long random string will do) [required]
+      -l, --ln-path <path>      path to c-lightning data directory [default: ~/.lightning]
+      -d, --db-path <path>      path to sqlite3 database file [default: ./sqlite.db]
+      -p, --port <port>         http server port [default: 9112]
+      -l, --host <host>         http server listen address [default: 127.0.0.1]
+      -e, --node-env <env>      nodejs environment mode [default: development]
+      -h, --help                output usage information
+      -v, --version             output version number
+
+    Example
+      $ charged -t mySecretToken -l ~/.lightning -d ~/charge.db -p 9112
+
+`, { alias: { p: 'port', d: 'db-path', l: 'ln-path', t: 'api-token' } }).flags
+
+const envify = k => k.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase()
+
+Object.keys(args).filter(k => k.length > 1)
+  .forEach(k => process.env[envify(k)] = args[k])
+
+require('babel-polyfill')
+require('babel-register')
+require('../app')

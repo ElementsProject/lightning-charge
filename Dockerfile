@@ -26,9 +26,9 @@ RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
     apt-get install -y nodejs
 
 # Lightning Charge
-WORKDIR /opt/lightning-charge
+WORKDIR /opt/charged
 COPY package*.json ./
 RUN npm install
 COPY . .
-CMD /opt/lightning-charge/scripts/docker-entrypoint.sh
+CMD scripts/docker-entrypoint.sh
 EXPOSE 9112 9735
