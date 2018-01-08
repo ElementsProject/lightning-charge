@@ -1,11 +1,6 @@
 FROM ubuntu:16.04
 
-ENV BITCOIND_OPTS='-testnet -prune=550'
-ENV LIGHTNINGD_OPTS='--network=testnet'
 ENV LIGHTNINGD_VERSION=master
-
-ENV HOST=0.0.0.0
-ENV DEBUG=lightning-charge,lightning-client,knex:query,knex:bindings,superagent
 
 # bitcoind & lightningd dependencies
 RUN gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys D46F45428842CE5E && \
