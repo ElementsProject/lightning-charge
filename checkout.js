@@ -26,7 +26,8 @@ module.exports = (app, payListen) => {
     if (req.invoice.completed && opt.redirect_url)
       return res.redirect(opt.redirect_url)
 
-    res.render('checkout', { ...req.invoice, expired: req.invoice_expired, qr: await makeQR(req.invoice) })
+    res.render('checkout', { ...req.invoice, expired: req.invoice_expired
+                           , qr: await qrcode.toDataURL(`lightning:${req.invoice.payreq}`, { margin: 1 }) })
   }))
 
   // like /invoice/:invoice/wait, but user-accessible, doesn't reveal the full invoice fields,
@@ -37,6 +38,7 @@ module.exports = (app, payListen) => {
     res.sendStatus(completed ? 204 : 402)
   }))
 
+  app.get('/checkout/:invoice/qr.png', wrap(async (req, res) => {
+    qrcode.toFileStream(res.type('png'), `lightning:${req.invoice.payreq}`)
+  }))
 }
-
-const makeQR = ({ payreq }) => qrcode.toDataURL(`lightning:${payreq}`, { margin: 1 })
