@@ -1,13 +1,13 @@
 #!/bin/bash
 echo "Starting bitcoind $BITCOIND_OPTS"
-bitcoind -daemon -printtoconsole ${BITCOIND_OPTS:- -testnet -prune=550}
+bitcoind -daemon ${BITCOIND_OPTS:- -testnet -prune=550}
 echo "Waiting for bitcoind to startup"
-sleep 5
+sed '/init message: Done loading/ q' <(tail -F -n+0 ~/.bitcoin/*/debug.log 2> /dev/null)
 
 echo "Starting lightningd $LIGHTNINGD_OPTS"
 lightningd --port 9735 --log-file=debug.log ${LIGHTNINGD_OPTS:- --network=testnet} &
 echo "Waiting for lightningd to startup"
-sleep 5
+sed '/Hello world/ q' <(tail -F -n+0 ~/.lightning/debug.log 2> /dev/null)
 
 echo "Starting Lightning Charge"
 
