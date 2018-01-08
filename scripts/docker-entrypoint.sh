@@ -10,6 +10,5 @@ echo "Waiting for lightningd to startup"
 sed '/Hello world/ q' <(tail -F -n+0 ~/.lightning/debug.log 2> /dev/null)
 
 echo "Starting Lightning Charge"
-
 HOST=0.0.0.0 DEBUG=$DEBUG,lightning-charge,lightning-client,knex:query,knex:bindings,superagent \
 npm start
