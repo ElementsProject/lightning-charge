@@ -13,9 +13,9 @@ Lightning Charge is available at:
 
   $CHARGE_URL
 
-You can run the unit tests with:
+You can run the unit tests against the running services with:
 
-  $ CHARGE_URL=$CHARGE_URL LN_BOB_PATH=$LN_BOB_PATH mocha
+  $ CHARGE_URL=$CHARGE_URL LN_BOB_PATH=$LN_BOB_PATH npm test
 
 EOL
 

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source test/prelude.sh
+if [[ -z "$CHARGE_URL" || -z "$LN_BOB_PATH" ]]; then
+  source test/prelude.sh
+fi
 
 echo Running unit tests
 
