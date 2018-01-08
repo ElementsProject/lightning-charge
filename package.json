@@ -4,9 +4,9 @@
   "description": "Lightning REST API server",
   "license": "MIT",
   "scripts": {
-    "start": "start.sh",
-    "test": "test/runner.sh",
-    "testenv": "test/testenv.sh"
+    "start": "./start.sh",
+    "test": "./test/runner.sh",
+    "testenv": "./test/testenv.sh"
   },
   "dependencies": {
     "basic-auth": "^2.0.0",
