@@ -46,7 +46,7 @@ rpcport=`get-port`
 port=`get-port`
 EOL
 
-bitcoind -datadir=$BTC_DIR &
+bitcoind -datadir=$BTC_DIR $BITCOIND_OPTS &
 
 echo - Waiting for bitcoind to warm up...
 sed $sedq '/init message: Done loading/ q' <(tail -F -n+0 $BTC_DIR/regtest/debug.log 2> /dev/null)

@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
-ENV BITCOIND_ARGS='-testnet -prune=550'
-ENV LIGHTNINGD_ARGS='--network=testnet'
+ENV BITCOIND_OPTS='-testnet -prune=550'
+ENV LIGHTNINGD_OPTS='--network=testnet'
 ENV LIGHTNINGD_VERSION=master
 
 ENV HOST=0.0.0.0

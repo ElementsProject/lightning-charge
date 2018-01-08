@@ -42,7 +42,7 @@ $ docker run [...] -e API_TOKEN=myLongRandomToken -e NODE_ENV=production
 ```
 
 Runs in `testnet` mode by default.
-To run in `regtest` mode, add `-e BITCOIND_ARGS='-regtest' -e LIGHTNINGD_ARGS='--network=regtest'` to the `docker run` command.
+To run in `regtest` mode, add `-e BITCOIND_OPTS='-regtest' -e LIGHTNINGD_OPTS='--network=regtest'` to the `docker run` command.
 
 ### Client libraries
 
