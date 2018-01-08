@@ -1,5 +1,9 @@
+(async () => {
+
 const db = require('knex')(require('./knexfile'))
     , ln = require('lightning-client')(process.env.LN_PATH || require('path').join(process.env.HOME, '.lightning'))
+
+await db.migrate.latest()
 
 const model = require('./model')(db, ln)
     , auth  = require('./lib/auth')('api-token', process.env.API_TOKEN)
@@ -23,3 +27,5 @@ app.listen(app.settings.port, app.settings.host, _ =>
   console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`))
 
 process.on('unhandledRejection', err => { throw err })
+
+})()
