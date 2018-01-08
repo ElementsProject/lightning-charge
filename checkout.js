@@ -4,19 +4,21 @@ import qrcode  from 'qrcode'
 import moveDec from 'move-decimal-point'
 import wrap    from './lib/promise-wrap'
 
+const rpath = name => path.join(__dirname, name)
+
 module.exports = (app, payListen) => {
   app.set('url', process.env.URL || '/')
   app.set('static_url', process.env.STATIC_URL || app.settings.url + 'static/')
   app.set('view engine', 'pug')
-  app.set('views', path.join(__dirname, 'views'))
+  app.set('views', rpath('views'))
 
   app.locals.formatMsat = msat => moveDec(msat, -8) + ' mBTC'
 
   app.use('/static', (r => (
-    r.get('/checkout.js', require('browserify-middleware')('./client/checkout.js'))
-  , r.use(require('stylus').middleware({ src: './styl', serve: true }))
-  , r.use('/styl', express.static('./styl'))
-  , r.use('/', express.static('./static'))
+    r.get('/checkout.js', require('browserify-middleware')(rpath('client/checkout.js')))
+  , r.use(require('stylus').middleware({ src: rpath('styl'), serve: true }))
+  , r.use('/styl', express.static(rpath('styl')))
+  , r.use('/', express.static(rpath('static')))
   , r
   ))(express.Router()))
 

@@ -1,10 +1,12 @@
+import { join } from 'path'
+
 (async () => {
 process.on('unhandledRejection', err => { throw err })
 
 const db = require('knex')(require('./knexfile'))
     , ln = require('lightning-client')(process.env.LN_PATH || require('path').join(process.env.HOME, '.lightning'))
 
-await db.migrate.latest()
+await db.migrate.latest({ directory: join(__dirname, 'migrations') })
 
 const model = require('./model')(db, ln)
     , auth  = require('./lib/auth')('api-token', process.env.API_TOKEN)
