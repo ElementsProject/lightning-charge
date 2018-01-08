@@ -36,13 +36,15 @@ $ docker run -v `pwd`/lightning:/root/.lightning \
              -v `pwd`/.env:/opt/lightning-charge/.env \
              -p 9112:9112 \
              shesek/lightning-charge
-
-# Instead of mounting an `.env` file, configuration options can also be specified directly via `-e`:
-$ docker run [...] -e API_TOKEN=myLongRandomToken -e NODE_ENV=production
 ```
 
-Runs in `testnet` mode by default.
-To run in `regtest` mode, add `-e BITCOIND_OPTS='-regtest' -e LIGHTNINGD_OPTS='--network=regtest'` to the `docker run` command.
+Runs in `testnet` mode by default, set `NETWORK` to override.
+
+If you want to experiment in regtest mode and don't care about persisting data, this should do:
+
+```bash
+$ docker run -e NETWORK=regtest -e API_TOKEN=1 -p 9112:9112 shesek/lightning-charge
+```
 
 ### Client libraries
 
