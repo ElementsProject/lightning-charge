@@ -58,7 +58,7 @@ module.exports = (db, ln) => {
       .where('expires_at', '<', now() - 86400)
       // make sure they're really unpaid
       .then(invs => Promise.all(invs.map(i => ln.listinvoice(i.id))))
-      .then(invs => invs.filter(i => !i[0].complete).map(i => i[0].label))
+      .then(invs => invs.filter(i => i[0] && !i[0].complete).map(i => i[0].label))
       // finally, delete them
       .then(invs => Promise.all(invs.map(delInvoice)))
 
