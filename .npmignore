@@ -1,8 +1,8 @@
 .env
 sqlite.db
-src
-test
-www
+src/
+test/
+www/
 Dockerfile
 .dockerignore
 example.env
