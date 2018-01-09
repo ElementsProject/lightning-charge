@@ -14,6 +14,7 @@
     "prepublishOnly": "npm test && npm run dist"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "basic-auth": "^2.0.0",
     "big.js": "^5.0.3",
     "body-parser": "^1.18.2",
@@ -28,8 +29,7 @@
     "pug": "^2.0.0-rc.4",
     "qrcode": "^1.2.0",
     "sqlite3": "^3.1.13",
-    "superagent": "^3.8.1",
-    "babel-polyfill": "^6.26.0"
+    "superagent": "^3.8.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -37,10 +37,10 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
-    "mocha": "^4.1.0",
-    "supertest": "^3.0.0",
     "get-port-cli": "^1.1.0",
+    "mocha": "^4.1.0",
     "stylus": "^0.54.5",
+    "supertest": "^3.0.0",
     "uglify-js": "^3.3.5"
   }
 }
