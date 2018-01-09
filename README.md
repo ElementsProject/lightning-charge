@@ -25,7 +25,7 @@ Deploy with docker, comes bundled with `bitcoind`+`lightningd`+`charged`:
 $ touch charge.db
 $ docker run -v $HOME/.lightning:/root/.lightning -v $HOME/.bitcoin:/root/.bitcoin \
              -v `pwd`/charge.db:/opt/charged/sqlite.db \
-             -p 9112 -e API_TOKEN=mySecretToken \
+             -p 9112:9112 -e API_TOKEN=mySecretToken \
              shesek/lightning-charge
 ```
 
@@ -34,7 +34,7 @@ Runs in `testnet` mode by default, set `NETWORK` to override.
 If you want to experiment in regtest mode and don't care about persisting data, this should do:
 
 ```bash
-$ docker run -e NETWORK=regtest -e API_TOKEN=myToken -p 9112 shesek/lightning-charge
+$ docker run -e NETWORK=regtest -e API_TOKEN=myToken -p 9112:9112 shesek/lightning-charge
 ```
 
 ### Client libraries
