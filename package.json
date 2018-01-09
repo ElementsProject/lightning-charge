@@ -10,7 +10,8 @@
     "start": "scripts/start.sh",
     "test": "scripts/test.sh",
     "testenv": "scripts/testenv.sh",
-    "prepublish": "babel src -d dist"
+    "dist": "scripts/dist.sh",
+    "prepublishOnly": "npm test && npm run dist"
   },
   "dependencies": {
     "basic-auth": "^2.0.0",
@@ -28,10 +29,7 @@
     "qrcode": "^1.2.0",
     "sqlite3": "^3.1.13",
     "superagent": "^3.8.1",
-    "babel-polyfill": "^6.26.0",
-    "browserify": "^14.5.0",
-    "browserify-middleware": "^8.0.0",
-    "stylus": "^0.54.5"
+    "babel-polyfill": "^6.26.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -41,6 +39,8 @@
     "babel-register": "^6.26.0",
     "mocha": "^4.1.0",
     "supertest": "^3.0.0",
-    "get-port-cli": "^1.1.0"
+    "get-port-cli": "^1.1.0",
+    "stylus": "^0.54.5",
+    "uglify-js": "^3.3.5"
   }
 }

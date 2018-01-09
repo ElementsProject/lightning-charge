@@ -1,3 +1,4 @@
+import fs      from 'fs'
 import path    from 'path'
 import express from 'express'
 import qrcode  from 'qrcode'
@@ -14,13 +15,11 @@ module.exports = (app, payListen) => {
 
   app.locals.formatMsat = msat => moveDec(msat, -8) + ' mBTC'
 
-  app.use('/static', (r => (
-    r.get('/checkout.js', require('browserify-middleware')(rpath('client/checkout.js')))
-  , r.use(require('stylus').middleware({ src: rpath('../styl'), serve: true }))
-  , r.use('/styl', express.static(rpath('../styl')))
-  , r.use('/', express.static(rpath('../static')))
-  , r
-  ))(express.Router()))
+  fs.existsSync(rpath('www')) // comes pre-built in dist/www
+    ? app.use('/static', express.static(rpath('www')))
+
+    : app.use('/static', require('stylus').middleware({ src: rpath('../www'), serve: true }))
+         .use('/static', express.static(rpath('../www')))
 
   app.get('/checkout/:invoice', wrap(async (req, res) => {
     const opt = req.invoice.metadata && req.invoice.metadata.checkout || {}
