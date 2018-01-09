@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eo pipefail
+
 : ${NETWORK:=testnet}
 
 echo "Starting bitcoind"
