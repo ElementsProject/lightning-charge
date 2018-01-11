@@ -3,7 +3,6 @@ import { LightningClient } from 'lightning-client'
 
 const debug = require('debug')('lightning-charge')
 
-// @TODO gracefully recover from connection errors
 class PaymentListener extends EventEmitter {
   constructor(rpcPath, model) {
     super()
