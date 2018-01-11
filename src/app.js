@@ -29,5 +29,4 @@ require('./checkout')(app, payListen)
 app.listen(app.settings.port, app.settings.host, _ =>
   console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`))
 
-
 })()

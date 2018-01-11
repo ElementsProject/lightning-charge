@@ -21,7 +21,7 @@ const args = require('meow')(`
             , 'port': { alias: 'p' }, 'host': { alias: 'i' }, 'node-env' : { alias: 'e' } } }
 ).flags
 
-const envify = k => k.replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase()
+const envify = k => k.replace(/([A-Z])/g, '_$1').toUpperCase()
 
 Object.keys(args).filter(k => k.length > 1)
   .forEach(k => process.env[envify(k)] = args[k])
