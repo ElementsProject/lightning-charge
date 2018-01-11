@@ -30,5 +30,5 @@ WORKDIR /opt/charged
 COPY package*.json ./
 RUN npm install
 COPY . .
-CMD scripts/docker-entrypoint.sh
+CMD bin/docker-entrypoint.sh
 EXPOSE 9112 9735

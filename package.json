@@ -5,13 +5,13 @@
   "repository":  "https://github.com/ElementsProject/lightning-charge",
   "license": "MIT",
   "bin": {
-    "charged": "scripts/charged"
+    "charged": "bin/charged"
   },
   "scripts": {
-    "start": "scripts/start.sh",
-    "test": "scripts/test.sh",
-    "testenv": "scripts/testenv.sh",
-    "dist": "scripts/dist.sh",
+    "start": "bin/start.sh",
+    "test": "bin/test.sh",
+    "testenv": "bin/testenv.sh",
+    "dist": "bin/dist.sh",
     "prepublishOnly": "npm test && npm run dist"
   },
   "dependencies": {
