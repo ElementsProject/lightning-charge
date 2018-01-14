@@ -77,7 +77,7 @@ aliceid=`lna getinfo | jq -r .id`
 lnb connect $aliceid 127.0.0.1 `lna getinfo | jq -r .port` | jq -c . > $dbgout
 
 echo - Setting up channel... > $dbgout
-lnb fundchannel $aliceid 500000 | jq -c . > $dbgout
+lnb fundchannel $aliceid 16777215 | jq -c . > $dbgout
 btc generate 1 > /dev/null
 
 sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -F -n+0 $LN_ALICE_PATH/debug.log)
