@@ -8,6 +8,8 @@ A drop-in solution for accepting lightning payments, built on top of [c-lightnin
 
 - Built-in checkout page, can be iframed or redirected to.
 
+:zap: radically low fees :zap: nano payments :zap: instant confirmations :zap:
+
 ## Getting Started
 
 Setup [bitcoind](https://bitcoin.org/en/full-node#linux-instructions)
@@ -22,7 +24,15 @@ $ charged --api-token mySecretToken # defaults: --ln-path ~/.lightning --db-path
 $ LN_PATH=~/.lightning DB_PATH=charge.db API_TOKEN=mySecretToken PORT=9112 charged
 ```
 
+Your chosen `--api-token` will be used to authenticate requests made to the Lightning Charge REST API.
+
 See `$ charged --help` for the full list of available options.
+
+### Client libraries
+
+Clients libraries are available for [JavaScript](https://github.com/ElementsProject/lightning-charge-client-js)
+and [PHP](https://github.com/ElementsProject/lightning-charge-client-php).
+For other languages, you can use the REST API directly using a standard HTTP library.
 
 ### Docker
 
@@ -43,13 +53,6 @@ If you want to experiment in regtest mode and don't care about persisting data, 
 ```bash
 $ docker run -e NETWORK=regtest -e API_TOKEN=myToken -p 9112:9112 shesek/lightning-charge
 ```
-
-### Client libraries
-
-- [NodeJS client](https://github.com/ElementsProject/lightning-charge-client-js)
-
-- [PHP client](https://github.com/ElementsProject/lightning-charge-client-php)
-
 
 ## REST API
 
@@ -72,7 +75,7 @@ If a currency and amount were provided, they'll be available under `quoted_{curr
 
 `expiry` sets the invoice expiry time in seconds (defaults to one hour).
 `metadata` may contain arbitrary invoice-related meta-data.
-`description` is embedded in the payment request and presented in the user's wallet (keep it short).
+`description` is embedded in the payment request and presented by the user's wallet (keep it short).
 
 Returns `201 Created` and the invoice on success.
 
