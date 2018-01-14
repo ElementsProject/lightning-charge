@@ -34,7 +34,7 @@ alias btc="bitcoin-cli --datadir=$BTC_DIR"
 alias lna="lightning-cli --lightning-dir=$LN_ALICE_PATH"
 alias lnb="lightning-cli --lightning-dir=$LN_BOB_PATH"
 
-echo Creating test envirnoment in $DIR > $dbgout
+echo Setting up test envirnoment in $DIR
 
 # Setup bitcoind
 
