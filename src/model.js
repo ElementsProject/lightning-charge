@@ -2,8 +2,12 @@ import nanoid from 'nanoid'
 import { toMsat } from './lib/exchange-rate'
 
 const debug  = require('debug')('lightning-charge')
-    , format = invoice => ({ ...invoice, completed: !!invoice.completed, metadata: JSON.parse(invoice.metadata) })
+    , status = inv => inv.completed ? 'paid' : inv.expires_at > now() ? 'unpaid' : 'expired'
+    , format = inv => ({ ...inv, completed: !!inv.completed, status: status(inv), metadata: JSON.parse(inv.metadata) })
     , now    = _ => Date.now() / 1000 | 0
+
+// @XXX `completed` is deprecated as a public field and will eventually be hidden
+// from external APIs (but will remain in use internally) in favor of the `status` field.
 
 const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge Invoice'
 
@@ -16,19 +20,20 @@ module.exports = (db, ln) => {
         , lninv    = await ln.invoice(msatoshi, id, description || defaultDesc, expiry)
 
     const invoice = {
-            id, description, metadata, msatoshi
+            id, description, msatoshi
           , quoted_currency: currency, quoted_amount: amount
           , rhash: lninv.rhash, payreq: lninv.bolt11
           , expires_at: lninv.expiry_time, created_at: now()
+          , metadata: JSON.stringify(metadata || null)
           , completed: false
           }
 
     debug('saving invoice:', invoice)
-    await db('invoice').insert({ ...invoice, metadata: JSON.stringify(invoice.metadata || null) })
+    await db('invoice').insert(invoice)
 
     if (webhook) await addHook(id, webhook)
 
-    return invoice
+    return format(invoice)
   }
 
   const listInvoices = _ =>

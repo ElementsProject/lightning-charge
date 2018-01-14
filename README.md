@@ -61,7 +61,7 @@ All endpoints accept and return data in JSON format.
 Authentication is done using HTTP basic authentication headers, with `api-token` as the username and
 the api token (configured with `--api-token`/`-t` or using the `API_TOKEN` environment variable) as the password.
 
-Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `completed_at`, `completed` and `metadata`.
+Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `completed_at`, `metadata` and `status` (one of `unpaid|paid|expired`).
 
 ### `POST /invoice`
 
@@ -81,7 +81,7 @@ Returns `201 Created` and the invoice on success.
 
 ```bash
 $ curl http://charge.ln/invoice -d msatoshi=10000
-{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","completed":false,"rhash":"6823e46a08f50...",
+{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","status":"unpaid","rhash":"6823e46a08f50...",
  "payreq":"lntb100n1pd99d02pp...","created_at":1515369962,"expires_at":1515373562}
 
 # with fiat-denominated amounts
@@ -113,7 +113,7 @@ Get the specified invoice.
 
 ```bash
 $ curl http://charge.ln/invoice/OYwwaOQAPMFvg039gj_Rb
-{"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","quoted_currency":"EUR","quoted_amount":"0.5","completed":false,...}
+{"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","quoted_currency":"EUR","quoted_amount":"0.5","status":"unpaid",...}
 ```
 
 ### `GET /invoice/:id/wait?timeout=[sec]`
@@ -129,7 +129,7 @@ If the invoice is expired and can no longer be paid, returns `410 Gone`.
 ```bash
 $ curl http://charge.ln/invoice/OYwwaOQAPMFvg039gj_Rb/wait?timeout=60
 # zZZZzzZ
-{"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","completed":true,"completed_at":1515371152,...}
+{"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","status":"paid","completed_at":1515371152,...}
 ```
 
 ### `POST /invoice/:id/webhook`
@@ -160,9 +160,9 @@ Returns live invoice payment updates as a [server-sent events](https://streamdat
 ```bash
 $ curl http://charge.ln/payment-stream
 # zzZZzZZ
-data:{"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","completed":true,"completed_at":1515371152,...}
+data:{"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","status":"paid","completed_at":1515371152,...}
 # zZZzzZz
-data:{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","completed":true,"completed_at":1515681209,...}
+data:{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","status":"paid","completed_at":1515681209,...}
 # zZZzzzz...
 ```
 

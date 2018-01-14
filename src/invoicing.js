@@ -8,7 +8,6 @@ module.exports = (app, payListen, model, auth) => {
   app.param('invoice', wrap(async (req, res, next, id) => {
     req.invoice = await fetchInvoice(req.params.invoice)
     if (!req.invoice) return res.sendStatus(404)
-    req.invoice_expired = !req.invoice.completed && req.invoice.expires_at < Date.now()/1000
     next()
   }))
 
@@ -22,12 +21,12 @@ module.exports = (app, payListen, model, auth) => {
     res.status(201).send(await newInvoice(req.body))))
 
   app.get('/invoice/:invoice/wait', auth, wrap(async (req, res) => {
-    if (req.invoice.completed) return res.send(req.invoice)
-    if (req.invoice_expired)   return res.sendStatus(410)
+    if (req.invoice.status == 'paid')    return res.send(req.invoice)
+    if (req.invoice.status == 'expired') return res.sendStatus(410)
 
     const expires_in = req.invoice.expires_at - (Date.now()/1000|0)
         , timeout    = Math.min(+req.query.timeout || 300, expires_in, 1800)
-        , paid       = await payListen.register(req.params.invoice, timeout*1000)
+        , paid       = await payListen.register(req.invoice.id, timeout*1000)
 
     if (paid) res.send(paid)
     else res.sendStatus(timeout == expires_in ? 410 : 402)

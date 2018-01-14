@@ -33,11 +33,11 @@ body: .checkout.container
       else
         h3 #{ formatMsat(msatoshi) }
 
-  if completed
+  if status == 'paid'
     p.thankyou= opt.thank_you || 'Thank you! Your payment has been received.'
     script window.parent != window && window.parent.postMessage({ type: 'completed', invoice: '#{ id }' }, '*')
 
-  else if expired
+  else if status == 'expired'
     p.expired= opt.expired || 'Your invoice has expired. Please try again.'
 
   else

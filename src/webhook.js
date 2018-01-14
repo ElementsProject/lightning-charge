@@ -7,8 +7,8 @@ module.exports = (app, payListen, model, auth) => {
   const { addHook, getHooks, logHook } = model
 
   app.post('/invoice/:invoice/webhook', auth, wrap(async (req, res) => {
-    if (req.invoice.completed) return res.sendStatus(405)
-    if (req.invoice_expired)   return res.sendStatus(410)
+    if (req.invoice.status == 'paid')    return res.sendStatus(405)
+    if (req.invoice.status == 'expired') return res.sendStatus(410)
     await addHook(req.params.invoice, req.body.url)
     res.sendStatus(201)
   }))

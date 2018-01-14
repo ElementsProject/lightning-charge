@@ -24,19 +24,25 @@ module.exports = (app, payListen) => {
   app.get('/checkout/:invoice', wrap(async (req, res) => {
     const opt = req.invoice.metadata && req.invoice.metadata.checkout || {}
 
-    if (req.invoice.completed && opt.redirect_url)
+    if (req.invoice.status == 'paid' && opt.redirect_url)
       return res.redirect(opt.redirect_url)
 
-    res.render('checkout', { ...req.invoice, expired: req.invoice_expired
-                           , qr: await qrcode.toDataURL(`lightning:${req.invoice.payreq}`, { margin: 1 }) })
+    if (req.invoice.status == 'unpaid')
+      res.locals.qr = await qrcode.toDataURL(`lightning:${req.invoice.payreq}`, { margin: 1 })
+
+    res.render('checkout', req.invoice)
   }))
 
   // like /invoice/:invoice/wait, but user-accessible, doesn't reveal the full invoice fields,
   // and with a fixed timeout.
   app.get('/checkout/:invoice/wait', wrap(async (req, res) => {
-    if (req.invoice_expired) return res.sendStatus(410)
-    const completed = (req.invoice.completed || await payListen.register(req.invoice.id, 60000))
-    res.sendStatus(completed ? 204 : 402)
+    if (req.invoice.status == 'paid')    return res.sendStatus(204)
+    if (req.invoice.status == 'expired') return res.sendStatus(410)
+
+    const paid    = await payListen.register(req.invoice.id, 60000)
+        , expired = !paid && req.invoice.expires_at <= Date.now()/1000
+
+    res.sendStatus(paid ? 204 : expired ? 410 : 402)
   }))
 
   app.get('/checkout/:invoice/qr.png', wrap(async (req, res) => {
