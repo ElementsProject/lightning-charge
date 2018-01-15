@@ -22,7 +22,7 @@ module.exports = (db, ln) => {
     const invoice = {
             id, description, msatoshi
           , quoted_currency: currency, quoted_amount: amount
-          , rhash: lninv.rhash, payreq: lninv.bolt11
+          , rhash: lninv.payment_hash, payreq: lninv.bolt11
           , expires_at: lninv.expiry_time, created_at: now()
           , metadata: JSON.stringify(metadata || null)
           , completed: false
