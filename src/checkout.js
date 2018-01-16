@@ -28,7 +28,7 @@ module.exports = (app, payListen) => {
       return res.redirect(opt.redirect_url)
 
     if (req.invoice.status == 'unpaid')
-      res.locals.qr = await qrcode.toDataURL(`lightning:${req.invoice.payreq}`, { margin: 1 })
+      res.locals.qr = await qrcode.toDataURL(`lightning:${req.invoice.payreq}`.toUpperCase(), { margin: 1 })
 
     res.render('checkout', req.invoice)
   }))
@@ -46,6 +46,6 @@ module.exports = (app, payListen) => {
   }))
 
   app.get('/checkout/:invoice/qr.png', wrap(async (req, res) => {
-    qrcode.toFileStream(res.type('png'), `lightning:${req.invoice.payreq}`)
+    qrcode.toFileStream(res.type('png'), `lightning:${req.invoice.payreq}`.toUpperCase())
   }))
 }
