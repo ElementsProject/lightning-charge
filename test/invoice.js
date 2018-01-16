@@ -1,4 +1,5 @@
 const { ok, equal: eq } = require('assert')
+const EventSource = require('eventsource')
 
 describe('Invoice API', function() {
   let charge, lnBob
@@ -125,16 +126,20 @@ describe('Invoice API', function() {
       }, 250)
     )
 
-    it('streams all incoming payments', () =>
-      charge.get('/payment-stream')
-        .parse(sseParser(events => events.length == 2))
-        .expect(({ res: { events } }) => {
-          eq(events.length, 2)
-          ok(events[0].status == 'paid' && events[1].status == 'paid')
-          eq(events[0].msatoshi, '87')
-          eq(events[1].msatoshi, '78')
-        })
-    )
+    it('streams all incoming payments', async () => {
+      const evs  = new EventSource(process.env.CHARGE_URL + '/payment-stream')
+          , msgs = []
+
+      await new Promise(resolve =>
+        evs.on('message', msg => (msgs.push(JSON.parse(msg.data)), msgs.length == 2 && resolve())))
+
+      evs.close()
+
+      eq(msgs.length, 2)
+      ok(msgs[0].status == 'paid' && msgs[1].status == 'paid')
+      eq(msgs[0].msatoshi, '87')
+      eq(msgs[1].msatoshi, '78')
+    })
   })
 
   after(() => {
@@ -142,16 +147,3 @@ describe('Invoice API', function() {
     lnBob.client.end()
   })
 })
-
-// Superagent parser for HTTP server-sent events responses
-// the `testUntil` predicate function determines when to terminate the connection and stop reading
-const sseParser = testUntil => (res, fn) => {
-  res.events = []
-  res.on('data', b => {
-    const s = b.toString()
-    eq(s.substr(0, 5), 'data:')
-    res.events.push(JSON.parse(s.substr(5)))
-    if (testUntil(res.events)) res.req.socket.end()
-  })
-  res.req.socket.on('end', () => fn(null))
-}

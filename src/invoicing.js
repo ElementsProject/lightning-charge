@@ -40,7 +40,7 @@ module.exports = (app, payListen, model, auth) => {
     , 'Connection':    'keep-alive'
     }).flushHeaders()
 
-    const onPay = invoice => res.write(`data:${ JSON.stringify(invoice) }\n\n`)
+    const onPay = inv => res.write(`id:${ inv.pay_index }\ndata:${ JSON.stringify(inv) }\n\n`)
     payListen.on('payment', onPay)
     req.on('close', _ => payListen.removeListener('payment', onPay))
   })

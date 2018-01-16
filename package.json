@@ -38,6 +38,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
+    "eventsource": "^1.0.5",
     "get-port-cli": "^1.1.0",
     "mocha": "^4.1.0",
     "stylus": "^0.54.5",
