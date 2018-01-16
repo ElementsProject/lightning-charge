@@ -12,7 +12,6 @@ trap 'pkill -P $CHARGE_PID && kill `jobs -p` 2> /dev/null' SIGTERM
 if [ -n "$VERBOSE" ]; then
   set -x
   dbgout=/dev/stderr
-  export DEBUG=$DEBUG,lightning-client,lightning-charge
 else
   dbgout=/dev/null
   sedq='--quiet'
@@ -94,7 +93,8 @@ DB_PATH=$CHARGE_DB knex migrate:latest > $DIR/db-migration.log
 
 echo - Starting Lightning Charge API server > $dbgout
 LN_PATH=$LN_ALICE_PATH DB_PATH=$CHARGE_DB API_TOKEN=$CHARGE_TOKEN PORT=$CHARGE_PORT \
-NODE_ENV=test babel-node src/app.js > $DIR/charge.log &
+DEBUG=$DEBUG,lightning-*,knex:query,knex:bindings \
+NODE_ENV=test babel-node src/app.js &> $DIR/charge.log &
 
 CHARGE_PID=$!
 sed $sedq '/HTTP server running/ q' <(tail -F -n+0 $DIR/charge.log 2> /dev/null)
