@@ -30,5 +30,6 @@ WORKDIR /opt/charged
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN ln -s /opt/charged/bin/charged /usr/bin/charged
 CMD bin/docker-entrypoint.sh
 EXPOSE 9112 9735
