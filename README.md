@@ -1,5 +1,9 @@
 # Lightning Charge
 
+[![build status](https://api.travis-ci.org/ElementsProject/lightning-charge.svg)](https://travis-ci.org/ElementsProject/lightning-charge)
+[![npm release](https://img.shields.io/npm/v/lightning-charge.svg)](https://www.npmjs.com/package/lightning-charge)
+
+
 A drop-in solution for accepting lightning payments, built on top of [c-lightning](https://github.com/ElementsProject/lightning).
 
 - Simple HTTP REST API, optimized for developer friendliness and ease of integration. Near-zero configuration.
