@@ -1,14 +1,14 @@
-FROM ubuntu:17.04
+FROM ubuntu:16.04
 
 ENV LIGHTNINGD_VERSION=master
 ENV BITCOIN_PPA_KEY=C70EF1F0305A1ADB9986DBD8D46F45428842CE5E
 
-RUN apt-get update && apt-get install -y --no-install-recommends git curl ca-certificates jq dirmngr
+RUN apt-get update && apt-get install -y --no-install-recommends git curl ca-certificates jq
 
 # bitcoind
 RUN gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys $BITCOIN_PPA_KEY && \
     gpg --export --armor $BITCOIN_PPA_KEY | apt-key add - && \
-    echo deb http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu zesty main | tee /etc/apt/sources.list.d/bitcoin.list && \
+    echo deb http://ppa.launchpad.net/bitcoin/bitcoin/ubuntu xenial main | tee /etc/apt/sources.list.d/bitcoin.list && \
     apt-get update -o Dir::Etc::sourcelist=sources.list.d/bitcoin.list -o Dir::Etc::sourceparts=- -o APT::Get::List-Cleanup=0 && \
     apt-get install -y bitcoind
 
@@ -21,7 +21,7 @@ RUN apt-get install -y --no-install-recommends autoconf automake build-essential
 
 # nodejs 8
 RUN curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
-    echo deb http://deb.nodesource.com/node_8.x zesty main | tee /etc/apt/sources.list.d/nodesource.list && \
+    echo deb http://deb.nodesource.com/node_8.x xenial main | tee /etc/apt/sources.list.d/nodesource.list && \
     apt-get update -o Dir::Etc::sourcelist=sources.list.d/nodesource.list -o Dir::Etc::sourceparts=- -o APT::Get::List-Cleanup=0 && \
     apt-get install -y nodejs
 
