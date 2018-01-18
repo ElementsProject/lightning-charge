@@ -148,9 +148,9 @@ If the invoice is already paid, returns `405 Method Not Allowed`. If the invoice
 
 For security reasons, the provided `url` should contain a secret token used to verify the authenticity of the request
 (see an example HMAC-based implementation at woocommerce-gateway-lightning
-[here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/4051a70147a01b4387598a9facd9c00cae4981f8/woocommerce-gateway-lightning.php#L102-L103),
-[here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/4051a70147a01b4387598a9facd9c00cae4981f8/woocommerce-gateway-lightning.php#L182-L193)
-and [here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/4051a70147a01b4387598a9facd9c00cae4981f8/woocommerce-gateway-lightning.php#L119)).
+[here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/84592d7bcfc41db129b02d1927a6060a05c5c11e/woocommerce-gateway-lightning.php#L214-L225),
+[here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/84592d7bcfc41db129b02d1927a6060a05c5c11e/woocommerce-gateway-lightning.php#L131-L134)
+and [here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/84592d7bcfc41db129b02d1927a6060a05c5c11e/woocommerce-gateway-lightning.php#L109-L115)).
 
 ```bash
 $ curl http://charge.ln/invoice/OYwwaOQAPMFvg039gj_Rb/webhook -d url=http://example.com/callback
