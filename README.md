@@ -172,7 +172,7 @@ data:{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","status":"paid","completed
 
 ## Tests
 
-Make sure `bitcoind`, `bitcoin-cli`, `lightningd`, `lightnin-cli`
+Make sure `bitcoind`, `bitcoin-cli`, `lightningd`, `lightning-cli`
 and [`jq`](https://stedolan.github.io/jq/download/) are in your `PATH`,
 then run `$ npm test`.
 This will setup a temporary testing environment with a bitcoind regtest node
