@@ -4,10 +4,12 @@ import request from 'superagent'
 const FIXED_RATES    = { BTC: 1 }
     , BTC_MSAT_RATIO = big('100000000000')
 
+const enc = encodeURIComponent
+
 // Fetch current exchange rate from BitcoinAverage
 // @TODO cache results?
 const getRate = currency =>
-  request.get(`https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC&fiat=${currency}`)
+  request.get(`https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC&fiat=${enc(currency)}`)
     .then(res => res.body['BTC'+currency].last)
     .catch(err => Promise.reject(err.status == 404 ? new Error('Unknown currency: '+currency) : err))
 
