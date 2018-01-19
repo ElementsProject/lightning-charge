@@ -43,10 +43,11 @@ For other languages, you can use the REST API directly using a standard HTTP lib
 Deploy with docker, comes bundled with `bitcoind`+`lightningd`+`charged`:
 
 ```bash
-$ touch charge.db
-$ docker run -v $HOME/.lightning:/root/.lightning -v $HOME/.bitcoin:/root/.bitcoin \
-             -v `pwd`/charge.db:/opt/charged/sqlite.db \
-             -p 9112:9112 -e API_TOKEN=mySecretToken \
+$ mkdir data
+$ docker run -v `pwd`/data:/data \
+             -u `id -u` \
+             -p 9112:9112 \
+             -e API_TOKEN=mySecretToken \
              shesek/lightning-charge
 ```
 

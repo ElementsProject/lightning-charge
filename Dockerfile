@@ -2,8 +2,10 @@ FROM ubuntu:16.04
 
 ENV LIGHTNINGD_VERSION=master
 ENV BITCOIN_PPA_KEY=C70EF1F0305A1ADB9986DBD8D46F45428842CE5E
+ENV HOME=/tmp
 
 RUN apt-get update && apt-get install -y --no-install-recommends git curl ca-certificates jq
+RUN mkdir /data
 
 # bitcoind
 RUN gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys $BITCOIN_PPA_KEY && \
