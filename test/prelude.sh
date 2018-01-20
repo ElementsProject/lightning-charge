@@ -59,7 +59,9 @@ btc generate 432 > /dev/null
 
 echo Setting up lightningd >&2
 
-LN_OPTS="$LN_OPTS --network=regtest --bitcoind-poll=1s --bitcoin-datadir=$BTC_DIR --log-file=debug.log"
+LN_OPTS="$LN_OPTS --network=regtest --bitcoind-poll=1s --bitcoin-datadir=$BTC_DIR --log-level=debug --log-file=debug.log
+  --allow-deprecated-apis="$([ -n "$ALLOW_DEPRECATED" ] && echo true || echo false)
+
 lightningd $LN_OPTS --port=`get-port` --lightning-dir=$LN_ALICE_PATH  &> $dbgout &
 lightningd $LN_OPTS --port=`get-port` --lightning-dir=$LN_BOB_PATH &> $dbgout &
 
@@ -68,8 +70,9 @@ sed $sedq '/Hello world/ q' <(tail -F -n+0 $LN_ALICE_PATH/debug.log 2> /dev/null
 sed $sedq '/Hello world/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log 2> /dev/null)
 
 echo - Funding lightning wallet... > $dbgout
-lnb addfunds $(btc getrawtransaction $(btc sendtoaddress $(lnb newaddr | jq -r .address) 1)) | jq -c . > $dbgout
+btc sendtoaddress $(lnb newaddr | jq -r .address) 1 > $dbgout
 btc generate 1 > /dev/null
+sed $sedq '/Owning output [0-9]/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log)
 
 echo - Connecting peers... > $dbgout
 aliceid=`lna getinfo | jq -r .id`
@@ -79,10 +82,10 @@ echo - Setting up channel... > $dbgout
 lnb fundchannel $aliceid 16777215 | jq -c . > $dbgout
 btc generate 1 > /dev/null
 
-sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -F -n+0 $LN_ALICE_PATH/debug.log)
-sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log)
+sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -n+0 $LN_ALICE_PATH/debug.log)
+sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -n+0 $LN_BOB_PATH/debug.log)
 
-[[ -n "$VERBOSE" ]] && lna getpeers | jq -c .peers[0]
+[[ -n "$VERBOSE" ]] && lna listpeers | jq -c .peers[0]
 
 # Setup Lightning Charge
 

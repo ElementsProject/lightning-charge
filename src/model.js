@@ -2,12 +2,14 @@ import nanoid from 'nanoid'
 import { toMsat } from './lib/exchange-rate'
 
 const debug  = require('debug')('lightning-charge')
-    , status = inv => inv.completed ? 'paid' : inv.expires_at > now() ? 'unpaid' : 'expired'
-    , format = inv => ({ ...inv, completed: !!inv.completed, status: status(inv), metadata: JSON.parse(inv.metadata) })
+    , status = inv => inv.pay_index ? 'paid' : inv.expires_at > now() ? 'unpaid' : 'expired'
+    , format = inv => ({ ...inv, completed: !!inv.pay_index, completed_at: inv.paid_at
+                       , status: status(inv), metadata: JSON.parse(inv.metadata) })
     , now    = _ => Date.now() / 1000 | 0
 
-// @XXX `completed` is deprecated as a public field and will eventually be hidden
-// from external APIs (but will remain in use internally) in favor of the `status` field.
+// @XXX the `completed` and `completed_at` field are deprecated
+// in favor `status` and `paid_at`, and will eventually be removed
+// from the public API.
 
 const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge Invoice'
 
@@ -23,9 +25,8 @@ module.exports = (db, ln) => {
             id, description, msatoshi
           , quoted_currency: currency, quoted_amount: amount
           , rhash: lninv.payment_hash, payreq: lninv.bolt11
-          , expires_at: lninv.expiry_time, created_at: now()
+          , expires_at: lninv.expires_at, created_at: now()
           , metadata: JSON.stringify(metadata || null)
-          , completed: false
           }
 
     debug('saving invoice:', invoice)
@@ -42,30 +43,27 @@ module.exports = (db, ln) => {
   const fetchInvoice = id =>
       db('invoice').where({ id }).first().then(r => r && format(r))
 
-  const delInvoice = async id => {
-    await ln.delinvoice(id)
-    await db('invoice').where({ id }).delete()
-  }
-
-  const markPaid = (id, pay_index) =>
-    db('invoice').where({ id, completed: false })
-                 .update({ completed: true, completed_at: now(), pay_index })
+  const markPaid = (id, pay_index, paid_at) =>
+    db('invoice').where({ id, pay_index: null })
+                 .update({ pay_index, paid_at })
 
   const getLastPaid = _ =>
-    db('invoice').where({ completed: true })
-                 .max('pay_index as index')
+    db('invoice').max('pay_index as index')
                  .first().then(r => r.index)
 
   const delExpired = _ =>
     db('invoice').select('id')
       // fetch unpaid invoices expired over a day ago
-      .where({ completed: false })
+      .where({ pay_index: null })
       .where('expires_at', '<', now() - 86400)
-      // make sure they're really unpaid
-      .then(invs => Promise.all(invs.map(i => ln.listinvoice(i.id))))
-      .then(invs => invs.filter(i => i[0] && !i[0].complete).map(i => i[0].label))
-      // finally, delete them
-      .then(invs => Promise.all(invs.map(delInvoice)))
+      // delete from c-lightning
+      .then(invs => Promise.all(invs.map(inv =>
+        ln.delinvoice(inv.id, 'expired')
+          .then(deleted => deleted.label)
+          .catch(_ => null))))
+      .then(ids => ids.filter(id => id != null))
+      // delete locally
+      .then(ids => ids.length && db('invoice').whereIn('id', ids).delete())
 
   const addHook = (invoice_id, url) =>
     db('invoice_webhook').insert({ invoice_id, url, created_at: now() })

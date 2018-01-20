@@ -7,7 +7,7 @@ meta(name='viewport', content='width=device-width, initial-scale=1')
 
 meta(name='invoice-id', content=id)
 
-if !completed
+if status == 'unpaid'
   meta(name='invoice-poll-url', content=settings.url+'checkout/'+id+'/wait')
   meta(name='invoice-expiry', content=expires_at)
 
@@ -40,7 +40,7 @@ body: .checkout.container
   else if status == 'expired'
     p.expired= opt.expired || 'Your invoice has expired. Please try again.'
 
-  else
+  else if status == 'unpaid'
     .row
       .qr.col-sm-4: img(src=qr)
       .pay.col-sm-8

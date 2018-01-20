@@ -14,9 +14,9 @@ class PaymentListener extends EventEmitter {
   }
 
   async pollNext(last_index) {
-    const { label: id, pay_index } = await this.ln.waitanyinvoice(last_index)
+    const { label: id, pay_index, paid_at } = await this.ln.waitanyinvoice(last_index)
 
-    if (await this.model.markPaid(id, pay_index)) {
+    if (await this.model.markPaid(id, pay_index, paid_at)) {
       const invoice = await this.model.fetchInvoice(id)
       debug('invoice %s paid: %o', invoice.id, invoice)
       this.emit('payment', invoice)
