@@ -91,10 +91,6 @@ sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -n+0 $
 
 echo Setting up charged >&2
 
-echo - Initializing sqlite schema > $dbgout
-DB_PATH=$CHARGE_DB knex migrate:latest > $DIR/db-migration.log
-
-echo - Starting Lightning Charge API server > $dbgout
 LN_PATH=$LN_ALICE_PATH DB_PATH=$CHARGE_DB API_TOKEN=$CHARGE_TOKEN PORT=$CHARGE_PORT \
 DEBUG=$DEBUG,lightning-*,knex:query,knex:bindings \
 NODE_ENV=test babel-node src/app.js &> $DIR/charge.log &
