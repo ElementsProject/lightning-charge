@@ -1,5 +1,4 @@
 const { ok, equal: eq } = require('assert')
-const EventSource = require('eventsource')
 
 describe('Invoice API', function() {
   let charge, lnBob
@@ -113,32 +112,6 @@ describe('Invoice API', function() {
       if (timeLeft > 0) await new Promise(resolve => setTimeout(resolve, timeLeft))
       await charge.get(`/invoice/${ inv3.id }/wait`)
         .expect(410)
-    })
-  })
-
-  describe('GET /payment-stream', function() {
-    this.slow(1000)
-
-    before(() =>
-      setTimeout(async () => {
-        lnBob.pay(await mkInvoice({ msatoshi: '87' }).then(inv => inv.payreq))
-        lnBob.pay(await mkInvoice({ msatoshi: '78' }).then(inv => inv.payreq))
-      }, 250)
-    )
-
-    it('streams all incoming payments', async () => {
-      const evs  = new EventSource(process.env.CHARGE_URL + '/payment-stream')
-          , msgs = []
-
-      await new Promise(resolve =>
-        evs.on('message', msg => (msgs.push(JSON.parse(msg.data)), msgs.length == 2 && resolve())))
-
-      evs.close()
-
-      eq(msgs.length, 2)
-      ok(msgs[0].status == 'paid' && msgs[1].status == 'paid')
-      eq(msgs[0].msatoshi, '87')
-      eq(msgs[1].msatoshi, '78')
     })
   })
 

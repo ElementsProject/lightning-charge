@@ -23,9 +23,11 @@ import { join } from 'path'
   app.use(require('body-parser').urlencoded({ extended: true }))
 
   require('./invoicing')(app, payListen, model, auth)
+  require('./checkout')(app, payListen)
+
+  require('./sse')(app, payListen, auth)
   require('./webhook')(app, payListen, model, auth)
   require('./websocket')(app, payListen)
-  require('./checkout')(app, payListen)
 
   const server = app.listen(app.settings.port, app.settings.host, _ => {
     console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`)
