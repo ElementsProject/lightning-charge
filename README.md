@@ -32,12 +32,6 @@ Your chosen `--api-token` will be used to authenticate requests made to the Ligh
 
 See `$ charged --help` for the full list of available options.
 
-### Client libraries
-
-Clients libraries are available for [JavaScript](https://github.com/ElementsProject/lightning-charge-client-js)
-and [PHP](https://github.com/ElementsProject/lightning-charge-client-php).
-For other languages, you can use the REST API directly using a standard HTTP library.
-
 ### Docker
 
 Deploy with docker, comes bundled with `bitcoind`+`lightningd`+`charged`:
@@ -58,6 +52,12 @@ If you want to experiment in regtest mode and don't care about persisting data, 
 ```bash
 $ docker run -e NETWORK=regtest -e API_TOKEN=myToken -p 9112:9112 shesek/lightning-charge
 ```
+
+### Client libraries
+
+Clients libraries are available for [JavaScript](https://github.com/ElementsProject/lightning-charge-client-js)
+and [PHP](https://github.com/ElementsProject/lightning-charge-client-php).
+For other languages, you can use the REST API directly using a standard HTTP library.
 
 ## REST API
 
