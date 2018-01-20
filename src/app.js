@@ -24,8 +24,11 @@ import { join } from 'path'
 
   require('./invoicing')(app, payListen, model, auth)
   require('./webhook')(app, payListen, model, auth)
+  require('./websocket')(app, payListen)
   require('./checkout')(app, payListen)
 
-  app.listen(app.settings.port, app.settings.host, _ =>
-    console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`))
+  const server = app.listen(app.settings.port, app.settings.host, _ => {
+    console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`)
+    app.emit('listening', server)
+  })
 })()

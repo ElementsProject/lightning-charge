@@ -8,7 +8,7 @@ A drop-in solution for accepting lightning payments, built on top of [c-lightnin
 
 - Simple HTTP REST API, optimized for developer friendliness and ease of integration. Near-zero configuration.
 
-- Supports invoice metadata, fiat currency conversion, web hooks, long-polling and streaming payment updates.
+- Supports invoice metadata, fiat currency conversion, long polling, web hooks, websockets and server-sent-events.
 
 - Built-in checkout page, can be iframed or redirected to.
 
@@ -162,7 +162,7 @@ Created
 
 ### `GET /payment-stream`
 
-Returns live invoice payment updates as a [server-sent events](https://streamdata.io/blog/server-sent-events/) stream.
+Subscribe to payment updates as a [server-sent events](https://streamdata.io/blog/server-sent-events/) stream.
 
 ```bash
 $ curl http://charge.ln/payment-stream
@@ -171,6 +171,21 @@ data:{"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","status":"paid","paid_at
 # zZZzzZz
 data:{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","status":"paid","paid_at":1515681209,...}
 # zZZzzzz...
+```
+
+## WebSocket API
+
+### `GET /ws`
+
+Subscribe to payment updates over WebSocket.
+
+```javascript
+const ws = new WebSocket('http://api-token:[TOKEN]@charge.ln/ws')
+
+ws.on('message', msg => {
+  const inv = JSON.parse(msg)
+  console.log('Paid invoice:', inv)
+})
 ```
 
 ## Tests
