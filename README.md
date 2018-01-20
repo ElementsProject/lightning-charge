@@ -37,10 +37,8 @@ See `$ charged --help` for the full list of available options.
 Deploy with docker, comes bundled with `bitcoind`+`lightningd`+`charged`:
 
 ```bash
-$ mkdir data
-$ docker run -v `pwd`/data:/data \
-             -u `id -u` \
-             -p 9112:9112 \
+$ mkdir data # make sure to create the folder _before_ running docker
+$ docker run -u `id -u` -v `pwd`/data:/data -p 9112:9112 \
              -e API_TOKEN=mySecretToken \
              shesek/lightning-charge
 ```
@@ -50,7 +48,7 @@ Runs in `testnet` mode by default, set `NETWORK` to override.
 If you want to experiment in regtest mode and don't care about persisting data, this should do:
 
 ```bash
-$ docker run -e NETWORK=regtest -e API_TOKEN=myToken -p 9112:9112 shesek/lightning-charge
+$ docker run -e NETWORK=regtest -e API_TOKEN=mySecretToken -p 9112:9112 shesek/lightning-charge
 ```
 
 ### Client libraries
@@ -68,7 +66,10 @@ the api token (configured with `--api-token`/`-t` or using the `API_TOKEN` envir
 
 Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `paid_at`, `metadata` and `status` (one of `unpaid|paid|expired`).
 
-The `completed` (replaced with `status`) and `completed_at` (renamed to `paid_at`) fields are deprecated and will eventually be removed.
+The `completed` (replaced with `status`) and `completed_at` (renamed to `paid_at`) fields are deprecated,
+but currently still available. They will eventually be removed.
+
+The code samples below assumes you've set `CHARGE=http://api-token:mySecretToken@localhost:9112`.
 
 ### `POST /invoice`
 
@@ -76,7 +77,7 @@ Create a new invoice.
 
 *Body parameters*: `msatoshi`, `currency`, `amount`, `description`, `expiry` and `metadata`.
 
-You can specify the amount as `msatoshi` (1 msatoshi = 0.001 satoshis),
+You can specify the amount as `msatoshi` (1 satoshi = 1000 msatoshis),
 or provide a `currency` and `amount` to be converted according to the current exchange rates.
 If a currency and amount were provided, they'll be available under `quoted_{currency|amount}`.
 
@@ -87,21 +88,21 @@ If a currency and amount were provided, they'll be available under `quoted_{curr
 Returns `201 Created` and the invoice on success.
 
 ```bash
-$ curl http://charge.ln/invoice -d msatoshi=10000
+$ curl $CHARGE/invoice -d msatoshi=10000
 {"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","status":"unpaid","rhash":"6823e46a08f50...",
  "payreq":"lntb100n1pd99d02pp...","created_at":1515369962,"expires_at":1515373562}
 
 # with fiat-denominated amounts
-$ curl http://charge.ln/invoice -d currency=EUR -d amount=0.5
+$ curl $CHARGE/invoice -d currency=EUR -d amount=0.5
 {"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","quoted_currency":"EUR","quoted_amount":"0.5",...}
 
 # with metadata as application/json
-$ curl http://charge.ln/invoice -H 'Content-Type: application/json' \
+$ curl $CHARGE/invoice -H 'Content-Type: application/json' \
   -d '{"msatoshi":7000,"metadata":{"customer_id":9817,"products":[593,182]}}'
 {"id":"PLKV1f8B7sth7w2OeDOt_","msatoshi":"7000","metadata":{"customer_id":9817,"products":[593,182]},...}
 
 # with metadata as application/x-www-form-urlencoded
-$ curl http://charge.ln/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
+$ curl $CHARGE/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
 {"id":"58H9eoerBpKML9FvnMQtG","msatoshi":"5000","metadata":{"customer_id":"9817","product_id":"7189"},...}
 ```
 
@@ -110,7 +111,7 @@ $ curl http://charge.ln/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -
 List all invoices.
 
 ```bash
-$ curl http://charge.ln/invoices
+$ curl $CHARGE/invoices
 [{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000",...},{"id":"PLKV1f8B7sth7w2OeDOt_","msatoshi":"7000"},...]
 ```
 
@@ -119,7 +120,7 @@ $ curl http://charge.ln/invoices
 Get the specified invoice.
 
 ```bash
-$ curl http://charge.ln/invoice/OYwwaOQAPMFvg039gj_Rb
+$ curl $CHARGE/invoice/OYwwaOQAPMFvg039gj_Rb
 {"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","quoted_currency":"EUR","quoted_amount":"0.5","status":"unpaid",...}
 ```
 
@@ -134,7 +135,7 @@ If `timeout` (defaults to 30s) is reached before the invoice is paid, returns `4
 If the invoice is expired and can no longer be paid, returns `410 Gone`.
 
 ```bash
-$ curl http://charge.ln/invoice/OYwwaOQAPMFvg039gj_Rb/wait?timeout=60
+$ curl $CHARGE/invoice/OYwwaOQAPMFvg039gj_Rb/wait?timeout=60
 # zZZZzzZ
 {"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","status":"paid","paid_at":1515371152,...}
 ```
@@ -156,7 +157,7 @@ For security reasons, the provided `url` should contain a secret token used to v
 and [here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/84592d7bcfc41db129b02d1927a6060a05c5c11e/woocommerce-gateway-lightning.php#L109-L115)).
 
 ```bash
-$ curl http://charge.ln/invoice/OYwwaOQAPMFvg039gj_Rb/webhook -d url=http://example.com/callback
+$ curl $CHARGE/invoice/OYwwaOQAPMFvg039gj_Rb/webhook -d url=http://example.com/callback
 Created
 ```
 
@@ -165,7 +166,7 @@ Created
 Subscribe to payment updates as a [server-sent events](https://streamdata.io/blog/server-sent-events/) stream.
 
 ```bash
-$ curl http://charge.ln/payment-stream
+$ curl $CHARGE/payment-stream
 # zzZZzZZ
 data:{"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","status":"paid","paid_at":1515371152,...}
 # zZZzzZz
