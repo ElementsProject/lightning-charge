@@ -16,8 +16,7 @@ A drop-in solution for accepting lightning payments, built on top of [c-lightnin
 
 ## Getting Started
 
-Setup [bitcoind](https://bitcoin.org/en/full-node#linux-instructions)
-and [c-lightning](https://github.com/ElementsProject/lightning#getting-started), then:
+Setup [c-lightning](https://github.com/ElementsProject/lightning#getting-started) and nodejs (v7.6 or newer), then:
 
 ```bash
 $ npm install -g lightning-charge
