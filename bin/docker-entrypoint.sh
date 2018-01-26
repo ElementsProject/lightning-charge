@@ -22,5 +22,5 @@ echo "Waiting for lightningd to startup"
 sed '/Hello world/ q' <(tail -F -n+0 $LN_PATH/debug.log 2> /dev/null)
 
 echo "Starting Lightning Charge"
-HOST=0.0.0.0 DEBUG=$DEBUG,lightning-charge,lightning-client,knex:query,knex:bindings,superagent BABEL_DISABLE_CACHE=1 \
+HOST=0.0.0.0 DEBUG=$DEBUG,lightning-charge,lightning-client,knex:query,knex:bindings \
 ./bin/charged $@ $CHARGED_OPTS
