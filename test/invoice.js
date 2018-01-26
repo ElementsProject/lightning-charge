@@ -88,6 +88,19 @@ describe('Invoice API', function() {
           eq(body.completed, false) // to be deprecated
         })
     )
+
+    describe('msatoshi_received', () => {
+      let inv
+      before(async () => {
+        inv = await mkInvoice()
+        await lnBob.pay(inv.payreq, 432)
+      })
+      it('contains the actual amount paid', () =>
+        charge.get(`/invoice/${ inv.id }`)
+          .expect(200)
+          .expect(r => eq(r.body.msatoshi_received, '432'))
+      )
+    })
   })
 
   describe('GET /invoice/:invoice/wait', function() {

@@ -14,9 +14,9 @@ class PaymentListener extends EventEmitter {
   }
 
   async pollNext(last_index) {
-    const { label: id, pay_index, paid_at } = await this.ln.waitanyinvoice(last_index)
+    const { label: id, pay_index, paid_at, msatoshi_received } = await this.ln.waitanyinvoice(last_index)
 
-    if (await this.model.markPaid(id, pay_index, paid_at)) {
+    if (await this.model.markPaid(id, pay_index, paid_at, msatoshi_received)) {
       const invoice = await this.model.fetchInvoice(id)
       debug('invoice %s paid: %o', invoice.id, invoice)
       this.emit('payment', invoice)
@@ -29,7 +29,7 @@ class PaymentListener extends EventEmitter {
   }
 
   register(id, timeout) {
-    debug('register for %s', id)
+    debug('register(%s)', id)
     return new Promise((resolve, reject) => {
 
       const onPay = invoice => {

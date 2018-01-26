@@ -47,11 +47,11 @@ module.exports = (db, ln) => {
     db('invoice').then(rows => rows.map(format))
 
   const fetchInvoice = id =>
-      db('invoice').where({ id }).first().then(r => r && format(r))
+    db('invoice').where({ id }).first().then(r => r && format(r))
 
-  const markPaid = (id, pay_index, paid_at) =>
+  const markPaid = (id, pay_index, paid_at, msatoshi_received) =>
     db('invoice').where({ id, pay_index: null })
-                 .update({ pay_index, paid_at })
+                 .update({ pay_index, paid_at, msatoshi_received })
 
   const getLastPaid = _ =>
     db('invoice').max('pay_index as index')
