@@ -9,6 +9,8 @@ export BTC_PATH=/data/bitcoin
 : ${LIGHTNINGD_OPT:=--log-level=debug}
 : ${BITCOIND_OPT:=-debug=rpc}
 
+[[ "$NETWORK" == "mainnet" ]] && NETWORK=bitcoin
+
 mkdir -p $BTC_PATH $LN_PATH
 
 if [ -z "$SKIP_BITCOIND" ]; then
