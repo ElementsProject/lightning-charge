@@ -4,12 +4,18 @@ import { toMsat } from './lib/exchange-rate'
 const debug  = require('debug')('lightning-charge')
     , status = inv => inv.pay_index ? 'paid' : inv.expires_at > now() ? 'unpaid' : 'expired'
     , format = inv => ({ ...inv, completed: !!inv.pay_index, completed_at: inv.paid_at
-                       , status: status(inv), metadata: JSON.parse(inv.metadata) })
+                       , status: status(inv), msatoshi: (inv.msatoshi || null), metadata: JSON.parse(inv.metadata) })
     , now    = _ => Date.now() / 1000 | 0
 
 // @XXX the `completed` and `completed_at` field are deprecated
 // in favor `status` and `paid_at`, and will eventually be removed
 // from the public API.
+
+// @XXX invoices that accept any amount are stored as msatoshi='' (empty string)
+// and converted to null when formatted. this is due to sqlite's lack of support
+// for ALTER TABLE, which makes dropping the NOT NULL constraint complicated
+// (requires creating a new table, copying over the data and replacing the old one).
+// This will eventually be done in a future release.
 
 const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge Invoice'
 
@@ -18,8 +24,8 @@ module.exports = (db, ln) => {
     const { currency, amount, expiry, description, metadata, webhook } = props
 
     const id       = nanoid()
-        , msatoshi = props.msatoshi ? ''+props.msatoshi : await toMsat(currency, amount)
-        , lninv    = await ln.invoice(msatoshi, id, description || defaultDesc, expiry)
+        , msatoshi = props.msatoshi ? ''+props.msatoshi : currency ? await toMsat(currency, amount) : ''
+        , lninv    = await ln.invoice(msatoshi || 'any', id, description || defaultDesc, expiry)
 
     const invoice = {
             id, description, msatoshi

@@ -48,6 +48,12 @@ describe('Invoice API', function() {
         .expect(201)
         .expect(r => r.body.expires_at*1000 - Date.now() < 5000)
     )
+
+    it('can create invoices that accept any amount', () => {
+      charge.post('/invoice')
+        .expect(201)
+        .expect(r => r.body.msatoshi == null)
+    })
   })
 
   const mkInvoice = props =>

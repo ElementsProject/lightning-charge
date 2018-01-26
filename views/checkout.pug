@@ -26,12 +26,13 @@ body: .checkout.container
     .desc.col-sm-6
       h3= opt.title || 'Lightning Payment'
       h4= opt.desc || 'Pay with Lightning'
-    .amounts.col-sm-6
-      if quoted_currency
-        h3 #{ quoted_amount } #{ quoted_currency }
-        h4 #{ formatMsat(msatoshi) }
-      else
-        h3 #{ formatMsat(msatoshi) }
+    if msatoshi
+      .amounts.col-sm-6
+        if quoted_currency
+          h3 #{ quoted_amount } #{ quoted_currency }
+          h4 #{ formatMsat(msatoshi) }
+        else
+          h3 #{ formatMsat(msatoshi) }
 
   if status == 'paid'
     p.thankyou= opt.thank_you || 'Thank you! Your payment has been received.'

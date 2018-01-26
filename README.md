@@ -87,21 +87,25 @@ If a currency and amount were provided, they'll be available under `quoted_{curr
 Returns `201 Created` and the invoice on success.
 
 ```bash
-$ curl $CHARGE/invoice -d msatoshi=10000
+$ curl -X POST $CHARGE/invoice -d msatoshi=10000
 {"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","status":"unpaid","rhash":"6823e46a08f50...",
  "payreq":"lntb100n1pd99d02pp...","created_at":1515369962,"expires_at":1515373562}
 
 # with fiat-denominated amounts
-$ curl $CHARGE/invoice -d currency=EUR -d amount=0.5
+$ curl -X POST $CHARGE/invoice -d currency=EUR -d amount=0.5
 {"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","quoted_currency":"EUR","quoted_amount":"0.5",...}
 
+# without amount (accept all payments)
+$ curl -X POST $CHARGE/invoice
+{"id":"W8CF0UqY7qfAHCfnchqk9","msatoshi":null,...}
+
 # with metadata as application/json
-$ curl $CHARGE/invoice -H 'Content-Type: application/json' \
+$ curl -X POST $CHARGE/invoice -H 'Content-Type: application/json' \
   -d '{"msatoshi":7000,"metadata":{"customer_id":9817,"products":[593,182]}}'
 {"id":"PLKV1f8B7sth7w2OeDOt_","msatoshi":"7000","metadata":{"customer_id":9817,"products":[593,182]},...}
 
 # with metadata as application/x-www-form-urlencoded
-$ curl $CHARGE/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
+$ curl -X POST $CHARGE/invoice -d msatoshi=5000 -d metadata[customer_id]=9817 -d metadata[product_id]=7189
 {"id":"58H9eoerBpKML9FvnMQtG","msatoshi":"5000","metadata":{"customer_id":"9817","product_id":"7189"},...}
 ```
 
@@ -156,7 +160,7 @@ For security reasons, the provided `url` should contain a secret token used to v
 and [here](https://github.com/ElementsProject/woocommerce-gateway-lightning/blob/84592d7bcfc41db129b02d1927a6060a05c5c11e/woocommerce-gateway-lightning.php#L109-L115)).
 
 ```bash
-$ curl $CHARGE/invoice/OYwwaOQAPMFvg039gj_Rb/webhook -d url=http://example.com/callback
+$ curl -X POST $CHARGE/invoice/OYwwaOQAPMFvg039gj_Rb/webhook -d url=http://example.com/callback
 Created
 ```
 
