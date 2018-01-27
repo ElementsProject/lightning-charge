@@ -50,6 +50,53 @@ If you want to experiment in regtest mode and don't care about persisting data, 
 $ docker run -e NETWORK=regtest -e API_TOKEN=mySecretToken -p 9112:9112 shesek/lightning-charge
 ```
 
+If this image is used inside a docker-compose already having its own bitcoin core node, you need to configure the following environment variables:
+
+* `BITCOIND_HOST`: The host of the bitcoin RPC server.
+* `SKIP_BITCOIND`: Set to `1` so this container does not use its internal bitcoind.
+
+Then you need to map the datadir volume of the bitcoin core container to `/root/.bitcoin`.
+
+Example of `docker-compose.yml` file using this technique:
+
+```
+version: "3"
+
+services:
+  lightning-charged:
+    restart: always
+    image: shesek/lightning-charge
+    environment:
+      NETWORK: ${NBITCOIN_NETWORK:-regtest}
+      API_TOKEN: ${CHARGED_API_TOKEN}
+      SKIP_BITCOIND: 1
+      BITCOIND_HOST: bitcoind
+    volumes:
+      - "bitcoin_datadir:/root/.bitcoin"
+      - "charged_datadir:/data"
+    links:
+      - bitcoind
+
+  bitcoind:
+    restart: always
+    image: nicolasdorier/docker-bitcoin:0.15.0.1
+    environment:
+      BITCOIN_EXTRA_ARGS: |
+        rpcport=43782
+        ${NBITCOIN_NETWORK:-regtest}=1
+        port=39388
+        whitelist=0.0.0.0/0
+    expose:
+      - "43782"
+      - "39388"
+    volumes:
+      - "bitcoin_datadir:/data"
+
+volumes:
+    bitcoin_datadir:
+    charged_datadir:
+```
+
 ### Client libraries
 
 Clients libraries are available for [JavaScript](https://github.com/ElementsProject/lightning-charge-client-js)
