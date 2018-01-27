@@ -41,8 +41,6 @@ echo Setting up bitcoind >&2
 mkdir -p $BTC_DIR
 cat >$BTC_DIR/bitcoin.conf <<EOL
 regtest=1
-rpcuser=satoshi
-rpcpassword=`head -c 10 /dev/urandom | base64 | tr -d '+/='`
 rpcport=`get-port`
 port=`get-port`
 EOL
