@@ -50,6 +50,11 @@ If you want to experiment in regtest mode and don't care about persisting data, 
 $ docker run -e NETWORK=regtest -e API_TOKEN=mySecretToken -p 9112:9112 shesek/lightning-charge
 ```
 
+To connect to an existing bitcoind instance running on the same machine,
+mount the bitcoin data directory to `/etc/bitcoin` (i.e. `-v $HOME/.bitcoin:/etc/bitcoin`).
+To connect to a remote bitcoind instance, set `-e BITCOIND_URI=http://[user]:[pass]@[host]:[port]`
+(use `__cookie__:...` as the login for cookie-based authentication).
+
 ### Client libraries
 
 Clients libraries are available for [JavaScript](https://github.com/ElementsProject/lightning-charge-client-js)
