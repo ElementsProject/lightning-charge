@@ -4,7 +4,7 @@ ENV LIGHTNINGD_VERSION=master
 ENV BITCOIN_PPA_KEY=C70EF1F0305A1ADB9986DBD8D46F45428842CE5E
 ENV HOME=/tmp
 
-RUN apt-get update && apt-get install -y --no-install-recommends git curl ca-certificates jq
+RUN apt-get update && apt-get install -y --no-install-recommends git curl ca-certificates jq inotify-tools
 RUN mkdir /data
 
 # bitcoind

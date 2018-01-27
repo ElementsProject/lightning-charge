@@ -48,7 +48,11 @@ EOL
 bitcoind -datadir=$BTC_DIR $BITCOIND_OPTS &
 
 echo - Waiting for bitcoind to warm up... > $dbgout
-sed $sedq '/init message: Done loading/ q' <(tail -F -n+0 $BTC_DIR/regtest/debug.log 2> /dev/null)
+command -v inotifywait > /dev/null \
+  && sed --quiet '/^\.cookie$/ q' <(inotifywait -e create,moved_to --format '%f' -qmr $BTC_DIR) \
+  || sleep 2 # fallback to slower startup if inotifywait is not available
+
+btc -rpcwait getblockchaininfo > /dev/null
 
 echo - Generating some blocks... > $dbgout
 btc generate 432 > /dev/null
