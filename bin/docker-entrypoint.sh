@@ -46,7 +46,7 @@ elif [[ "$BITCOIND_URI" =~ ^[a-z]+:\/+(([^:]+):([^@]+))@([^:/]+):([0-9]+)/?$ ]];
     echo "${BASH_REMATCH[1]}" > $NET_PATH/.cookie
   fi
 else
-  echo >2 "Invalid bitcoind URI: $BITCOIND_URI"
+  echo >&2 "Invalid bitcoind URI: $BITCOIND_URI"
   exit 1
 fi
 
