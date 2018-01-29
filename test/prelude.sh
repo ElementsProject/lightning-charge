@@ -68,8 +68,8 @@ lightningd $LN_OPTS --port=`get-port` --lightning-dir=$LN_ALICE_PATH  &> $dbgout
 lightningd $LN_OPTS --port=`get-port` --lightning-dir=$LN_BOB_PATH &> $dbgout &
 
 echo - Waiting for lightningd to warm up... > $dbgout
-sed $sedq '/Hello world/ q' <(tail -F -n+0 $LN_ALICE_PATH/debug.log 2> /dev/null)
-sed $sedq '/Hello world/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log 2> /dev/null)
+sed $sedq '/Server started with public key/ q' <(tail -F -n+0 $LN_ALICE_PATH/debug.log 2> /dev/null)
+sed $sedq '/Server started with public key/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log 2> /dev/null)
 
 echo - Funding lightning wallet... > $dbgout
 btc sendtoaddress $(lnb newaddr | jq -r .address) 1 > $dbgout

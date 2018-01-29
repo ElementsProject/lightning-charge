@@ -66,7 +66,7 @@ else
   LN_PATH=/data/lightning
   lightningd --network=$NETWORK --bitcoin-datadir=$BTC_PATH --lightning-dir=$LN_PATH $LIGHTNINGD_OPT &>> /data/lightning.log &
   echo -n "waiting for startup... "
-  sed --quiet '/Hello world/ q' <(tail -F -n0 /data/lightning.log 2> /dev/null)
+  sed --quiet '/Server started with public key/ q' <(tail -F -n0 /data/lightning.log 2> /dev/null)
   echo "ready."
 fi
 
