@@ -84,8 +84,8 @@ echo - Setting up channel... > $dbgout
 lnb fundchannel $aliceid 16777215 | jq -c . > $dbgout
 btc generate 1 > /dev/null
 
-sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -n+0 $LN_ALICE_PATH/debug.log)
-sed $sedq '/state: CHANNELD_AWAITING_LOCKIN -> CHANNELD_NORMAL/ q' <(tail -n+0 $LN_BOB_PATH/debug.log)
+sed $sedq '/State changed from CHANNELD_AWAITING_LOCKIN to CHANNELD_NORMAL/ q' <(tail -f -n+0 $LN_ALICE_PATH/debug.log)
+sed $sedq '/State changed from CHANNELD_AWAITING_LOCKIN to CHANNELD_NORMAL/ q' <(tail -f -n+0 $LN_BOB_PATH/debug.log)
 
 [[ -n "$VERBOSE" ]] && lna listpeers | jq -c .peers[0]
 
