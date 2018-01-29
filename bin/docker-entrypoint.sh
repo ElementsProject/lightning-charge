@@ -15,6 +15,8 @@ if [ -d /etc/bitcoin ]; then
   # but specify a different rpc host to connect to. this will modify
   # the external bitcoind config file which might result in side effects.
   # should be eventually replaced with a better solution.
+  # https://github.com/ElementsProject/lightning/issues/804
+  # https://github.com/ElementsProject/lightning/issues/329
   if [ -n "$BITCOIND_RPCCONNECT_HACK" ]; then
     sed -i '/^rpcconnect=/ d' $BTC_PATH/bitcoin.conf
     echo "rpcconnect=$BITCOIND_RPCCONNECT_HACK" >> $BTC_PATH/bitcoin.conf
