@@ -51,9 +51,9 @@ $ docker run -e NETWORK=regtest -e API_TOKEN=mySecretToken -p 9112:9112 shesek/l
 ```
 
 To connect to an existing bitcoind instance running on the same machine,
-mount the bitcoin data directory to `/etc/bitcoin` (i.e. `-v $HOME/.bitcoin:/etc/bitcoin`).
-To connect to a remote bitcoind instance, set `-e BITCOIND_URI=http://[user]:[pass]@[host]:[port]`
-(use `__cookie__:...` as the login for cookie-based authentication).
+mount the bitcoin data directory to `/etc/bitcoin` (e.g. `-v $HOME/.bitcoin:/etc/bitcoin`).
+To connect to a remote bitcoind instance, set `BITCOIND_URI=http://[user]:[pass]@[host]:[port]`
+(or use `__cookie__:...` as the login for cookie-based authentication).
 
 ### Client libraries
 
@@ -199,9 +199,16 @@ ws.on('message', msg => {
 
 ## Tests
 
-Make sure `bitcoind`, `bitcoin-cli`, `lightningd`, `lightning-cli`
-and [`jq`](https://stedolan.github.io/jq/download/) are in your `PATH`,
-then run `$ npm test`.
+Requires `bitcoind`, `bitcoin-cli`, `lightningd`, `lightning-cli`
+and [`jq`](https://stedolan.github.io/jq/download/) to be in your `PATH`.
+
+```bash
+$ git clone https://github.com/ElementsProject/lightning-charge.git
+$ cd lightning-charge
+$ npm install
+$ npm test
+```
+
 This will setup a temporary testing environment with a bitcoind regtest node
 and two c-lightning nodes with a funded channel,
 then start the Lightning Charge server and run the unit tests
@@ -216,7 +223,7 @@ To prevent the test environment files from being deleted after completing the te
 To setup a testing environment without running the tests, run `$ npm run testenv`.
 This will display information about the running services and keep them alive for further inspection.
 
-Tests can also be run using docker: `$ docker run shesek/lightning-charge npm test`
+Tests can also be run using docker: `$ docker run shesek/lightning-charge:testrunner npm test`
 
 ## License
 

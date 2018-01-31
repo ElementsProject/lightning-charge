@@ -95,7 +95,7 @@ echo Setting up charged >&2
 
 LN_PATH=$LN_ALICE_PATH DB_PATH=$CHARGE_DB API_TOKEN=$CHARGE_TOKEN PORT=$CHARGE_PORT \
 DEBUG=$DEBUG,lightning-*,knex:query,knex:bindings \
-NODE_ENV=test babel-node src/app.js &> $DIR/charge.log &
+NODE_ENV=test bin/charged &> $DIR/charge.log &
 
 CHARGE_PID=$!
 sed $sedq '/HTTP server running/ q' <(tail -F -n+0 $DIR/charge.log 2> /dev/null)
