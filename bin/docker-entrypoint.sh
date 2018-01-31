@@ -2,7 +2,7 @@
 set -eo pipefail
 
 : ${NETWORK:=testnet}
-: ${LIGHTNINGD_OPT:=--log-level=debug}
+: ${LIGHTNINGD_OPT:=--log-level=debug --log-file=debug.log}
 : ${BITCOIND_OPT:=-debug=rpc}
 
 [[ "$NETWORK" == "mainnet" ]] && NETWORK=bitcoin
@@ -22,17 +22,10 @@ if [ -d /etc/bitcoin ]; then
     echo "rpcconnect=$BITCOIND_RPCCONNECT_HACK" >> $BTC_PATH/bitcoin.conf
   fi
 
-elif [ -z "$BITCOIND_URI" ]; then
-  echo -n "Starting bitcoind... "
+elif [ -n "$BITCOIND_URI" ]; then
+  [[ "$BITCOIND_URI" =~ ^[a-z]+:\/+(([^:]+):([^@]+))@([^:/]+):([0-9]+)/?$ ]] || \
+    { echo >&2 "ERROR: invalid bitcoind URI: $BITCOIND_URI"; exit 1; }
 
-  BTC_PATH=/data/bitcoin
-  mkdir -p $BTC_PATH
-
-  bitcoind -printtoconsole -$NETWORK -datadir=$BTC_PATH $BITCOIND_OPTS &>> /data/bitcoin.log &
-  echo -n "waiting for cookie... "
-  sed --quiet '/^\.cookie$/ q' <(inotifywait -e create,moved_to --format '%f' -qmr $BTC_PATH)
-
-elif [[ "$BITCOIND_URI" =~ ^[a-z]+:\/+(([^:]+):([^@]+))@([^:/]+):([0-9]+)/?$ ]]; then
   echo -n "Connecting to bitcoind at ${BASH_REMATCH[4]}:${BASH_REMATCH[5]}... "
 
   BTC_PATH=/tmp/bitcoin
@@ -47,9 +40,16 @@ elif [[ "$BITCOIND_URI" =~ ^[a-z]+:\/+(([^:]+):([^@]+))@([^:/]+):([0-9]+)/?$ ]];
     mkdir -p $NET_PATH
     echo "${BASH_REMATCH[1]}" > $NET_PATH/.cookie
   fi
+
 else
-  echo >&2 "Invalid bitcoind URI: $BITCOIND_URI"
-  exit 1
+  echo -n "Starting bitcoind... "
+
+  BTC_PATH=/data/bitcoin
+  mkdir -p $BTC_PATH
+
+  bitcoind -$NETWORK -datadir=$BTC_PATH $BITCOIND_OPTS &
+  echo -n "waiting for cookie... "
+  sed --quiet '/^\.cookie$/ q' <(inotifywait -e create,moved_to --format '%f' -qmr $BTC_PATH)
 fi
 
 echo -n "waiting for RPC... "
@@ -64,13 +64,12 @@ else
   echo -n "Starting lightningd... "
 
   LN_PATH=/data/lightning
-  lightningd --network=$NETWORK --bitcoin-datadir=$BTC_PATH --lightning-dir=$LN_PATH $LIGHTNINGD_OPT &>> /data/lightning.log &
+  lightningd --network=$NETWORK --bitcoin-datadir=$BTC_PATH --lightning-dir=$LN_PATH $LIGHTNINGD_OPT > /dev/null &
   echo -n "waiting for startup... "
-  sed --quiet '/Server started with public key/ q' <(tail -F -n0 /data/lightning.log 2> /dev/null)
+  sed --quiet '/Server started with public key/ q' <(tail -F -n0 /data/lightning/debug.log 2> /dev/null)
   echo "ready."
 fi
 
 echo "Starting Lightning Charge"
-HOST=0.0.0.0 DEBUG=$DEBUG,lightning-charge,lightning-client,knex:query,knex:bindings \
-DB_PATH=/data/charge.db LN_PATH=$LN_PATH \
-./bin/charged $@ $CHARGED_OPTS
+DEBUG=$DEBUG,lightning-charge,lightning-client \
+charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 $@ $CHARGED_OPTS
