@@ -18,9 +18,4 @@ docker tag charge:testrunner $NAME:testrunner
 
 read -p 'Press enter to push'
 
-docker push $NAME:$VER
-docker push $NAME:latest
 docker push $NAME
-
-docker push $NAME:$VER-testrunner
-docker push $NAME:testrunner
