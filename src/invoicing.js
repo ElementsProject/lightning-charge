@@ -1,7 +1,5 @@
 import wrap from './lib/promise-wrap'
 
-process.env.API_TOKEN || (console.error('API access token is required, please configure.'), process.exit(1))
-
 module.exports = (app, payListen, model, auth) => {
   const { newInvoice, fetchInvoice, listInvoices, delExpired } = model
 

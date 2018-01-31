@@ -1,16 +1,19 @@
 import { join } from 'path'
 
-(async () => {
+const apiToken = process.env.API_TOKEN || (console.error('Please configure your API access token via --api-token or API_TOKEN'), process.exit(1))
+    , lnPath   = process.env.LN_PATH   || require('path').join(require('os').homedir(), '.lightning')
+
+;(async () => {
   process.on('unhandledRejection', err => { throw err })
 
   const db = require('knex')(require('../knexfile'))
-      , ln = require('lightning-client')(process.env.LN_PATH || require('path').join(process.env.HOME, '.lightning'))
+      , ln = require('lightning-client')(lnPath)
 
   await db.migrate.latest({ directory: join(__dirname, '../migrations') })
 
   const model = require('./model')(db, ln)
-      , auth  = require('./lib/auth')('api-token', process.env.API_TOKEN)
-      , payListen = require('./lib/payment-listener')(ln.rpcPath, model)
+      , auth  = require('./lib/auth')('api-token', apiToken)
+      , payListen = require('./lib/payment-listener')(lnPath, model)
 
   const app = require('express')()
 
