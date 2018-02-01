@@ -29,10 +29,10 @@ ARG TESTRUNNER
 COPY package*.json ./
 RUN npm install \
    && test -n "$TESTRUNNER" || { \
-      cp -r node_modules node_modules.dev && \
-      npm prune --production && npm install --production && \
-      mv -f node_modules node_modules.prod && \
-      mv -f node_modules.dev node_modules; }
+      cp -r node_modules node_modules.dev \
+      && npm prune --production && npm install --production \
+      && mv -f node_modules node_modules.prod \
+      && mv -f node_modules.dev node_modules; }
 
 # https://github.com/npm/npm/issues/19356#issuecomment-361475985
 
