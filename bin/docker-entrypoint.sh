@@ -2,7 +2,7 @@
 set -eo pipefail
 
 : ${NETWORK:=testnet}
-: ${LIGHTNINGD_OPT:=--log-level=debug --log-file=debug.log}
+: ${LIGHTNINGD_OPT:=--log-level=debug}
 : ${BITCOIND_OPT:=-debug=rpc}
 
 [[ "$NETWORK" == "mainnet" ]] && NETWORK=bitcoin
@@ -57,7 +57,8 @@ else
   LN_PATH=/data/lightning
 
   lightningd --network=$NETWORK $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') \
-    --lightning-dir=$LN_PATH $LIGHTNINGD_OPT > /dev/null &
+    "$([[ -z "$LN_ALIAS" ]] || echo "--alias=$LN_ALIAS")" \
+    --lightning-dir=$LN_PATH --log-file=debug.log $LIGHTNINGD_OPT > /dev/null &
 
   echo -n "waiting for startup... "
   sed --quiet '/Server started with public key/ q' <(tail -F -n0 $LN_PATH/debug.log 2> /dev/null)
