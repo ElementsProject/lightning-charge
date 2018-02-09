@@ -56,9 +56,10 @@ else
 
   LN_PATH=/data/lightning
 
-  lightningd --network=$NETWORK $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') \
-    "$([[ -z "$LN_ALIAS" ]] || echo "--alias=$LN_ALIAS")" \
-    --lightning-dir=$LN_PATH --log-file=debug.log $LIGHTNINGD_OPT > /dev/null &
+  lnopt=($LIGHTNING_OPT --network=$NETWORK --lightning-dir="$LN_PATH" --log-file=debug.log)
+  [[ -z "$LN_ALIAS" ]] || lnopt+=(--alias="$LN_ALIAS")
+
+  lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
 
   echo -n "waiting for startup... "
   sed --quiet '/Server started with public key/ q' <(tail -F -n0 $LN_PATH/debug.log 2> /dev/null)
