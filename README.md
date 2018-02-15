@@ -31,7 +31,7 @@ Your chosen `--api-token` will be used to authenticate requests made to the Ligh
 
 See `$ charged --help` for the full list of available options.
 
-### Docker
+### Deploy with Docker
 
 Deploy with docker, comes bundled with `bitcoind`+`lightningd`+`charged`:
 
@@ -54,6 +54,11 @@ To connect to an existing bitcoind instance running on the same machine,
 mount the bitcoin data directory to `/etc/bitcoin` (e.g. `-v $HOME/.bitcoin:/etc/bitcoin`).
 To connect to a remote bitcoind instance, set `BITCOIND_URI=http://[user]:[pass]@[host]:[port]`
 (or use `__cookie__:...` as the login for cookie-based authentication).
+
+### Deploy to Azure
+
+[One-click deployment on Azure](https://github.com/NicolasDorier/lightning-charge-azure)
+(by [@NicolasDorier](https://github.com/NicolasDorier)).
 
 ### Client libraries
 
