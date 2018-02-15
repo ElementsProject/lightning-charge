@@ -56,7 +56,7 @@ else
 
   LN_PATH=/data/lightning
 
-  lnopt=($LIGHTNING_OPT --network=$NETWORK --lightning-dir="$LN_PATH" --log-file=debug.log)
+  lnopt=($LIGHTNINGD_OPT --network=$NETWORK --lightning-dir="$LN_PATH" --log-file=debug.log)
   [[ -z "$LN_ALIAS" ]] || lnopt+=(--alias="$LN_ALIAS")
 
   lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
