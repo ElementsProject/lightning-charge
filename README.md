@@ -80,6 +80,15 @@ but currently still available. They will eventually be removed.
 
 The code samples below assumes you've set `CHARGE=http://api-token:mySecretToken@localhost:9112`.
 
+### `GET /info`
+
+Get information about the c-lightning node.
+
+```bash
+$ curl $CHARGE/info
+{"id":"032c6ba19a2141c5fee6ac8b6ff6cf24456fd4e8e206716a39af3300876c3a4835","port":42259,"address":[],"version":"v0.5.2-2016-11-21-1937-ge97ee3d","blockheight":434,"network":"regtest"}
+```
+
 ### `POST /invoice`
 
 Create a new invoice.

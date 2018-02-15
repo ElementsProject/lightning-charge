@@ -1,4 +1,5 @@
 import { join } from 'path'
+import wrap from './lib/promise-wrap'
 
 const apiToken = process.env.API_TOKEN || (console.error('Please configure your API access token via --api-token or API_TOKEN'), process.exit(1))
     , lnPath   = process.env.LN_PATH   || require('path').join(require('os').homedir(), '.lightning')
@@ -24,6 +25,8 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
   app.use(require('morgan')('dev'))
   app.use(require('body-parser').json())
   app.use(require('body-parser').urlencoded({ extended: true }))
+
+  app.get('/info', auth, wrap(async (req, res) => res.send(await ln.getinfo())))
 
   require('./invoicing')(app, payListen, model, auth)
   require('./checkout')(app, payListen)
