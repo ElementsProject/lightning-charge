@@ -22,7 +22,7 @@
     "debug": "^3.1.0",
     "express": "^4.16.2",
     "knex": "^0.14.0",
-    "lightning-client": "github:shesek/lightning-client-js",
+    "lightning-client": "github:shesek/lightning-client-js#e25ab8219e2297d5b3a433e19f2dedb74e57fc49",
     "meow": "^4.0.0",
     "morgan": "^1.9.0",
     "move-decimal-point": "0.0.4",

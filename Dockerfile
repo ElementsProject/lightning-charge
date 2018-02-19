@@ -30,7 +30,7 @@ COPY package*.json ./
 RUN npm install \
    && test -n "$TESTRUNNER" || { \
       cp -r node_modules node_modules.dev \
-      && npm prune --production && npm install --production \
+      && npm prune --production \
       && mv -f node_modules node_modules.prod \
       && mv -f node_modules.dev node_modules; }
 
