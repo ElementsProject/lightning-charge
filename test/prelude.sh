@@ -17,7 +17,7 @@ else
   sedq='--quiet'
 fi
 
-DIR=`mktemp -d`
+: ${DIR:=`mktemp -d`}
 BTC_DIR=$DIR/bitcoin
 
 # Alice is the backend for Charge, Bob is paying customer
@@ -94,7 +94,7 @@ sed $sedq '/State changed from CHANNELD_AWAITING_LOCKIN to CHANNELD_NORMAL/ q' <
 echo Setting up charged >&2
 
 DEBUG=$DEBUG,lightning-*,knex:query,knex:bindings \
-bin/charged -l $LN_ALICE_PATH -d $CHARGE_DB -t $CHARGE_TOKEN -p $CHARGE_PORT -e test &> $DIR/charge.log &
+bin/charged -l $LN_ALICE_PATH -d $CHARGE_DB -t $CHARGE_TOKEN -p $CHARGE_PORT -e ${NODE_ENV:-test} &> $DIR/charge.log &
 
 CHARGE_PID=$!
 sed $sedq '/HTTP server running/ q' <(tail -F -n+0 $DIR/charge.log 2> /dev/null)
