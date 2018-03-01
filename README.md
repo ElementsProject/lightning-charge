@@ -60,6 +60,8 @@ To connect to a remote bitcoind instance, set `BITCOIND_URI=http://[user]:[pass]
 [One-click deployment on Azure](https://github.com/NicolasDorier/lightning-charge-azure)
 (by [@NicolasDorier](https://github.com/NicolasDorier)).
 
+An instructional video is [available here](https://www.youtube.com/watch?v=D4RqULSA4uU).
+
 ### Client libraries
 
 Clients libraries are available for [JavaScript](https://github.com/ElementsProject/lightning-charge-client-js)
