@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eo pipefail
+trap 'kill `jobs -p`' SIGTERM
 
 : ${NETWORK:=testnet}
 : ${LIGHTNINGD_OPT:=--log-level=debug}
