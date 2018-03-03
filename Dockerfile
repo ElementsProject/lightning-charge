@@ -9,9 +9,9 @@ RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && git checkout $LIGHTNINGD_VERSION \
     && make
 
-ENV BITCOIN_VERSION 0.15.1
+ENV BITCOIN_VERSION 0.16.0
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
-ENV BITCOIN_SHA256 387c2e12c67250892b0814f26a5a38f837ca8ab68c86af517f975a2a2710225b
+ENV BITCOIN_SHA256 e6322c69bcc974a29e6a715e0ecb8799d2d21691d683eeb8fef65fc5f6a66477
 ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN mkdir /opt/bitcoin && cd /opt/bitcoin \
