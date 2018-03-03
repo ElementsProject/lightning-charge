@@ -28,12 +28,12 @@ module.exports = (db, ln) => {
         , lninv    = await ln.invoice(msatoshi || 'any', id, description || defaultDesc, expiry)
 
     const invoice = {
-            id, description, msatoshi
-          , quoted_currency: currency, quoted_amount: amount
-          , rhash: lninv.payment_hash, payreq: lninv.bolt11
-          , expires_at: lninv.expires_at, created_at: now()
-          , metadata: JSON.stringify(metadata || null)
-          }
+      id, description, msatoshi
+    , quoted_currency: currency, quoted_amount: amount
+    , rhash: lninv.payment_hash, payreq: lninv.bolt11
+    , expires_at: lninv.expires_at, created_at: now()
+    , metadata: JSON.stringify(metadata || null)
+    }
 
     debug('saving invoice:', invoice)
     await db('invoice').insert(invoice)

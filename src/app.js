@@ -2,7 +2,7 @@ import { join } from 'path'
 import wrap from './lib/promise-wrap'
 
 const apiToken = process.env.API_TOKEN || (console.error('Please configure your API access token via --api-token or API_TOKEN'), process.exit(1))
-    , lnPath   = process.env.LN_PATH   || require('path').join(require('os').homedir(), '.lightning')
+    , lnPath   = process.env.LN_PATH   || join(require('os').homedir(), '.lightning')
 
 ;(async () => {
   process.on('unhandledRejection', err => { throw err })
