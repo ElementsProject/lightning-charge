@@ -207,8 +207,8 @@ Subscribe to payment updates over WebSocket.
 ```javascript
 const ws = new WebSocket('http://api-token:[TOKEN]@charge.ln/ws')
 
-ws.on('message', msg => {
-  const inv = JSON.parse(msg)
+ws.addEventListener('message', msg => {
+  const inv = JSON.parse(msg.data)
   console.log('Paid invoice:', inv)
 })
 ```
