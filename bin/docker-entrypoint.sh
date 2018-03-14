@@ -69,4 +69,8 @@ fi
 
 echo "Starting Lightning Charge"
 DEBUG=$DEBUG,lightning-charge,lightning-client \
-charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 $@ $CHARGED_OPTS
+charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 $@ $CHARGED_OPTS &
+
+# shutdown the entire process when any of the background jobs exits (even if successfully)
+wait -n
+kill -TERM $$
