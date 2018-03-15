@@ -20,18 +20,18 @@
     "big.js": "^5.0.3",
     "body-parser": "^1.18.2",
     "debug": "^3.1.0",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "knex": "^0.14.4",
     "lightning-client": "github:shesek/lightning-client-js#e25ab8219e2297d5b3a433e19f2dedb74e57fc49",
     "meow": "^4.0.0",
     "morgan": "^1.9.0",
     "move-decimal-point": "0.0.4",
     "nanoid": "^1.0.2",
-    "pug": "^2.0.0-rc.4",
+    "pug": "^2.0.1",
     "qrcode": "^1.2.0",
-    "sqlite3": "^3.1.13",
+    "sqlite3": "^4.0.0",
     "superagent": "^3.8.2",
-    "ws": "^4.1.0"
+    "ws": "^5.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
