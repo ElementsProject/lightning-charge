@@ -54,6 +54,13 @@ describe('Invoice API', function() {
         .expect(201)
         .expect(r => ok(r.body.msatoshi == null))
     })
+
+    it('rounds amounts up to the nearest msatoshi', () =>
+      charge.post('/invoice')
+        .send({ currency: 'BTC', amount: '0.0000000000000001' })
+        .expect(201)
+        .expect(r => eq(r.body.msatoshi, 1))
+    )
   })
 
   const mkInvoice = props =>

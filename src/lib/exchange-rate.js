@@ -18,6 +18,7 @@ const toMsat = async (currency, amount) =>
   big(amount)
     .div(FIXED_RATES[currency] || await getRate(currency))
     .mul(BTC_MSAT_RATIO)
+    .round(0, 3) // round up to nearest msatoshi
     .toFixed(0)
 
 module.exports = { getRate, toMsat }
