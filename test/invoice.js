@@ -46,13 +46,13 @@ describe('Invoice API', function() {
       charge.post('/invoice')
         .send({ msatoshi: '20', expiry: 5 /*seconds*/ })
         .expect(201)
-        .expect(r => r.body.expires_at*1000 - Date.now() < 5000)
+        .expect(r => ok(r.body.expires_at*1000 - Date.now() < 5000))
     )
 
     it('can create invoices that accept any amount', () => {
       charge.post('/invoice')
         .expect(201)
-        .expect(r => r.body.msatoshi == null)
+        .expect(r => ok(r.body.msatoshi == null))
     })
   })
 
