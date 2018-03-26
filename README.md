@@ -65,11 +65,25 @@ To connect to a remote bitcoind instance, set `BITCOIND_URI=http://[user]:[pass]
 
 An instructional video is [available here](https://www.youtube.com/watch?v=D4RqULSA4uU).
 
-### Client libraries
+## Client libraries
 
 Clients libraries are available for [JavaScript](https://github.com/ElementsProject/lightning-charge-client-js)
 and [PHP](https://github.com/ElementsProject/lightning-charge-client-php).
 For other languages, you can use the REST API directly using a standard HTTP library.
+
+## LApps
+
+Below are example LApps built on top of Lightning Charge:
+
+- [FileBazaar](https://github.com/ElementsProject/filebazaar), an ecommerce tool for content creators that produce digital files like photos, videos, or music.
+
+- [nanotip](https://github.com/ElementsProject/nanotip), a simple web server for accepting lightning donations (a lightning tip jar).
+
+- [paypercall](https://github.com/shesek/paypercall), easily charge for HTTP APIs on a pay-per-call basis.
+
+- [Lightning Publisher](https://github.com/ElementsProject/wordpress-lightning-publisher), accept bitcoin payments for content on WordPress blogs.
+
+- [WooCommerce Lightning](https://github.com/ElementsProject/woocommerce-gateway-lightning), a lightning gateway for the WooCommerce e-commerce software.
 
 ## REST API
 
