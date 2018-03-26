@@ -97,7 +97,7 @@ Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `qu
 The `completed` (replaced with `status`) and `completed_at` (renamed to `paid_at`) fields are deprecated,
 but currently still available. They will eventually be removed.
 
-The code samples below assumes you've set `CHARGE=http://api-token:mySecretToken@localhost:9112`.
+The code samples below assume you've set `CHARGE=http://api-token:mySecretToken@localhost:9112`.
 
 ### `GET /info`
 
