@@ -79,7 +79,9 @@ Below are example LApps built on top of Lightning Charge:
 
 - [nanotip](https://github.com/ElementsProject/nanotip), a simple web server for accepting lightning donations (a lightning tip jar).
 
-- [paypercall](https://github.com/shesek/paypercall), easily charge for HTTP APIs on a pay-per-call basis.
+- [paypercall](https://github.com/ElementsProject/paypercall), easily charge for HTTP APIs on a pay-per-call basis.
+
+- [nanopos](https://github.com/ElementsProject/nanopos), a simple point-of-sale system for physical stores.
 
 - [Lightning Publisher](https://github.com/ElementsProject/wordpress-lightning-publisher), accept bitcoin payments for content on WordPress blogs.
 
