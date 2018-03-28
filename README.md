@@ -75,15 +75,17 @@ For other languages, you can use the REST API directly using a standard HTTP lib
 
 Below are example LApps built on top of Lightning Charge:
 
-- [FileBazaar](https://github.com/ElementsProject/filebazaar), an ecommerce tool for content creators that produce digital files like photos, videos, or music.
+- [FileBazaar](https://github.com/ElementsProject/filebazaar): an ecommerce tool for content creators that produce digital files like photos, videos, or music.
 
-- [nanotip](https://github.com/ElementsProject/nanotip), a simple web server for accepting lightning donations (a lightning tip jar).
+- [Lightning Publisher](https://github.com/ElementsProject/wordpress-lightning-publisher): accept bitcoin payments for content on WordPress blogs.
 
-- [paypercall](https://github.com/ElementsProject/paypercall), easily charge for HTTP APIs on a pay-per-call basis.
+- [nanotip](https://github.com/ElementsProject/nanotip): a simple web server for accepting lightning donations (a lightning tip jar).
 
-- [nanopos](https://github.com/ElementsProject/nanopos), a simple point-of-sale system for physical stores.
+- [paypercall](https://github.com/ElementsProject/paypercall): easily charge for HTTP APIs on a pay-per-call basis.
 
-- [Lightning Publisher](https://github.com/ElementsProject/wordpress-lightning-publisher), accept bitcoin payments for content on WordPress blogs.
+- [nanopos](https://github.com/ElementsProject/nanopos): a simple point-of-sale system for physical stores.
+
+- [ifpaytt](https://github.com/ElementsProject/ifpaytt): trigger IFTTT actions with lightning payments.
 
 - [WooCommerce Lightning](https://github.com/ElementsProject/woocommerce-gateway-lightning), a lightning gateway for the WooCommerce e-commerce software.
 
