@@ -17,7 +17,6 @@ describe('Invoice API', function() {
           ok(body.id && body.rhash && body.payreq)
           eq(body.msatoshi, '100')
           eq(body.status, 'unpaid')
-          eq(body.completed, false) // to be deprecated
         })
     )
 
@@ -92,7 +91,6 @@ describe('Invoice API', function() {
           eq(body.msatoshi, '180000')
           eq(body.rhash, inv.rhash)
           eq(body.status, 'unpaid')
-          eq(body.completed, false) // to be deprecated
         })
     )
 
@@ -125,7 +123,7 @@ describe('Invoice API', function() {
     it('blocks until the invoice is paid', () =>
       charge.get(`/invoice/${ inv1.id }/wait?timeout=1`)
         .expect(200)
-        .expect(r => ok(r.body.status == 'paid' && r.body.completed && r.body.paid_at))
+        .expect(r => ok(r.body.status == 'paid' && r.body.paid_at))
     )
 
     it('... or until the timeout is reached', () =>

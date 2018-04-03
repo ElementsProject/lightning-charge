@@ -43,7 +43,7 @@ describe('Webhooks', function() {
 
       eq(cbRecv.length, 1)
       const recv = cbRecv[0]
-      ok(recv.completed && recv.paid_at)
+      ok(recv.status == 'paid' && recv.paid_at)
       eq(recv.id, inv1.id)
     })
 
