@@ -20,10 +20,11 @@ module.exports = (db, ln) => {
 
     const id       = nanoid()
         , msatoshi = props.msatoshi ? ''+props.msatoshi : currency ? await toMsat(currency, amount) : ''
-        , lninv    = await ln.invoice(msatoshi || 'any', id, description || defaultDesc, expiry)
+        , desc     = props.description ? ''+props.description : defaultDesc
+        , lninv    = await ln.invoice(msatoshi || 'any', id, desc, expiry)
 
     const invoice = {
-      id, description, msatoshi
+      id, msatoshi, description: desc
     , quoted_currency: currency, quoted_amount: amount
     , rhash: lninv.payment_hash, payreq: lninv.bolt11
     , expires_at: lninv.expires_at, created_at: now()

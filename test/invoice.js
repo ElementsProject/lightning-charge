@@ -60,6 +60,13 @@ describe('Invoice API', function() {
         .expect(201)
         .expect(r => eq(r.body.msatoshi, 1))
     )
+
+    it('casts description to string', () =>
+      charge.post('/invoice')
+        .send({ description: 1234 })
+        .expect(201)
+        .expect(r => ok(r.body.description === '1234'))
+    )
   })
 
   const mkInvoice = props =>
