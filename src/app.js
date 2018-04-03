@@ -35,6 +35,11 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
   require('./webhook')(app, payListen, model, auth)
   require('./websocket')(app, payListen)
 
+  app.use((err, req, res, next) =>
+    err.name == 'LightningError' ? res.status(err.status || 400).send(err.toString())
+  : next(err)
+  )
+
   const server = app.listen(app.settings.port, app.settings.host, _ => {
     console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`)
     app.emit('listening', server)
