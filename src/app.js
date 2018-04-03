@@ -20,7 +20,7 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
 
   app.set('port', process.env.PORT || 9112)
   app.set('host', process.env.HOST || 'localhost')
-  app.set('trust proxy', !!process.env.PROXIED)
+  app.set('trust proxy', process.env.PROXIED || 'loopback')
 
   app.use(require('morgan')('dev'))
   app.use(require('body-parser').json())
