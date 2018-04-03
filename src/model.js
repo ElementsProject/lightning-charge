@@ -62,13 +62,14 @@ module.exports = (db, ln) => {
       // fetch unpaid invoices expired over a day ago
       .where({ pay_index: null })
       .where('expires_at', '<', now() - 86400)
-      // delete from c-lightning
+      // try fetching the invoices from c-lightning to make sure they're deleted there.
+      // invoices that still exists on c-lightning won't be deleted from charge.
+      // c-lightning should be configured for automatic cleanup via autocleaninvoice
       .then(invs => Promise.all(invs.map(inv =>
-        ln.delinvoice(inv.id, 'expired')
-          .then(deleted => deleted.label)
-          .catch(_ => null))))
+        ln.listinvoices(inv.id).then(r => r.invoices.length ? null : inv.id)
+      )))
       .then(ids => ids.filter(id => id != null))
-      // delete locally
+      // delete all expired invoices not found on c-lightning
       .then(ids => ids.length && db('invoice').whereIn('id', ids).delete())
 
   const addHook = (invoice_id, url) =>
