@@ -49,7 +49,7 @@ echo "ready."
 
 
 if [ -d /etc/lightning ]; then
-  echo -n "Using lightningd directory mounted in /etc/lightning..."
+  echo -n "Using lightningd directory mounted in /etc/lightning... "
   LN_PATH=/etc/lightning
 
 else
@@ -65,8 +65,10 @@ else
 
 fi
 
-echo -n "waiting for RPC unix socket... "
-sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
+if [ ! -S /etc/lightning/lightning-rpc ]; then
+  echo -n "waiting for RPC unix socket... "
+  sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
+fi
 echo "ready."
 
 echo "Starting Lightning Charge"
