@@ -48,24 +48,26 @@ bitcoin-cli -$NETWORK $RPC_OPT -rpcwait getblockchaininfo > /dev/null
 echo "ready."
 
 
-if [ -S /etc/lightning/lightning-rpc ]; then
-  echo "Using lightningd unix socket mounted in /etc/lightning/lightning-rpc"
+if [ -d /etc/lightning ]; then
+  echo -n "Using lightningd directory mounted in /etc/lightning..."
   LN_PATH=/etc/lightning
 
 else
   echo -n "Starting lightningd... "
 
   LN_PATH=/data/lightning
+  mkdir -p $LN_PATH
 
   lnopt=($LIGHTNINGD_OPT --network=$NETWORK --lightning-dir="$LN_PATH" --log-file=debug.log)
   [[ -z "$LN_ALIAS" ]] || lnopt+=(--alias="$LN_ALIAS")
 
   lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
 
-  echo -n "waiting for startup... "
-  sed --quiet '/Server started with public key/ q' <(tail -F -n0 $LN_PATH/debug.log 2> /dev/null)
-  echo "ready."
 fi
+
+echo -n "waiting for RPC unix socket... "
+sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
+echo "ready."
 
 echo "Starting Lightning Charge"
 DEBUG=$DEBUG,lightning-charge,lightning-client \
