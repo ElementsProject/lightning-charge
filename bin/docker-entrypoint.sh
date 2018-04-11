@@ -8,8 +8,6 @@ trap 'kill `jobs -p`' SIGTERM
 
 [[ "$NETWORK" == "mainnet" ]] && NETWORK=bitcoin
 
-[[ -n "$BITCOIND_RPCCONNECT_HACK" ]] && { echo >&2 BITCONID_RPCCONNECT_HACK is now named BITCOIND_RPCCONNECT && exit 1; }
-
 if [ -d /etc/bitcoin ]; then
   echo -n "Connecting to bitcoind configured in /etc/bitcoin... "
 
