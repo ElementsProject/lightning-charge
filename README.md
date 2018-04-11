@@ -238,7 +238,7 @@ data:{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","status":"paid","paid_at":
 Subscribe to payment updates over WebSocket.
 
 ```javascript
-const ws = new WebSocket('http://api-token:[TOKEN]@charge.ln/ws')
+const ws = new WebSocket('http://api-token:[TOKEN]@localhost:9112/ws')
 
 ws.addEventListener('message', msg => {
   const inv = JSON.parse(msg.data)
