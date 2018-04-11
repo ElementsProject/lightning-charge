@@ -26,17 +26,22 @@ $ npm install -g lightning-charge
 
 $ charged --api-token mySecretToken # defaults: --ln-path ~/.lightning --db-path ./charge.db --port 9112
 
-# configuration options may alternatively be provided using environment variables:
-$ LN_PATH=~/.lightning DB_PATH=charge.db API_TOKEN=mySecretToken PORT=9112 charged
 ```
 
-Your chosen `--api-token` will be used to authenticate requests made to the Lightning Charge REST API.
+That's it! The Lightning Charge REST API is now running and ready to process payments.
+You can access it at `http://localhost:9112` using the API access token configured with `--api-token`.
+
+Configuration options may alternatively be provided using environment variables:
+
+```bash
+$ LN_PATH=~/.lightning DB_PATH=charge.db API_TOKEN=mySecretToken PORT=9112 charged
+```
 
 See `$ charged --help` for the full list of available options.
 
 ### Deploy with Docker
 
-Deploy with docker, comes bundled with `bitcoind`+`lightningd`+`charged`:
+To deploy Lightning Charge with Docker, run these commands:
 
 ```bash
 $ mkdir data # make sure to create the folder _before_ running docker
@@ -45,15 +50,22 @@ $ docker run -u `id -u` -v `pwd`/data:/data -p 9112:9112 \
              shesek/lightning-charge
 ```
 
+This will start `bitcoind`, `lightningd` and `charged` and hook them up together.
+You will then be able to access the REST API at `http://localhost:9112` using `mySecretToken`.
+
 Runs in `testnet` mode by default, set `NETWORK` to override.
 
-If you want to experiment in regtest mode and don't care about persisting data, this should do:
+If you want to experiment in `regtest` mode and don't care about persisting data, this should do:
 
 ```bash
 $ docker run -e NETWORK=regtest -e API_TOKEN=mySecretToken -p 9112:9112 shesek/lightning-charge
 ```
 
-To connect to an existing bitcoind instance running on the same machine,
+To connect to an existing `lightningd` instance running on the same machine,
+mount the lightning data directory to `/etc/lightning` (e.g. `-v $HOME/.lightning:/etc/lightning`).
+Connecting to remote lightningd instances is currently not supported.
+
+To connect to an existing `bitcoind` instance running on the same machine,
 mount the bitcoin data directory to `/etc/bitcoin` (e.g. `-v $HOME/.bitcoin:/etc/bitcoin`).
 To connect to a remote bitcoind instance, set `BITCOIND_URI=http://[user]:[pass]@[host]:[port]`
 (or use `__cookie__:...` as the login for cookie-based authentication).
