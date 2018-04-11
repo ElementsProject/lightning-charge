@@ -62,13 +62,15 @@ else
   [[ -z "$LN_ALIAS" ]] || lnopt+=(--alias="$LN_ALIAS")
 
   lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
-
 fi
 
 if [ ! -S /etc/lightning/lightning-rpc ]; then
   echo -n "waiting for RPC unix socket... "
   sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
 fi
+
+lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
+
 echo "ready."
 
 echo "Starting Lightning Charge"
