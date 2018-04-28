@@ -8,6 +8,7 @@ const args = require('meow')(`
       -t, --api-token <token>   API access token (any long random string will do) [required]
       -l, --ln-path <path>      path to c-lightning data directory [default: ~/.lightning]
       -d, --db-path <path>      path to sqlite3 database file [default: ./sqlite.db]
+      -w, --max-wait <sec>      maximum time to wait for invoice long-poll updates, in seconds [default: 120]
       -p, --port <port>         http server port [default: 9112]
       -i, --host <host>         http server listen address [default: 127.0.0.1]
       -e, --node-env <env>      nodejs environment mode [default: development]
@@ -17,8 +18,8 @@ const args = require('meow')(`
     Example
       $ charged -t mySecretToken -l ~/.lightning -d ~/charge.db -p 9112
 
-`, { flags: { 'api-token': { alias: 't' }, 'ln-path': { alias: 'l' }, 'db-path': { alias: 'd' }
-            , 'port': { alias: 'p' }, 'host': { alias: 'i' }, 'node-env' : { alias: 'e' } } }
+`, { flags: { apiToken: {alias:'t'}, lnPath: {alias:'l'}, dbPath: {alias:'d'}, maxWait: {alias:'w'}
+            , port: {alias:'p'}, host: {alias: 'i'}, nodeEnv: {alias:'e'} } }
 ).flags
 
 const envify = k => k.replace(/([A-Z])/g, '_$1').toUpperCase()
