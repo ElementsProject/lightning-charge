@@ -1,7 +1,12 @@
 import wrap from './lib/promise-wrap'
 
+// maximum wait time for long-polling
+const maxWait = +process.env.MAX_WAIT || 600
+
 module.exports = (app, payListen, model, auth) => {
   const { newInvoice, fetchInvoice, listInvoices, delExpired } = model
+
+  app.on('listening', server => server.timeout = maxWait*1000 + 500)
 
   app.param('invoice', wrap(async (req, res, next, id) => {
     req.invoice = await fetchInvoice(req.params.invoice)
@@ -23,7 +28,7 @@ module.exports = (app, payListen, model, auth) => {
     if (req.invoice.status == 'expired') return res.sendStatus(410)
 
     const expires_in = req.invoice.expires_at - (Date.now()/1000|0)
-        , timeout    = Math.min(+req.query.timeout || 300, expires_in, 1800)
+        , timeout    = Math.min(+req.query.timeout || 300, expires_in, maxWait)
         , paid       = await payListen.register(req.invoice.id, timeout*1000)
 
     if (paid) res.send(paid)
