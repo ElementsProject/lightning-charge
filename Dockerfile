@@ -3,7 +3,7 @@ FROM node:8.9-slim as builder
 RUN apt-get update && apt-get install -y --no-install-recommends autoconf automake build-essential git libtool libgmp-dev \
   libsqlite3-dev python python3 wget
 
-ARG LIGHTNINGD_VERSION=b0c2e3cd5c6dd77950284a498dcf5aed5d83a3f9
+ARG LIGHTNINGD_VERSION=91d149b99032d1dbc43f3498cd91bb46a437895d
 RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && cd /opt/lightningd \
     && git checkout $LIGHTNINGD_VERSION \
