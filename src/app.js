@@ -29,7 +29,7 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
   app.get('/info', auth, wrap(async (req, res) => res.send(await ln.getinfo())))
 
   require('./invoicing')(app, payListen, model, auth)
-  require('./checkout')(app, payListen)
+  require('./checkout')(app, payListen, ln)
 
   require('./sse')(app, payListen, auth)
   require('./webhook')(app, payListen, model, auth)
