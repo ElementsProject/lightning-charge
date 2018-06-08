@@ -7,6 +7,7 @@ ARG LIGHTNINGD_VERSION=6139fee31dec038052c36383f89bafa36ca7d3c4
 RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && cd /opt/lightningd \
     && git checkout $LIGHTNINGD_VERSION \
+    && ./configure \
     && make
 
 ENV BITCOIN_VERSION 0.16.0
