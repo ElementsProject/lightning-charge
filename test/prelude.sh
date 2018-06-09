@@ -61,11 +61,11 @@ btc generate 432 > /dev/null
 
 echo Setting up lightningd >&2
 
-LN_OPTS="$LN_OPTS --network=regtest --bitcoind-poll=1s --bitcoin-datadir=$BTC_DIR --log-level=debug --log-file=debug.log
+LN_OPTS="$LN_OPTS --network=regtest --dev-bitcoind-poll=1 --bitcoin-datadir=$BTC_DIR --log-level=debug --log-file=debug.log
   --allow-deprecated-apis="$([ -n "$ALLOW_DEPRECATED" ] && echo true || echo false)
 
-lightningd $LN_OPTS --port=`get-port` --lightning-dir=$LN_ALICE_PATH  &> $dbgout &
-lightningd $LN_OPTS --port=`get-port` --lightning-dir=$LN_BOB_PATH &> $dbgout &
+lightningd $LN_OPTS --addr=127.0.0.1:`get-port` --lightning-dir=$LN_ALICE_PATH  &> $dbgout &
+lightningd $LN_OPTS --addr=127.0.0.1:`get-port` --lightning-dir=$LN_BOB_PATH &> $dbgout &
 
 echo - Waiting for lightningd rpc unix socket... > $dbgout
 sed $sedq "/Listening on 'lightning-rpc'/ q" <(tail -F -n+0 $LN_ALICE_PATH/debug.log 2> /dev/null)
@@ -78,7 +78,7 @@ sed $sedq '/Owning output [0-9]/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log)
 
 echo - Connecting peers... > $dbgout
 aliceid=`lna getinfo | jq -r .id`
-lnb connect $aliceid 127.0.0.1 `lna getinfo | jq -r .port` | jq -c . > $dbgout
+lnb connect $aliceid 127.0.0.1 `lna getinfo | jq -r .binding[0].port` | jq -c . > $dbgout
 
 echo - Setting up channel... > $dbgout
 lnb fundchannel $aliceid 16777215 | jq -c . > $dbgout
