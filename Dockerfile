@@ -3,11 +3,13 @@ FROM node:8.9-slim as builder
 RUN apt-get update && apt-get install -y --no-install-recommends autoconf automake build-essential git libtool libgmp-dev \
   libsqlite3-dev python python3 wget zlib1g-dev
 
+ARG TESTRUNNER
 ARG LIGHTNINGD_VERSION=4429c6e7cd78c1eca39742ad57d5ff02ce5e6852
+
 RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && cd /opt/lightningd \
     && git checkout $LIGHTNINGD_VERSION \
-    && ./configure \
+    && DEVELOPER=$TESTRUNNER ./configure \
     && make
 
 ENV BITCOIN_VERSION 0.16.0
@@ -25,7 +27,6 @@ RUN mkdir /opt/bitcoin && cd /opt/bitcoin \
     && tar -xzvf bitcoin.tar.gz $BD/bitcoind $BD/bitcoin-cli --strip-components=1
 
 WORKDIR /opt/charged
-ARG TESTRUNNER
 
 COPY package*.json ./
 RUN npm install \
