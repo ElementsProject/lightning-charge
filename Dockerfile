@@ -54,7 +54,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends inotify-tools l
       $(test -n "$TESTRUNNER" && echo jq) \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /opt/charged/bin/charged /usr/bin/charged \
-    && mkdir /data
+    && mkdir /data \
+    && ln -s /data/lightning /tmp/.lightning
 
 COPY --from=builder /opt/lightningd/cli/lightning-cli /usr/bin
 COPY --from=builder /opt/lightningd/lightningd/lightning* /usr/bin/
