@@ -231,6 +231,20 @@ data:{"id":"KcoQHfHJSx3fVhp3b1Y3h","msatoshi":"10000","status":"paid","paid_at":
 # zZZzzzz...
 ```
 
+Or via JavaScript:
+
+```js
+const es = new EventSource('http://api-token:[TOKEN]@localhost:9112/payment-stream')
+
+es.addEventListener('message', msg => {
+  const inv = JSON.parse(msg.data)
+  console.log('Paid invoice:', inv)
+})
+```
+
+(`EventSource` is natively available in modern browsers,
+or via the [`eventsource` library](https://github.com/EventSource/eventsource) in nodejs)
+
 ## WebSocket API
 
 ### `GET /ws`
