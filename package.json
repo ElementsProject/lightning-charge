@@ -17,33 +17,33 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "basic-auth": "^2.0.0",
-    "big.js": "^5.0.3",
-    "body-parser": "^1.18.2",
+    "big.js": "^5.1.2",
+    "body-parser": "^1.18.3",
     "debug": "^3.1.0",
     "express": "^4.16.3",
-    "knex": "^0.14.5",
+    "knex": "^0.14.6",
     "lightning-client": "github:shesek/lightning-client-js#e25ab8219e2297d5b3a433e19f2dedb74e57fc49",
-    "meow": "^4.0.0",
+    "meow": "^4.0.1",
     "morgan": "^1.9.0",
     "move-decimal-point": "0.0.4",
-    "nanoid": "^1.0.2",
+    "nanoid": "^1.0.3",
     "pug": "^2.0.3",
     "qrcode": "^1.2.0",
     "sqlite3": "^4.0.0",
-    "superagent": "^3.8.2",
-    "ws": "^5.1.1"
+    "superagent": "^3.8.3",
+    "ws": "^5.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",
     "eventsource": "^1.0.5",
     "get-port-cli": "^1.1.0",
-    "mocha": "^5.0.5",
+    "mocha": "^5.2.0",
     "stylus": "^0.54.5",
-    "supertest": "^3.0.0",
+    "supertest": "^3.1.0",
     "uglify-js": "^3.3.12"
   }
 }
