@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends autoconf automa
   libsqlite3-dev python python3 wget zlib1g-dev
 
 ARG TESTRUNNER
-ARG LIGHTNINGD_VERSION=94ef0a7fbfe1687511c82fc9abbcfb40db2a5464
+ARG LIGHTNINGD_VERSION=654fa9d6806b2924a5ddc592929aec0fafbb3139
 
 RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && cd /opt/lightningd \
