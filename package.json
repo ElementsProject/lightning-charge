@@ -26,12 +26,12 @@
     "meow": "^4.0.1",
     "morgan": "^1.9.0",
     "move-decimal-point": "0.0.4",
-    "nanoid": "^1.0.3",
+    "nanoid": "^1.0.4",
     "pug": "^2.0.3",
     "qrcode": "^1.2.0",
-    "sqlite3": "^4.0.0",
+    "sqlite3": "^4.0.1",
     "superagent": "^3.8.3",
-    "ws": "^5.2.0"
+    "ws": "^5.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
