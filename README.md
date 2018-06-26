@@ -110,9 +110,6 @@ the api token (configured with `--api-token`/`-t` or using the `API_TOKEN` envir
 
 Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `paid_at`, `metadata` and `status` (one of `unpaid|paid|expired`).
 
-The `completed` (replaced with `status`) and `completed_at` (renamed to `paid_at`) fields are deprecated
-and no longer available.
-
 The code samples below assume you've set `CHARGE=http://api-token:mySecretToken@localhost:9112`.
 
 ### `GET /info`
