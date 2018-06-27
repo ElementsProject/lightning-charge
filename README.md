@@ -37,6 +37,8 @@ Configuration options may alternatively be provided using environment variables:
 $ LN_PATH=~/.lightning DB_PATH=charge.db API_TOKEN=mySecretToken PORT=9112 charged
 ```
 
+Listens for connections on `127.0.0.1` by default. Set `-i 0.0.0.0` to bind on all available interfaces.
+
 See `$ charged --help` for the full list of available options.
 
 ### Deploy with Docker
