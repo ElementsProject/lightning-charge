@@ -110,7 +110,7 @@ All endpoints accept and return data in JSON format.
 Authentication is done using HTTP basic authentication headers, with `api-token` as the username and
 the api token (configured with `--api-token`/`-t` or using the `API_TOKEN` environment variable) as the password.
 
-Invoices have the following properties: `id`, `msatoshi`, `quoted_currency`, `quoted_amount`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `paid_at`, `metadata` and `status` (one of `unpaid|paid|expired`).
+Invoices have the following properties: `id`, `msatoshi`, `msatoshi_received`, `quoted_currency`, `quoted_amount`, `rhash`, `payreq`, `description`, `created_at`, `expires_at`, `paid_at`, `metadata` and `status` (one of `unpaid|paid|expired`).
 
 The code samples below assume you've set `CHARGE=http://api-token:mySecretToken@localhost:9112`.
 
