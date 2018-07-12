@@ -130,7 +130,7 @@ Create a new invoice.
 *Body parameters*: `msatoshi`, `currency`, `amount`, `description`, `expiry`, `metadata` and `webhook`.
 
 You can specify the amount as `msatoshi` (1 satoshi = 1000 msatoshis),
-or provide a `currency` and `amount` to be converted according to the current exchange rates.
+or provide a `currency` and `amount` to be converted according to the current exchange rates (via bitcoinaverage).
 If a currency and amount were provided, they'll be available under `quoted_{currency|amount}`.
 
 `expiry` sets the invoice expiry time in seconds (defaults to one hour).
@@ -207,9 +207,9 @@ Register a URL as a web hook to be notified once the invoice is paid.
 
 Returns `201 Created` on success. Once the payment is made, a POST request with the updated invoice will be made to the provided URL.
 
-Webhooks can also be registered during invoice creation using the `webhook` parameter.
-
 If the invoice is already paid, returns `405 Method Not Allowed`. If the invoice is expired, returns `410 Gone`.
+
+Webhooks can also be registered during invoice creation using the `webhook` parameter.
 
 For security reasons, the provided `url` should contain a secret token used to verify the authenticity of the request
 (see an example HMAC-based implementation at woocommerce-gateway-lightning
