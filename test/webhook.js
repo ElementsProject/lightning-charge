@@ -61,6 +61,23 @@ describe('Webhooks', function() {
     })
   })
 
+  describe('POST /invoice with "webhook" parameter', function() {
+    this.slow(500)
+
+    it('allows attaching a webhook URL during invoice creation', async () => {
+      const inv = await mkInvoice({ msatoshi: 50, webhook: cbURL })
+
+      await lnBob.pay(inv.payreq)
+      await new Promise(resolve => setTimeout(resolve, 150))
+
+      eq(cbRecv.length, 2)
+      const recv = cbRecv[1]
+      ok(recv.status == 'paid' && recv.paid_at)
+      eq(recv.id, inv.id)
+    })
+
+  })
+
   after(() => {
     lnBob.client.removeAllListeners('end') // disable automatic reconnection
     lnBob.client.end()

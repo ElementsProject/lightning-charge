@@ -127,7 +127,7 @@ $ curl $CHARGE/info
 
 Create a new invoice.
 
-*Body parameters*: `msatoshi`, `currency`, `amount`, `description`, `expiry` and `metadata`.
+*Body parameters*: `msatoshi`, `currency`, `amount`, `description`, `expiry`, `metadata` and `webhook`.
 
 You can specify the amount as `msatoshi` (1 satoshi = 1000 msatoshis),
 or provide a `currency` and `amount` to be converted according to the current exchange rates.
@@ -136,6 +136,9 @@ If a currency and amount were provided, they'll be available under `quoted_{curr
 `expiry` sets the invoice expiry time in seconds (defaults to one hour).
 `metadata` may contain arbitrary invoice-related meta-data.
 `description` is embedded in the payment request and presented by the user's wallet (keep it short).
+
+`webhook` may contain a URL to be registered as a webhook
+(see [`POST /invoice/:id/webhook`](https://github.com/ElementsProject/lightning-charge#post-invoiceidwebhook)).
 
 Returns `201 Created` and the invoice on success.
 
@@ -203,6 +206,8 @@ Register a URL as a web hook to be notified once the invoice is paid.
 *Body parameters:* `url`.
 
 Returns `201 Created` on success. Once the payment is made, a POST request with the updated invoice will be made to the provided URL.
+
+Webhooks can also be registered during invoice creation using the `webhook` parameter.
 
 If the invoice is already paid, returns `405 Method Not Allowed`. If the invoice is expired, returns `410 Gone`.
 
