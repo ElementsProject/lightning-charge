@@ -21,17 +21,17 @@
     "body-parser": "^1.18.3",
     "debug": "^3.1.0",
     "express": "^4.16.3",
-    "knex": "^0.14.6",
-    "lightning-client": "github:shesek/lightning-client-js#e25ab8219e2297d5b3a433e19f2dedb74e57fc49",
+    "knex": "^0.15.0",
+    "lightning-client": "github:shesek/lightning-client-js#0d2a610ea24919861e2051dbf43a15994d8e79df",
     "meow": "^4.0.1",
     "morgan": "^1.9.0",
     "move-decimal-point": "0.0.4",
-    "nanoid": "^1.0.4",
+    "nanoid": "^1.0.7",
     "pug": "^2.0.3",
     "qrcode": "^1.2.0",
     "sqlite3": "^4.0.1",
     "superagent": "^3.8.3",
-    "ws": "^5.2.1"
+    "ws": "^5.2.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
