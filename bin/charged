@@ -11,7 +11,7 @@ const args = require('meow')(`
       -w, --max-wait <sec>      maximum time to wait for invoice long-poll updates, in seconds [default: 120]
       -p, --port <port>         http server port [default: 9112]
       -i, --host <host>         http server listen address [default: 127.0.0.1]
-      -e, --node-env <env>      nodejs environment mode [default: development]
+      -e, --node-env <env>      nodejs environment mode [default: production]
       -h, --help                output usage information
       -v, --version             output version number
 
@@ -19,7 +19,7 @@ const args = require('meow')(`
       $ charged -t mySecretToken -l ~/.lightning -d ~/charge.db -p 9112
 
 `, { flags: { apiToken: {alias:'t'}, lnPath: {alias:'l'}, dbPath: {alias:'d'}, maxWait: {alias:'w'}
-            , port: {alias:'p'}, host: {alias: 'i'}, nodeEnv: {alias:'e'} } }
+            , port: {alias:'p'}, host: {alias: 'i'}, nodeEnv: {alias:'e', default:'production'} } }
 ).flags
 
 const envify = k => k.replace(/([A-Z])/g, '_$1').toUpperCase()
