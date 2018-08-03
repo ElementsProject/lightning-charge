@@ -28,15 +28,13 @@ RUN mkdir /opt/bitcoin && cd /opt/bitcoin \
 
 WORKDIR /opt/charged
 
-COPY package*.json ./
+COPY package.json npm-shrinkwrap.json ./
 RUN npm install \
    && test -n "$TESTRUNNER" || { \
       cp -r node_modules node_modules.dev \
       && npm prune --production \
       && mv -f node_modules node_modules.prod \
       && mv -f node_modules.dev node_modules; }
-
-# https://github.com/npm/npm/issues/19356#issuecomment-361475985
 
 COPY . .
 RUN npm run dist \
