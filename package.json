@@ -28,7 +28,7 @@
     "move-decimal-point": "0.0.4",
     "nanoid": "^1.1.0",
     "pug": "^2.0.3",
-    "qrcode": "^1.2.0",
+    "qrcode": "^1.2.2",
     "sqlite3": "^4.0.2",
     "superagent": "^3.8.3",
     "ws": "^6.0.0"
@@ -44,6 +44,6 @@
     "mocha": "^5.2.0",
     "stylus": "^0.54.5",
     "supertest": "^3.1.0",
-    "uglify-js": "^3.4.5"
+    "uglify-js": "^3.4.6"
   }
 }
