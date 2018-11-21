@@ -1,6 +1,6 @@
 {
   "name": "lightning-charge",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "A simple drop-in solution for accepting lightning payments.",
   "repository": "https://github.com/ElementsProject/lightning-charge",
   "license": "MIT",
