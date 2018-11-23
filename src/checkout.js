@@ -7,7 +7,7 @@ import wrap    from './lib/promise-wrap'
 
 const rpath = name => path.join(__dirname, name)
 
-module.exports = (app, payListen) => {
+module.exports = (app, payListen, ln) => {
   app.set('url', process.env.URL || '/')
   app.set('static_url', process.env.STATIC_URL || app.settings.url + 'static/')
   app.set('view engine', 'pug')
@@ -29,8 +29,9 @@ module.exports = (app, payListen) => {
 
     if (req.invoice.status == 'unpaid')
       res.locals.qr = await qrcode.toDataURL(`lightning:${req.invoice.payreq}`.toUpperCase(), { margin: 1 })
+      const node_info = await ln.getinfo()
 
-    res.render('checkout', req.invoice)
+    res.render('checkout', {invoice: req.invoice, node: node_info })
   }))
 
   // like /invoice/:invoice/wait, but user-accessible, doesn't reveal the full invoice fields,

@@ -5,11 +5,11 @@ meta(charset='utf-8')
 base(href=settings.url)
 meta(name='viewport', content='width=device-width, initial-scale=1')
 
-meta(name='invoice-id', content=id)
+meta(name='invoice-id', content=invoice.id)
 
-if status == 'unpaid'
-  meta(name='invoice-poll-url', content=settings.url+'checkout/'+id+'/wait')
-  meta(name='invoice-expiry', content=expires_at)
+if invoice.status == 'unpaid'
+  meta(name='invoice-poll-url', content=settings.url+'checkout/'+invoice.id+'/wait')
+  meta(name='invoice-expiry', content=invoice.expires_at)
 
 mixin css(path)
   link(rel='stylesheet', href=settings.static_url+path)
@@ -17,7 +17,7 @@ mixin css(path)
 +css('bootstrap.min.css')
 +css('checkout.css')
 
-- opt = metadata && metadata.checkout || {}
+- opt = invoice.metadata && invoice.metadata.checkout || {}
 
 body: .checkout.container
   script window.parent != window && (document.body.className += ' iframed')
@@ -28,33 +28,39 @@ body: .checkout.container
       h4= opt.desc || 'Pay with Lightning'
     if msatoshi
       .amounts.col-sm-6
-        if quoted_currency
-          h3 #{ quoted_amount } #{ quoted_currency }
-          h4 #{ formatMsat(msatoshi) }
+        if invoice.quoted_currency
+          h3 #{ invoice.quoted_amount } #{ invoice.quoted_currency }
+          h4 #{ formatMsat(invoice.msatoshi) }
         else
-          h3 #{ formatMsat(msatoshi) }
+          h3 #{ formatMsat(invoice.msatoshi) }
 
-  if status == 'paid'
+  if invoice.status == 'paid'
     p.thankyou= opt.thank_you || 'Thank you! Your payment has been received.'
-    script window.parent != window && window.parent.postMessage({ type: 'completed', invoice: '#{ id }' }, '*')
+    script window.parent != window && window.parent.postMessage({ type: 'completed', invoice: '#{ invoice.id }' }, '*')
 
-  else if status == 'expired'
+  else if invoice.status == 'expired'
     p.expired= opt.expired || 'Your invoice has expired. Please try again.'
 
-  else if status == 'unpaid'
+  else if invoice.status == 'unpaid'
     .row
       .qr.col-sm-4: img(src=qr)
       .pay.col-sm-8
-        pre= payreq
-        a.btn.btn-lg.btn-primary(href=`lightning:${payreq}`)= opt.button || 'Pay with wallet'
+        pre= invoice.payreq
+        a.btn.btn-lg.btn-primary(href=`lightning:${invoice.payreq}`)= opt.button || 'Pay with wallet'
 
         p.expiry.text-muted Invoice expires in #[span]
+        
+    if node.address.length
+      .row
+        .qr.col-sm-12
+          h4 Our node
+          pre= node.id + "@" + node.address[0].address + ":" + node.address[0].port
 
     script(src=settings.static_url+'checkout.js')
 
   script.
     if (window.parent != window) {
-      function updateHeight() { window.parent.postMessage({ type: 'height', value: document.body.scrollHeight, invoice: '#{ id }' }, '*') }
+      function updateHeight() { window.parent.postMessage({ type: 'height', value: document.body.scrollHeight, invoice: '#{ invoice.id }' }, '*') }
       updateHeight()
       window.addEventListener('resize', updateHeight)
     }
