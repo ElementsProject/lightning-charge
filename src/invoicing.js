@@ -1,9 +1,11 @@
 import wrap from './lib/promise-wrap'
 
+const debug = require('debug')('lightning-charge')
+
 // maximum wait time for long-polling
 const maxWait = +process.env.MAX_WAIT || 600
 
-module.exports = (app, payListen, model, auth) => {
+module.exports = (app, payListen, model, auth, lnconf) => {
   const { newInvoice, fetchInvoice, listInvoices, delExpired } = model
 
   app.on('listening', server => server.timeout = maxWait*1000 + 500)
@@ -36,8 +38,18 @@ module.exports = (app, payListen, model, auth) => {
     // @TODO remove listener on client disconnect
   }))
 
-  ;(async function expiryJob() {
-    await delExpired()
-    setTimeout(expiryJob, 14400000) // 4 hours
-  })()
+  // Enable automatic cleanup for expired invoices if enabled on c-lightning,
+  // using the same configurations.
+  if (lnconf['autocleaninvoice-cycle'] && lnconf['autocleaninvoice-expired-by']) {
+    const cycle = lnconf['autocleaninvoice-cycle'] * 1000
+        , ttl   = lnconf['autocleaninvoice-expired-by']
+
+    debug(`Running autoclean job every ${cycle/1000}s to delete invoices expired over ${ttl}s ago`)
+
+    ;(async function expiryJob() {
+      debug('Cleaning up expired invoices')
+      await delExpired(ttl)
+      setTimeout(expiryJob, cycle)
+    })()
+  }
 }

@@ -53,11 +53,11 @@ module.exports = (db, ln) => {
     db('invoice').max('pay_index as index')
                  .first().then(r => r.index)
 
-  const delExpired = _ =>
+  const delExpired = ttl =>
     db('invoice').select('id')
-      // fetch unpaid invoices expired over a day ago
+      // fetch unpaid invoices expired over `ttl` ago
       .where({ pay_index: null })
-      .where('expires_at', '<', now() - 86400)
+      .where('expires_at', '<', now() - ttl)
       // try fetching the invoices from c-lightning to make sure they're deleted there.
       // invoices that still exists on c-lightning won't be deleted from charge.
       // c-lightning should be configured for automatic cleanup via autocleaninvoice

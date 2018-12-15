@@ -9,6 +9,7 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
 
   const db = require('knex')(require('../knexfile'))
       , ln = require('lightning-client')(lnPath)
+      , lnconf = await ln.listconfigs()
 
   await db.migrate.latest({ directory: join(__dirname, '../migrations') })
 
@@ -28,7 +29,7 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
 
   app.get('/info', auth, wrap(async (req, res) => res.send(await ln.getinfo())))
 
-  require('./invoicing')(app, payListen, model, auth)
+  require('./invoicing')(app, payListen, model, auth, lnconf)
   require('./checkout')(app, payListen)
 
   require('./sse')(app, payListen, auth)
