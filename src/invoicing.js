@@ -40,6 +40,12 @@ module.exports = (app, payListen, model, auth, lnconf) => {
 
   // Enable automatic cleanup for expired invoices if enabled on c-lightning,
   // using the same configurations.
+
+  // Disabled until the following issues are addressed:
+  // https://github.com/ElementsProject/lightning/issues/2180
+  // https://github.com/ElementsProject/lightning/issues/2181
+
+  /*
   if (lnconf['autocleaninvoice-cycle'] && lnconf['autocleaninvoice-expired-by']) {
     const cycle = lnconf['autocleaninvoice-cycle'] * 1000
         , ttl   = lnconf['autocleaninvoice-expired-by']
@@ -52,4 +58,5 @@ module.exports = (app, payListen, model, auth, lnconf) => {
       setTimeout(expiryJob, cycle)
     })()
   }
+  */
 }
