@@ -5,8 +5,6 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
     , lnPath   = process.env.LN_PATH   || join(require('os').homedir(), '.lightning')
 
 ;(async () => {
-  process.on('unhandledRejection', err => { throw err })
-
   const db = require('knex')(require('../knexfile'))
       , ln = require('lightning-client')(lnPath)
       , lnconf = await ln.listconfigs()
@@ -46,3 +44,10 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
     app.emit('listening', server)
   })
 })()
+
+process.on('unhandledRejection', err => { throw err })
+
+process.on('SIGTERM', err => {
+  console.error('Caught SIGTERM, shutting down')
+  process.exit(0)
+})
