@@ -69,11 +69,12 @@ if [ ! -S /etc/lightning/lightning-rpc ]; then
   sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
 fi
 
-lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
+if command -v lightning-cli > /dev/null; then
+  lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
+  echo -n "c-lightning RPC ready."
+fi
 
-echo "ready."
-
-echo "Starting Lightning Charge"
+echo -e "\nStarting Lightning Charge"
 DEBUG=$DEBUG,lightning-charge,lightning-client \
 charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 "$@" $CHARGED_OPTS &
 
