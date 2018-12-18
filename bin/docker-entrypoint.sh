@@ -4,7 +4,7 @@ trap 'kill `jobs -p`' SIGTERM
 
 : ${NETWORK:=testnet}
 : ${LIGHTNINGD_OPT:=--log-level=debug}
-: ${BITCOIND_OPT:=-debug=rpc}
+: ${BITCOIND_OPT:=-debug=rpc --printtoconsole=0}
 
 [[ "$NETWORK" == "mainnet" ]] && NETWORK=bitcoin
 
