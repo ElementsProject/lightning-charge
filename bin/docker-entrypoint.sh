@@ -75,9 +75,14 @@ if command -v lightning-cli > /dev/null; then
 fi
 
 echo -e "\nStarting Lightning Charge"
-DEBUG=$DEBUG,lightning-charge,lightning-client \
-charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 "$@" $CHARGED_OPTS &
 
-# shutdown the entire process when any of the background jobs exits (even if successfully)
-wait -n
-kill -TERM $$
+if [ -z "$STANDALONE"  ]; then
+    # when not in standalone mode, run spark-wallet as an additional background job
+  charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 "$@" $CHARGED_OPTS &
+
+  # shutdown the entire process when any of the background jobs exits (even if successfully)
+  wait -n
+  kill -TERM $$
+else
+  exec charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 "$@" $CHARGED_OPTS
+fi
