@@ -58,6 +58,8 @@ WORKDIR /opt/charged
 ARG TESTRUNNER
 ENV HOME /tmp
 ENV NODE_ENV production
+ARG STANDALONE
+ENV STANDALONE=$STANDALONE
 
 RUN ([ -n "$STANDALONE" ] || ( \
           apt-get update && apt-get install -y --no-install-recommends inotify-tools libgmp-dev libsqlite3-dev \
@@ -70,5 +72,5 @@ RUN ([ -n "$STANDALONE" ] || ( \
 COPY --from=builder /opt/bin /usr/bin
 COPY --from=builder /opt/charged /opt/charged
 
-CMD bin/docker-entrypoint.sh
+CMD [ "bin/docker-entrypoint.sh" ]
 EXPOSE 9112 9735
