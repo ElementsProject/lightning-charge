@@ -1,12 +1,10 @@
 import WebSocket from 'ws'
 import basicAuth from 'basic-auth'
 
-const accessToken = process.env.API_TOKEN
-
-module.exports = (app, payListen) => {
+module.exports = (app, payListen, apiToken) => {
   const verifyClient = info => {
     const cred = basicAuth(info.req)
-    return cred && cred.name === 'api-token' && cred.pass === accessToken
+    return cred && cred.name === 'api-token' && cred.pass === apiToken
   }
 
   app.on('listening', server => {

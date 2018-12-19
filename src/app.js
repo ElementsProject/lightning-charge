@@ -1,8 +1,9 @@
 import { join } from 'path'
 import wrap from './lib/promise-wrap'
+import { getToken, authMiddleware } from './lib/auth'
 
-const apiToken = process.env.API_TOKEN || (console.error('Please configure your API access token via --api-token or API_TOKEN'), process.exit(1))
-    , lnPath   = process.env.LN_PATH   || join(require('os').homedir(), '.lightning')
+const lnPath   = process.env.LN_PATH || join(require('os').homedir(), '.lightning')
+    , apiToken = getToken(process.env.API_TOKEN, process.env.COOKIE_FILE)
 
 ;(async () => {
   const db = require('knex')(require('../knexfile'))
@@ -12,7 +13,7 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
   await db.migrate.latest({ directory: join(__dirname, '../migrations') })
 
   const model = require('./model')(db, ln)
-      , auth  = require('./lib/auth')('api-token', apiToken)
+      , auth  = authMiddleware('api-token', apiToken)
       , payListen = require('./lib/payment-listener')(lnPath, model)
 
   const app = require('express')()
@@ -32,7 +33,7 @@ const apiToken = process.env.API_TOKEN || (console.error('Please configure your 
 
   require('./sse')(app, payListen, auth)
   require('./webhook')(app, payListen, model, auth)
-  require('./websocket')(app, payListen)
+  require('./websocket')(app, payListen, apiToken)
 
   app.use((err, req, res, next) =>
     err.name == 'LightningError' ? res.status(err.status || 400).send(err.toString())
