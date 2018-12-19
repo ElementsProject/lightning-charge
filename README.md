@@ -39,6 +39,8 @@ $ LN_PATH=~/.lightning DB_PATH=charge.db API_TOKEN=mySecretToken PORT=9112 charg
 ```
 
 Listens for connections on `127.0.0.1` by default. Set `-i 0.0.0.0` to bind on all available interfaces.
+Note that Charge does not have TLS encryption and should not normally be exposed directly to the public
+internet. For remote access, you should setup an SSH tunnel or a TLS-enabled reverse proxy like nginx.
 
 See `$ charged --help` for the full list of available options.
 
