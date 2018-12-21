@@ -106,6 +106,8 @@ Below are example LApps built on top of Lightning Charge:
 
 - [WooCommerce Lightning](https://github.com/ElementsProject/woocommerce-gateway-lightning), a lightning gateway for the WooCommerce e-commerce software.
 
+- [Lightning Jukebox](https://github.com/ElementsProject/lightning-jukebox), a lightning powered jukebox. Pay with Bitcoin to choose your music.
+
 ## REST API
 
 All endpoints accept and return data in JSON format.
