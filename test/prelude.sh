@@ -41,6 +41,7 @@ echo Setting up bitcoind >&2
 mkdir -p $BTC_DIR
 cat >$BTC_DIR/bitcoin.conf <<EOL
 regtest=1
+printtoconsole=0
 
 [regtest]
 rpcport=`get-port`
