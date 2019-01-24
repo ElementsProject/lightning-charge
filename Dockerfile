@@ -16,10 +16,10 @@ RUN [ -n "$STANDALONE" ] || \
     && DEVELOPER=$TESTRUNNER ./configure \
     && make)
 
-ENV BITCOIN_VERSION 0.17.0.1
+ENV BITCOIN_VERSION 0.17.1
 ENV BITCOIN_FILENAME bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_FILENAME
-ENV BITCOIN_SHA256 6ccc675ee91522eee5785457e922d8a155e4eb7d5524bd130eb0ef0f0c4a6008
+ENV BITCOIN_SHA256 53ffca45809127c9ba33ce0080558634101ec49de5224b2998c489b6d0fc2b17
 ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN [ -n "$STANDALONE" ] || \
@@ -30,8 +30,7 @@ RUN [ -n "$STANDALONE" ] || \
     && wget -qO bitcoin.asc "$BITCOIN_ASC_URL" \
     && gpg --verify bitcoin.asc \
     && cat bitcoin.asc | grep "$BITCOIN_FILENAME" | sha256sum -c - \
-    && BD=bitcoin-0.17.0/bin \
-    # the above is needed because the dir name is missing the .1 && BD=bitcoin-$BITCOIN_VERSION/bin \
+    && BD=bitcoin-$BITCOIN_VERSION/bin \
     && tar -xzvf "$BITCOIN_FILENAME" $BD/bitcoind $BD/bitcoin-cli --strip-components=1)
 
 RUN mkdir /opt/bin && ([ -n "$STANDALONE" ] || \
