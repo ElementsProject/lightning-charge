@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
                                      libsqlite3-dev python python3 wget zlib1g-dev")
 
 ARG TESTRUNNER
-ARG LIGHTNINGD_VERSION=v0.6.2
+ARG LIGHTNINGD_VERSION=v0.6.3
 
 RUN [ -n "$STANDALONE" ] || \
     (git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
