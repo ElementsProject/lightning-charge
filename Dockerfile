@@ -7,11 +7,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
                                      libsqlite3-dev python python3 wget zlib1g-dev")
 
 ARG TESTRUNNER
-ARG LIGHTNINGD_VERSION=v0.6.3
+
+ENV LIGHTNINGD_VERSION=v0.6.3
+ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
 
 RUN [ -n "$STANDALONE" ] || \
     (git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && cd /opt/lightningd \
+    && gpg --keyserver keyserver.ubuntu.com --recv-keys "$LIGHTNINGD_PGP_KEY" \
+    && git verify-tag $LIGHTNINGD_VERSION \
     && git checkout $LIGHTNINGD_VERSION \
     && DEVELOPER=$TESTRUNNER ./configure \
     && make)
