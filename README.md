@@ -29,6 +29,9 @@ $ charged --api-token mySecretToken # defaults: --ln-path ~/.lightning --db-path
 
 ```
 
+> Note: if you're running into permission issues, try following
+[these instructions](https://docs.npmjs.com/getting-started/fixing-npm-permissions#option-two-change-npms-default-directory).
+
 That's it! The Lightning Charge REST API is now running and ready to process payments.
 You can access it at `http://localhost:9112` using the API access token configured with `--api-token`.
 
