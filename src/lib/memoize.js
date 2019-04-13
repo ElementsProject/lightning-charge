@@ -1,5 +1,5 @@
 // Memoize the results of `fn` for up to `ms` milliseconds.
-// Currently only supported functions of a single argument.
+// Currently only supports functions of a single argument.
 
 const memoize = (ms, fn, cache=new Map) => arg => {
   const cached = cache.has(arg) && cache.get(arg)
