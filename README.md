@@ -53,7 +53,7 @@ To deploy Lightning Charge with Docker, run these commands:
 
 ```bash
 $ mkdir data # make sure to create the folder _before_ running docker
-$ docker run -u `id -u` -v `pwd`/data:/data -p 9112:9112 \
+$ docker run -u `id -u` -v `pwd`/data:/data -p 9735:9735 -p 9112:9112 \
              -e API_TOKEN=mySecretToken \
              shesek/lightning-charge
 ```
