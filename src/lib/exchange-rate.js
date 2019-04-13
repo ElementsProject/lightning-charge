@@ -1,17 +1,19 @@
 import big from 'big.js'
 import request from 'superagent'
+import memoize from './memoize'
 
 const FIXED_RATES    = { BTC: 1 }
     , BTC_MSAT_RATIO = big('100000000000')
+    , CACHE_TTL      = +process.env.RATE_CACHE_TTL || 30000
 
 const enc = encodeURIComponent
 
 // Fetch current exchange rate from BitcoinAverage
-// @TODO cache results?
-const getRate = currency =>
+const getRate = memoize(CACHE_TTL, currency =>
   request.get(`https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC&fiat=${enc(currency)}`)
     .then(res => res.body['BTC'+currency].last)
     .catch(err => Promise.reject(err.status == 404 ? new Error('Unknown currency: '+currency) : err))
+)
 
 // Convert `amount` units of `currency` to msatoshis
 const toMsat = async (currency, amount) =>
