@@ -18,20 +18,20 @@
     "babel-polyfill": "^6.26.0",
     "basic-auth": "^2.0.1",
     "big.js": "^5.2.2",
-    "body-parser": "^1.18.3",
-    "debug": "^4.1.0",
+    "body-parser": "^1.19.0",
+    "debug": "^4.1.1",
     "express": "^4.16.4",
-    "knex": "^0.15.2",
+    "knex": "^0.16.5",
     "lightning-client": "github:shesek/lightning-client-js#0d2a610ea24919861e2051dbf43a15994d8e79df",
     "meow": "^5.0.0",
     "morgan": "^1.9.1",
     "move-decimal-point": "0.0.4",
-    "nanoid": "^1.3.4",
+    "nanoid": "^2.0.1",
     "pug": "^2.0.3",
-    "qrcode": "^1.3.2",
-    "sqlite3": "^4.0.4",
-    "superagent": "^3.8.3",
-    "ws": "^6.1.2"
+    "qrcode": "^1.3.3",
+    "sqlite3": "^4.0.6",
+    "superagent": "^5.0.5",
+    "ws": "^7.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -41,9 +41,9 @@
     "babel-register": "^6.26.0",
     "eventsource": "^1.0.7",
     "get-port-cli": "^2.0.0",
-    "mocha": "^5.2.0",
+    "mocha": "^6.1.4",
     "stylus": "^0.54.5",
-    "supertest": "^3.3.0",
-    "uglify-js": "^3.4.9"
+    "supertest": "^4.0.2",
+    "uglify-js": "^3.5.10"
   }
 }
