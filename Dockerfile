@@ -68,7 +68,7 @@ ENV STANDALONE=$STANDALONE
 
 RUN ([ -n "$STANDALONE" ] || ( \
           apt-get update && apt-get install -y --no-install-recommends inotify-tools libgmp-dev libsqlite3-dev \
-          $(test -n "$TESTRUNNER" && echo jq))) \
+          $(test -n "$TESTRUNNER" && echo jq procps))) \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /opt/charged/bin/charged /usr/bin/charged \
     && mkdir /data \
