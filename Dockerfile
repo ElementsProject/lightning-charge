@@ -2,13 +2,13 @@ FROM node:8.15-slim as builder
 
 ARG STANDALONE
 
-RUN apt-get update && apt-get install -y --no-install-recommends git \
+RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recommends git \
     $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential libtool libgmp-dev \
                                      libsqlite3-dev python python3 wget zlib1g-dev")
 
 ARG TESTRUNNER
 
-ENV LIGHTNINGD_VERSION=v0.6.3
+ENV LIGHTNINGD_VERSION=v0.7.0
 ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
 
 RUN [ -n "$STANDALONE" ] || \
@@ -17,13 +17,16 @@ RUN [ -n "$STANDALONE" ] || \
     && gpg --keyserver keyserver.ubuntu.com --recv-keys "$LIGHTNINGD_PGP_KEY" \
     && git verify-tag $LIGHTNINGD_VERSION \
     && git checkout $LIGHTNINGD_VERSION \
-    && DEVELOPER=$TESTRUNNER ./configure \
-    && make)
+    && DEVELOPER=$TESTRUNNER ./configure --prefix=./target \
+    && make -j3 \
+    && make install \
+    && rm -r target/share \
+    && mv -f target/* /opt/local/)
 
-ENV BITCOIN_VERSION 0.17.1
+ENV BITCOIN_VERSION 0.18.0
 ENV BITCOIN_FILENAME bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_FILENAME
-ENV BITCOIN_SHA256 53ffca45809127c9ba33ce0080558634101ec49de5224b2998c489b6d0fc2b17
+ENV BITCOIN_SHA256 5146ac5310133fbb01439666131588006543ab5364435b748ddfc95a8cb8d63f
 ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN [ -n "$STANDALONE" ] || \
@@ -35,12 +38,8 @@ RUN [ -n "$STANDALONE" ] || \
     && gpg --verify bitcoin.asc \
     && cat bitcoin.asc | grep "$BITCOIN_FILENAME" | sha256sum -c - \
     && BD=bitcoin-$BITCOIN_VERSION/bin \
-    && tar -xzvf "$BITCOIN_FILENAME" $BD/bitcoind $BD/bitcoin-cli --strip-components=1)
-
-RUN mkdir /opt/bin && ([ -n "$STANDALONE" ] || \
-    (mv /opt/lightningd/cli/lightning-cli /opt/bin/ \
-    && mv /opt/lightningd/lightningd/lightning* /opt/bin/ \
-    && mv /opt/bitcoin/bin/* /opt/bin/))
+    && tar -xzvf "$BITCOIN_FILENAME" $BD/bitcoind $BD/bitcoin-cli --strip-components=1 \
+    && mv bin/* /opt/local/bin/)
 
 WORKDIR /opt/charged
 
@@ -74,7 +73,7 @@ RUN ([ -n "$STANDALONE" ] || ( \
     && mkdir /data \
     && ln -s /data/lightning /tmp/.lightning
 
-COPY --from=builder /opt/bin /usr/bin
+COPY --from=builder /opt/local /usr/local
 COPY --from=builder /opt/charged /opt/charged
 
 CMD [ "bin/docker-entrypoint.sh" ]

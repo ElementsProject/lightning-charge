@@ -57,8 +57,10 @@ command -v inotifywait > /dev/null \
 
 btc -rpcwait getblockchaininfo > /dev/null
 
+addr=`btc getnewaddress`
+
 echo - Generating some blocks... > $dbgout
-btc generate 432 > /dev/null
+btc generatetoaddress 432 $addr > /dev/null
 
 # Setup lightningd
 
@@ -76,7 +78,7 @@ sed $sedq "/Listening on 'lightning-rpc'/ q" <(tail -F -n+0 $LN_BOB_PATH/debug.l
 
 echo - Funding lightning wallet... > $dbgout
 btc sendtoaddress $(lnb newaddr | jq -r .address) 1 > $dbgout
-btc generate 1 > /dev/null
+btc generatetoaddress 1 $addr > /dev/null
 sed $sedq '/Owning output [0-9]/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log)
 
 echo - Connecting peers... > $dbgout
@@ -85,7 +87,7 @@ lnb connect $aliceid 127.0.0.1 `lna getinfo | jq -r .binding[0].port` | jq -c . 
 
 echo - Setting up channel... > $dbgout
 lnb fundchannel $aliceid 16777215 10000perkb | jq -c . > $dbgout
-btc generate 1 > /dev/null
+btc generatetoaddress 1 $addr > /dev/null
 
 sed $sedq '/State changed from CHANNELD_AWAITING_LOCKIN to CHANNELD_NORMAL/ q' <(tail -f -n+0 $LN_ALICE_PATH/debug.log)
 sed $sedq '/State changed from CHANNELD_AWAITING_LOCKIN to CHANNELD_NORMAL/ q' <(tail -f -n+0 $LN_BOB_PATH/debug.log)
