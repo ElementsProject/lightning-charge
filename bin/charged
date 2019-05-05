@@ -10,9 +10,15 @@ const args = require('meow')(`
       -l, --ln-path <path>      path to c-lightning data directory [default: ~/.lightning]
       -d, --db-path <path>      path to sqlite3 database file [default: ./sqlite.db]
       -w, --max-wait <sec>      maximum time to wait for invoice long-poll updates, in seconds [default: 120]
+
       -p, --port <port>         http server port [default: 9112]
       -i, --host <host>         http server listen address [default: 127.0.0.1]
       -e, --node-env <env>      nodejs environment mode [default: production]
+
+      --rate-proxy <uri>        proxy to use for fetching exchange rate from bitcoinaverage [default: see proxy-from-env]
+      --hook-proxy <uri>        proxy to use for web hook push requests [default: see proxy-from-env]
+      --all-proxy <uri>         proxy to use for all http requests [default: see proxy-from-env]
+
       -h, --help                output usage information
       -v, --version             output version number
 

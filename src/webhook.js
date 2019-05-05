@@ -1,7 +1,13 @@
 import request from 'superagent'
 import wrap from './lib/promise-wrap'
 
+require('superagent-proxy')(request)
+
 const debug = require('debug')('lightning-charge')
+
+// if none if set, will fallback to using HTTP(S)_PROXY or ALL_PROXY.
+// see https://github.com/Rob--W/proxy-from-env
+const HOOK_PROXY = process.env.HOOK_PROXY
 
 module.exports = (app, payListen, model, auth) => {
   const { addHook, getHooks, logHook } = model
@@ -19,7 +25,9 @@ module.exports = (app, payListen, model, auth) => {
 
     Promise.all(hooks.map(hook =>
       request.post(hook.url)
-        .type('json').send(invoice)
+        .proxy(HOOK_PROXY)
+        .type('json')
+        .send(invoice)
         .then(res  => res.ok ? res : Promise.reject(new Error('invalid status code '+res.status)))
         .then(res  => logHook(hook.id, null, res))
         .catch(err => logHook(hook.id, err))
