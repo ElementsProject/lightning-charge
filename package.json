@@ -15,7 +15,7 @@
     "prepublishOnly": "npm test && npm run dist"
   },
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
+    "@babel/polyfill": "^7.4.4",
     "basic-auth": "^2.0.1",
     "big.js": "^5.2.2",
     "body-parser": "^1.19.0",
@@ -35,11 +35,10 @@
     "ws": "^7.0.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/register": "^7.4.4",
     "eventsource": "^1.0.7",
     "get-port-cli": "^2.0.0",
     "mocha": "^6.1.4",

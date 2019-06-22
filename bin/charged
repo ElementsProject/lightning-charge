@@ -38,8 +38,8 @@ const envify = k => k.replace(/([A-Z])/g, '_$1').toUpperCase()
 Object.keys(args).filter(k => k.length > 1)
   .forEach(k => process.env[envify(k)] = args[k])
 
-require('babel-polyfill')
+require('@babel/polyfill')
 
 require('fs').existsSync(__dirname + '/../src')
-  ? require('babel-register') && require('../src/app')
+  ? require('@babel/register') && require('../src/app')
   : require('../dist/app')
