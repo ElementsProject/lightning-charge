@@ -53,7 +53,7 @@ To deploy Lightning Charge with Docker, run these commands:
 
 ```bash
 $ mkdir data # make sure to create the folder _before_ running docker
-$ docker run -u `id -u` -v `pwd`/data:/data -p 9735:9735 -p 9112:9112 \
+$ docker run -it -u `id -u` -v `pwd`/data:/data -p 9735:9735 -p 9112:9112 \
              -e API_TOKEN=mySecretToken \
              shesek/lightning-charge
 ```
@@ -66,7 +66,7 @@ Runs in `testnet` mode by default, set `NETWORK` to override.
 If you want to experiment in `regtest` mode and don't care about persisting data, this should do:
 
 ```bash
-$ docker run -e NETWORK=regtest -e API_TOKEN=mySecretToken -p 9112:9112 shesek/lightning-charge
+$ docker run -it -e NETWORK=regtest -e API_TOKEN=mySecretToken -p 9112:9112 shesek/lightning-charge
 ```
 
 To connect to an existing `lightningd` instance running on the same machine,
@@ -298,7 +298,7 @@ To prevent the test environment files from being deleted after completing the te
 To setup a testing environment without running the tests, run `$ npm run testenv`.
 This will display information about the running services and keep them alive for further inspection.
 
-Tests can also be run using docker: `$ docker build --build-arg TESTRUNNER=1 -t charge . && docker run charge npm test`
+Tests can also be run using docker: `$ docker build --build-arg TESTRUNNER=1 -t charge . && docker run -it charge npm test`
 
 ## License
 
