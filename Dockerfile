@@ -8,7 +8,7 @@ RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recomm
 
 ARG TESTRUNNER
 
-ENV LIGHTNINGD_VERSION=v0.7.0
+ENV LIGHTNINGD_VERSION=v0.7.1
 ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
 
 RUN [ -n "$STANDALONE" ] || \
