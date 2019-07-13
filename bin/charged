@@ -14,6 +14,7 @@ const args = require('meow')(`
       -p, --port <port>         http server port [default: 9112]
       -i, --host <host>         http server listen address [default: 127.0.0.1]
       -e, --node-env <env>      nodejs environment mode [default: production]
+      --allow-cors <origin>     allow browser CORS requests from <origin> [default: off]
 
       --rate-proxy <uri>        proxy to use for fetching exchange rate from bitcoinaverage [default: see proxy-from-env]
       --hook-proxy <uri>        proxy to use for web hook push requests [default: see proxy-from-env]

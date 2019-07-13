@@ -26,6 +26,11 @@ const lnPath   = process.env.LN_PATH || join(require('os').homedir(), '.lightnin
   app.use(require('body-parser').json())
   app.use(require('body-parser').urlencoded({ extended: true }))
 
+  process.env.ALLOW_CORS && app.use((req, res, next) => {
+    res.set('Access-Control-Allow-Origin', process.env.ALLOW_CORS)
+    next()
+  })
+
   app.get('/info', auth, wrap(async (req, res) => res.send(await ln.getinfo())))
 
   require('./invoicing')(app, payListen, model, auth, lnconf)

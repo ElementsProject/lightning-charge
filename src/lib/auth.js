@@ -21,6 +21,7 @@ export const authMiddleware = (name, pass, realm='Lightning Charge') => (req, re
 
   if (!cred || cred.name !== name || cred.pass !== pass)
     res.set('WWW-Authenticate', `Basic realm="${realm}"`)
+       .removeHeader('Access-Control-Allow-Origin')
        .sendStatus(401)
 
   else next()
