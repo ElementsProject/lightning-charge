@@ -115,6 +115,30 @@ describe('Invoice API', function() {
     })
   })
 
+  describe('DELETE /invoice/:invoice', () => {
+    it('deletes an invoice by its id and status', async () => {
+      const inv = await mkInvoice()
+      charge.del(`/invoice/${ inv.id }`)
+        .send({ status: 'unpaid' })
+        .expect(204)
+    })
+
+    it("won't delete the invoice if the status mismatches", async () => {
+      const inv = await mkInvoice()
+
+      await charge.del(`/invoice/${ inv.id }`)
+        .send({ status: 'paid' })
+        .expect(400)
+
+      await lnBob.pay(inv.payreq, 1000)
+
+      await charge.del(`/invoice/${ inv.id }`)
+        .send({ status: 'paid' })
+        .expect(204)
+    })
+  })
+
+
   describe('GET /invoice/:invoice/wait', function() {
     this.slow(500)
 

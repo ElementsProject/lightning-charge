@@ -191,6 +191,19 @@ $ curl $CHARGE/invoice/OYwwaOQAPMFvg039gj_Rb
 {"id":"OYwwaOQAPMFvg039gj_Rb","msatoshi":"3738106","quoted_currency":"EUR","quoted_amount":"0.5","status":"unpaid",...}
 ```
 
+### `DELETE /invoice/:id`
+
+Delete the specified invoice.
+
+*Body parameters:* `status`
+
+The current status of the invoice needs to be specified in the request body.
+
+```bash
+$ curl -X DELETE $CHARGE/invoice/OYwwaOQAPMFvg039gj_Rb -d status=unpaid
+204 No Content
+```
+
 ### `GET /invoice/:id/wait?timeout=[sec]`
 
 Long-polling invoice payment notification.

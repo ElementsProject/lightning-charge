@@ -6,7 +6,7 @@ const debug = require('debug')('lightning-charge')
 const maxWait = +process.env.MAX_WAIT || 600
 
 module.exports = (app, payListen, model, auth, lnconf) => {
-  const { newInvoice, fetchInvoice, listInvoices, delExpired } = model
+  const { newInvoice, fetchInvoice, listInvoices, delInvoice, delExpired } = model
 
   app.on('listening', server => server.timeout = maxWait*1000 + 500)
 
@@ -36,6 +36,11 @@ module.exports = (app, payListen, model, auth, lnconf) => {
     if (paid) res.send(paid)
     else res.sendStatus(timeout == expires_in ? 410 : 402)
     // @TODO remove listener on client disconnect
+  }))
+
+  app.delete('/invoice/:invoice', auth, wrap(async (req, res) => {
+    await delInvoice(req.params.invoice, req.body.status)
+    res.sendStatus(204)
   }))
 
   // Enable automatic cleanup for expired invoices if enabled on c-lightning,

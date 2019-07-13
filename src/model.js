@@ -45,6 +45,11 @@ module.exports = (db, ln) => {
   const fetchInvoice = id =>
     db('invoice').where({ id }).first().then(r => r && format(r))
 
+  const delInvoice = async (id, status) => {
+    await ln.delinvoice(id, status)
+    await db('invoice').where({ id }).del()
+  }
+
   const markPaid = (id, pay_index, paid_at, msatoshi_received) =>
     db('invoice').where({ id, pay_index: null })
                  .update({ pay_index, paid_at, msatoshi_received })
@@ -79,7 +84,7 @@ module.exports = (db, ln) => {
       !err ? { requested_at: now(), success: true,  resp_code: res.status }
            : { requested_at: now(), success: false, resp_error: err })
 
-  return { newInvoice, listInvoices, fetchInvoice
+  return { newInvoice, listInvoices, fetchInvoice, delInvoice
          , getLastPaid, markPaid, delExpired
          , addHook, getHooks, logHook }
 }
