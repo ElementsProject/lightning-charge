@@ -21,7 +21,7 @@
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
     "express": "^4.17.1",
-    "knex": "^0.17.6",
+    "knex": "^0.19.0",
     "lightning-client": "github:shesek/lightning-client-js#0d2a610ea24919861e2051dbf43a15994d8e79df",
     "meow": "^5.0.0",
     "morgan": "^1.9.1",
@@ -32,12 +32,12 @@
     "sqlite3": "^4.0.9",
     "superagent": "^5.1.0",
     "superagent-proxy": "github:shesek/superagent-proxy#5f0570481b4e98918103d5577006ff060123e87d",
-    "ws": "^7.0.1"
+    "ws": "^7.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
     "@babel/register": "^7.4.4",
     "eventsource": "^1.0.7",
     "get-port-cli": "^2.0.0",
