@@ -77,7 +77,7 @@ sed $sedq "/Listening on 'lightning-rpc'/ q" <(tail -F -n+0 $LN_ALICE_PATH/debug
 sed $sedq "/Listening on 'lightning-rpc'/ q" <(tail -F -n+0 $LN_BOB_PATH/debug.log 2> /dev/null)
 
 echo - Funding lightning wallet... > $dbgout
-btc sendtoaddress $(lnb newaddr | jq -r .bech32) 1 > $dbgout
+btc sendtoaddress $(lnb newaddr | jq -r '.bech32 // .address') 1 > $dbgout
 btc generatetoaddress 1 $addr > /dev/null
 sed $sedq '/Owning output [0-9]/ q' <(tail -F -n+0 $LN_BOB_PATH/debug.log)
 
