@@ -28,6 +28,8 @@ const lnPath   = process.env.LN_PATH || join(require('os').homedir(), '.lightnin
 
   process.env.ALLOW_CORS && app.use((req, res, next) => {
     res.set('Access-Control-Allow-Origin', process.env.ALLOW_CORS)
+    res.set('Access-Control-Allow-Headers', 'Content-Type, Accept')
+    res.set('Access-Control-Allow-Methods', 'GET, DELETE, POST')
     next()
   })
 
