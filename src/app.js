@@ -7,7 +7,7 @@ const lnPath   = process.env.LN_PATH || join(require('os').homedir(), '.lightnin
 
 ;(async () => {
   const db = require('knex')(require('../knexfile'))
-      , ln = require('lightning-client')(lnPath)
+      , ln = require('clightning-client')(lnPath)
       , lnconf = await ln.listconfigs()
 
   await db.migrate.latest({ directory: join(__dirname, '../migrations') })

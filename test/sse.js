@@ -5,7 +5,7 @@ describe('Server-Sent-Events', function() {
   let charge, lnBob
   before(() => {
     charge = require('supertest')(process.env.CHARGE_URL)
-    lnBob  = require('lightning-client')(process.env.LN_BOB_PATH)
+    lnBob  = require('clightning-client')(process.env.LN_BOB_PATH)
   })
 
   const mkInvoice = props =>

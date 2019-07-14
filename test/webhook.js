@@ -4,7 +4,7 @@ describe('Webhooks', function() {
   let charge, lnBob, cbServer, cbURL, cbRecv=[]
   before(() => {
     charge = require('supertest')(process.env.CHARGE_URL)
-    lnBob  = require('lightning-client')(process.env.LN_BOB_PATH)
+    lnBob  = require('clightning-client')(process.env.LN_BOB_PATH)
 
     // Setup mock web server to listen for webhook callback requests
     const cbApp = require('express')()

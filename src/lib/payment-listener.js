@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { LightningClient } from 'lightning-client'
+import { LightningClient } from 'clightning-client'
 
 const debug = require('debug')('lightning-charge')
 
