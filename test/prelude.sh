@@ -60,7 +60,7 @@ btc -rpcwait getblockchaininfo > /dev/null
 addr=`btc getnewaddress`
 
 echo - Generating some blocks... > $dbgout
-btc generatetoaddress 432 $addr > /dev/null
+btc generatetoaddress 101 $addr > /dev/null
 
 # Setup lightningd
 
