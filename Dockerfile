@@ -3,12 +3,12 @@ FROM node:8.15-slim as builder
 ARG STANDALONE
 
 RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recommends git \
-    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential libtool libgmp-dev \
-                                     libsqlite3-dev python python3 wget zlib1g-dev")
+    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
+                                     libsqlite3-dev python python3 python3-mako wget zlib1g-dev")
 
 ARG TESTRUNNER
 
-ENV LIGHTNINGD_VERSION=v0.7.1
+ENV LIGHTNINGD_VERSION=v0.7.2
 ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
 
 RUN [ -n "$STANDALONE" ] || \
