@@ -3,5 +3,8 @@ node_modules
 sqlite.db
 dist
 .git
+docker-release.sh
+.dockerignore
 Dockerfile
-bin/docker-build.sh
+arm32v7.Dockerfile
+arm64v8.Dockerfile
