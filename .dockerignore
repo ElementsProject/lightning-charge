@@ -3,7 +3,7 @@ node_modules
 sqlite.db
 dist
 .git
-docker-release.sh
+bin/docker-release.sh
 .dockerignore
 Dockerfile
 arm32v7.Dockerfile

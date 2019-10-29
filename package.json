@@ -12,6 +12,7 @@
     "test": "bin/test.sh",
     "testenv": "bin/testenv.sh",
     "dist": "bin/dist.sh",
+    "docker-release": "bin/docker-release.sh",
     "prepublishOnly": "npm test && npm run dist"
   },
   "dependencies": {
