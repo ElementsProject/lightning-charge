@@ -2,7 +2,8 @@ FROM node:8.15-slim as builder
 
 ARG STANDALONE
 
-RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recommends git
+RUN mkdir /opt/local && apt-get update && \
+  apt-get install -y --no-install-recommends git qemu qemu-user-static qemu-user binfmt-support
 
 WORKDIR /opt/charged
 
@@ -21,6 +22,8 @@ ENV HOME /tmp
 ENV NODE_ENV production
 ARG STANDALONE
 ENV STANDALONE=$STANDALONE
+
+COPY --from=builder /usr/bin/qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
 RUN rm -rf /var/lib/apt/lists/* \
     && ln -s /opt/charged/bin/charged /usr/bin/charged \
