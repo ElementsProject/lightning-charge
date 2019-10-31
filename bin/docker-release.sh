@@ -4,6 +4,8 @@ set -xeo pipefail
 docker_name=shesek/lightning-charge
 version=`node -p 'require("./package").version'`
 
+export DOCKER_CLI_EXPERIMENTAL=enabled
+
 # Building the arm32v7 image requires registering qemu on the host, which can be done using one of the following:
 # sudo apt-get install qemu binfmt-support qemu-user-static
 # docker run --rm --privileged multiarch/qemu-user-static:register --reset
