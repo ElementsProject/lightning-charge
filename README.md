@@ -107,9 +107,17 @@ Below are example LApps built on top of Lightning Charge:
 
 - [ifpaytt](https://github.com/ElementsProject/ifpaytt): trigger IFTTT actions with lightning payments.
 
-- [WooCommerce Lightning](https://github.com/ElementsProject/woocommerce-gateway-lightning), a lightning gateway for the WooCommerce e-commerce software.
+- [WooCommerce Lightning](https://github.com/ElementsProject/woocommerce-gateway-lightning): a lightning gateway for the WooCommerce e-commerce software.
 
-- [Lightning Jukebox](https://github.com/ElementsProject/lightning-jukebox), a lightning powered jukebox. Pay with Bitcoin to choose your music.
+- [Lightning Jukebox](https://github.com/ElementsProject/lightning-jukebox): a lightning powered jukebox. Pay with Bitcoin to choose your music.
+
+Third party Lapps:
+
+- [Satoshi's Place](https://github.com/LightningK0ala/satoshis.place): a collaborative art board, pay with lightning to draw on a pixel grid. (live on [satoshis.place](https://satoshis.place/))
+
+- [Pollo feed](https://github.com/j-chimienti/pollofeed): a lightning powered chicken feeder. (live on [pollofeed.com](https://pollofeed.com/))
+
+- [lightning-captive-portal](https://github.com/poperbu/lightning-captive-portal/): Wi-Fi access through a nodogsplash captive portal with Lightning payments.
 
 ## REST API
 
