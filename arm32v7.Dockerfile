@@ -25,7 +25,8 @@ ENV STANDALONE=$STANDALONE
 
 COPY --from=builder /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
 
-RUN rm -rf /var/lib/apt/lists/* \
+RUN apt-get update && apt-get install -y --no-install-recommends inotify-tools \
+    && rm -rf /var/lib/apt/lists/* \
     && ln -s /opt/charged/bin/charged /usr/bin/charged \
     && mkdir /data \
     && ln -s /data/lightning /tmp/.lightning

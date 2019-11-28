@@ -65,9 +65,10 @@ ENV NODE_ENV production
 ARG STANDALONE
 ENV STANDALONE=$STANDALONE
 
-RUN ([ -n "$STANDALONE" ] || ( \
-          apt-get update && apt-get install -y --no-install-recommends inotify-tools libgmp-dev libsqlite3-dev \
-          $(test -n "$TESTRUNNER" && echo jq procps))) \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends inotify-tools \
+    && ([ -n "$STANDALONE" ] || apt-get install -y --no-install-recommends libgmp-dev libsqlite3-dev) \
+    && ([ -z "$TESTRUNNER" ] || apt-get install -y --no-install-recommends jq procps) \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /opt/charged/bin/charged /usr/bin/charged \
     && mkdir /data \
