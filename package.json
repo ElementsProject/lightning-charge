@@ -23,28 +23,28 @@
     "clightning-client": "^0.1.1",
     "debug": "^4.1.1",
     "express": "^4.17.1",
-    "knex": "^0.20.3",
+    "knex": "^0.20.4",
     "meow": "^5.0.0",
     "morgan": "^1.9.1",
     "move-decimal-point": "0.0.4",
     "nanoid": "^2.1.7",
     "pug": "^2.0.4",
     "qrcode": "^1.4.4",
-    "sqlite3": "^4.1.0",
-    "superagent": "^5.1.1",
+    "sqlite3": "^4.1.1",
+    "superagent": "^5.1.2",
     "superagent-proxy": "github:shesek/superagent-proxy#b512f8bbcf1baa196058922ee3b6cfe45375ebc9",
     "ws": "^7.2.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.4",
-    "@babel/core": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.6",
     "@babel/register": "^7.7.4",
     "eventsource": "^1.0.7",
     "get-port-cli": "^2.0.0",
     "mocha": "^6.2.2",
     "stylus": "^0.54.7",
     "supertest": "^4.0.2",
-    "uglify-js": "^3.7.0"
+    "uglify-js": "^3.7.1"
   }
 }
