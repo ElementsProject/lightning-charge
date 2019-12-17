@@ -20,7 +20,7 @@
     "basic-auth": "^2.0.1",
     "big.js": "^5.2.2",
     "body-parser": "^1.19.0",
-    "clightning-client": "^0.1.1",
+    "clightning-client": "^0.1.2",
     "debug": "^4.1.1",
     "express": "^4.17.1",
     "knex": "^0.20.4",
