@@ -1086,11 +1086,6 @@
       "dev": true,
       "optional": true
     },
-    "async-limiter": {
-      "version": "1.0.1",
-      "resolved": "https://registry.npmjs.org/async-limiter/-/async-limiter-1.0.1.tgz",
-      "integrity": "sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ=="
-    },
     "asynckit": {
       "version": "0.4.0",
       "resolved": "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz",
@@ -4389,9 +4384,9 @@
       "integrity": "sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg=="
     },
     "nanoid": {
-      "version": "2.1.7",
-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-2.1.7.tgz",
-      "integrity": "sha512-fmS3qwDldm4bE01HCIRqNk+f255CNjnAoeV3Zzzv0KemObHKqYgirVaZA9DtKcjogicWjYcHkJs4D5A8CjnuVQ=="
+      "version": "2.1.8",
+      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-2.1.8.tgz",
+      "integrity": "sha512-g1z+n5s26w0TGKh7gjn7HCqurNKMZWzH08elXzh/gM/csQHd/UqDV6uxMghQYg9IvqRPm1QpeMk50YMofHvEjQ=="
     },
     "nanomatch": {
       "version": "1.2.13",
@@ -6400,9 +6395,9 @@
       }
     },
     "uglify-js": {
-      "version": "3.7.1",
-      "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.7.1.tgz",
-      "integrity": "sha512-pnOF7jY82wdIhATVn87uUY/FHU+MDUdPLkmGFvGoclQmeu229eTkbG5gjGGBi3R7UuYYSEeYXY/TTY5j2aym2g==",
+      "version": "3.7.2",
+      "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.7.2.tgz",
+      "integrity": "sha512-uhRwZcANNWVLrxLfNFEdltoPNhECUR3lc+UdJoG9CBpMcSnKyWA94tc3eAujB1GcMY5Uwq8ZMp4qWpxWYDQmaA==",
       "dev": true,
       "requires": {
         "commander": "~2.20.3",
@@ -6687,12 +6682,9 @@
       "integrity": "sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8="
     },
     "ws": {
-      "version": "7.2.0",
-      "resolved": "https://registry.npmjs.org/ws/-/ws-7.2.0.tgz",
-      "integrity": "sha512-+SqNqFbwTm/0DC18KYzIsMTnEWpLwJsiasW/O17la4iDRRIO9uaHbvKiAS3AHgTiuuWerK/brj4O6MYZkei9xg==",
-      "requires": {
-        "async-limiter": "^1.0.0"
-      }
+      "version": "7.2.1",
+      "resolved": "https://registry.npmjs.org/ws/-/ws-7.2.1.tgz",
+      "integrity": "sha512-sucePNSafamSKoOqoNfBd8V0StlkzJKL2ZAhGQinCfNQ+oacw+Pk7lcdAElecBF2VkLNZRiIb5Oi1Q5lVUVt2A=="
     },
     "xregexp": {
       "version": "2.0.0",
