@@ -8,8 +8,8 @@ RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recomm
 
 ARG TESTRUNNER
 
-ENV LIGHTNINGD_VERSION=v0.7.3
-ENV LIGHTNINGD_PGP_KEY=30DE693AE0DE9E37B3E7EB6BBFF0F67810C1EED1
+ENV LIGHTNINGD_VERSION=v0.8.0
+ENV LIGHTNINGD_PGP_KEY=B7C4BE81184FC203D52C35C51416D83DC4F0E86D
 
 RUN [ -n "$STANDALONE" ] || \
     (git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
