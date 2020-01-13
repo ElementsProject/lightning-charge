@@ -67,6 +67,7 @@ btc generatetoaddress 101 $addr > /dev/null
 echo Setting up lightningd >&2
 
 LN_OPTS="$LN_OPTS --network=regtest --dev-bitcoind-poll=1 --bitcoin-datadir=$BTC_DIR --log-level=debug --log-file=debug.log
+  --fee-base 0 --fee-per-satoshi 0
   --allow-deprecated-apis="$([ -n "$ALLOW_DEPRECATED" ] && echo true || echo false)
 
 lightningd $LN_OPTS --addr=127.0.0.1:`get-port` --lightning-dir=$LN_ALICE_PATH  &> $dbgout &
