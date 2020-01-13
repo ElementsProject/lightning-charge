@@ -30,15 +30,17 @@ describe('Invoice API', function() {
         })
     )
 
-    it('accepts amounts denominated in fiat currencies', () =>
-      charge.post('/invoice')
-        .send({ currency: 'ILS', amount: '0.05' })
-        .expect(201)
-        .expect(({ body }) => {
-          eq(body.quoted_currency, 'ILS')
-          eq(body.quoted_amount, '0.05')
-          ok(/^\d+$/.test(body.msatoshi))
-        })
+    ;[ 'USD' /* from bitstamp */, 'ILS' /* from coingecko */ ].forEach(currency =>
+      it('accepts amounts denominated in fiat currencies - ' + currency, () =>
+        charge.post('/invoice')
+          .send({ currency, amount: '0.05' })
+          .expect(201)
+          .expect(({ body }) => {
+            eq(body.quoted_currency, currency)
+            eq(body.quoted_amount, '0.05')
+            ok(/^\d+$/.test(body.msatoshi))
+          })
+      )
     )
 
     it('can override the expiry time', () =>

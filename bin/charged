@@ -16,7 +16,7 @@ const args = require('meow')(`
       -e, --node-env <env>      nodejs environment mode [default: production]
       --allow-cors <origin>     allow browser CORS requests from <origin> [default: off]
 
-      --rate-proxy <uri>        proxy to use for fetching exchange rate from coinmarketcap [default: see proxy-from-env]
+      --rate-proxy <uri>        proxy to use for fetching exchange rate from bitstamp/coingecko [default: see proxy-from-env]
       --hook-proxy <uri>        proxy to use for web hook push requests [default: see proxy-from-env]
       --all-proxy <uri>         proxy to use for all http requests [default: see proxy-from-env]
 
