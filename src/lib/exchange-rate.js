@@ -14,12 +14,12 @@ const FIXED_RATES    = { BTC: 1 }
 
 const enc = encodeURIComponent
 
-// Fetch current exchange rate from BitcoinAverage
+// Fetch current exchange rate from coinmarketcap
 const getRate = memoize(CACHE_TTL, currency =>
-  request.get(`https://apiv2.bitcoinaverage.com/indices/global/ticker/short?crypto=BTC&fiat=${enc(currency)}`)
+  request.get(`https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=${enc(currency)}`)
     .proxy(RATE_PROXY)
-    .then(res => res.body['BTC'+currency].last)
-    .catch(err => Promise.reject(err.status == 404 ? new Error('Unknown currency: '+currency) : err))
+    .then(res => res.body[0]['price_'+currency.toLowerCase()])
+    .then(rate => rate || Promise.reject(`Unknown currency: ${currency}`))
 )
 
 // Convert `amount` units of `currency` to msatoshis
