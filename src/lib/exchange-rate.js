@@ -31,7 +31,6 @@ const getRateCoingecko = currency =>
   request.get(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=${enc(currency)}`)
     .proxy(RATE_PROXY)
     .then(res => res.body.bitcoin[currency.toLowerCase()] || Promise.reject(`Unknown currency: ${currency}`))
-    .catch(err => Promise.reject(err))
 
 // Convert `amount` units of `currency` to msatoshis
 const toMsat = async (currency, amount) =>
