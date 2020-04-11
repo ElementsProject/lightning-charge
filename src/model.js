@@ -1,4 +1,4 @@
-import nanoid from 'nanoid'
+import { nanoid } from 'nanoid'
 import { toMsat } from './lib/exchange-rate'
 
 const debug  = require('debug')('lightning-charge')
