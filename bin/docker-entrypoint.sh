@@ -72,7 +72,7 @@ if [ ! -S /etc/lightning/lightning-rpc ]; then
 fi
 
 if command -v lightning-cli > /dev/null; then
-  lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
+  lightning-cli --rpc-file=$LN_PATH/lightning-rpc getinfo > /dev/null
   echo -n "c-lightning RPC ready."
 fi
 
