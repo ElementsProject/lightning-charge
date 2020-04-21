@@ -1,4 +1,4 @@
-FROM node:8.15-slim as builder
+FROM node:12.16-slim as builder
 
 ARG STANDALONE
 
@@ -56,7 +56,7 @@ RUN npm run dist \
     && rm -rf src \
     && test -n "$TESTRUNNER" || (rm -rf test node_modules && mv -f node_modules.prod node_modules)
 
-FROM node:8.15-slim
+FROM node:12.16-slim
 
 WORKDIR /opt/charged
 ARG TESTRUNNER

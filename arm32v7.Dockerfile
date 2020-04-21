@@ -1,4 +1,4 @@
-FROM node:8.15-slim as builder
+FROM node:12.16-slim as builder
 
 ARG STANDALONE
 
@@ -14,7 +14,7 @@ COPY . .
 RUN npm run dist \
     && rm -rf src
 
-FROM arm32v7/node:8.15-slim
+FROM arm32v7/node:12.16-slim
 
 WORKDIR /opt/charged
 ARG TESTRUNNER
