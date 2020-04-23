@@ -18,7 +18,7 @@ mixin css(path)
 +css('checkout.css')
 
 - opt = metadata && metadata.checkout || {}
-- unit = opt.display_unit in fmtbtc.units ? opt.display_unit : 'milli'
+- unit = opt.display_unit in fmtbtc.units ? opt.display_unit : 'sat'
 - unit_label = ({ msat: 'millisatoshis', sat: 'satoshis', bit: 'bits', milli: 'mBTC', btc: 'BTC' })[unit]
 
 body: .checkout.container
