@@ -318,7 +318,7 @@ To prevent the test environment files from being deleted after completing the te
 To setup a testing environment without running the tests, run `$ npm run testenv`.
 This will display information about the running services and keep them alive for further inspection.
 
-Tests can also be run using docker: `$ docker build --build-arg TESTRUNNER=1 -t charge . && docker run -it charge npm test`
+Tests can also be run using docker: `$ docker build --build-arg TESTRUNNER=1 -t charge . && docker run -it --entrypoint npm charge test`
 
 ## License
 

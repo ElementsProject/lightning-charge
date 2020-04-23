@@ -1,3 +1,3 @@
 language: minimal
 before_script: docker build --build-arg TESTRUNNER=1 -t charge .
-script: docker run charge npm test -- --colors
+script: docker run --entrypoint npm charge test -- --colors
