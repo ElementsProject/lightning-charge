@@ -39,5 +39,5 @@ COPY --from=builder /opt/local /usr/local
 COPY --from=builder /opt/charged /opt/charged
 COPY --from=builder /usr/bin/tini /usr/bin/
 
-CMD [ "tiny", "-g", "--", "bin/docker-entrypoint.sh" ]
+ENTRYPOINT [ "tiny", "-g", "--", "bin/docker-entrypoint.sh" ]
 EXPOSE 9112 9735

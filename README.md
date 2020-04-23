@@ -54,8 +54,7 @@ To deploy Lightning Charge with Docker, run these commands:
 ```bash
 $ mkdir data # make sure to create the folder _before_ running docker
 $ docker run -it -u `id -u` -v `pwd`/data:/data -p 9735:9735 -p 9112:9112 \
-             -e API_TOKEN=mySecretToken \
-             shesek/lightning-charge
+             shesek/lightning-charge --api-token mySecretToken
 ```
 
 This will start `bitcoind`, `lightningd` and `charged` and hook them up together.
@@ -66,7 +65,7 @@ Runs in `testnet` mode by default, set `NETWORK` to override.
 If you want to experiment in `regtest` mode and don't care about persisting data, this should do:
 
 ```bash
-$ docker run -it -e NETWORK=regtest -e API_TOKEN=mySecretToken -p 9112:9112 shesek/lightning-charge
+$ docker run -it -e NETWORK=regtest -p 9112:9112 shesek/lightning-charge --api-token mySecretToken
 ```
 
 To connect to an existing `lightningd` instance running on the same machine,
