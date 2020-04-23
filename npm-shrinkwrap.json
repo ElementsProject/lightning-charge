@@ -2582,6 +2582,14 @@
         }
       }
     },
+    "fmtbtc": {
+      "version": "0.0.3",
+      "resolved": "https://registry.npmjs.org/fmtbtc/-/fmtbtc-0.0.3.tgz",
+      "integrity": "sha512-3awolswh6476ce5gIvzjw6OgT7ae2WD5NSinOC/de8gLeaDQPdYlW94Hb6nCoTXMUP6AFe3eh3IQiuT+dp4c8A==",
+      "requires": {
+        "move-decimal-point": "0.0.4"
+      }
+    },
     "for-in": {
       "version": "1.0.2",
       "resolved": "https://registry.npmjs.org/for-in/-/for-in-1.0.2.tgz",

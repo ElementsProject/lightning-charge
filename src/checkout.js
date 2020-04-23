@@ -2,7 +2,7 @@ import fs      from 'fs'
 import path    from 'path'
 import express from 'express'
 import qrcode  from 'qrcode'
-import moveDec from 'move-decimal-point'
+import fmtbtc  from 'fmtbtc'
 import wrap    from './lib/promise-wrap'
 
 const rpath = name => path.join(__dirname, name)
@@ -13,7 +13,7 @@ module.exports = (app, payListen) => {
   app.set('view engine', 'pug')
   app.set('views', rpath('../views'))
 
-  app.locals.formatMsat = msat => moveDec(msat, -8) + ' mBTC'
+  app.locals.formatMsat = msat => fmtbtc.sat2milli(msat) + ' mBTC'
 
   fs.existsSync(rpath('www')) // comes pre-built in dist/www
     ? app.use('/static', express.static(rpath('www')))
