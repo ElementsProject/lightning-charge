@@ -2,9 +2,9 @@ FROM node:12.16-slim as builder
 
 ARG STANDALONE
 
-RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recommends git gpg dirmngr ca-certificates \
+RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recommends git gpg dirmngr ca-certificates wget \
     $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
-                                     libsqlite3-dev python python3 python3-mako wget zlib1g-dev")
+                                     libsqlite3-dev python python3 python3-mako zlib1g-dev")
 
 ARG TESTRUNNER
 
@@ -41,6 +41,10 @@ RUN [ -n "$STANDALONE" ] || \
     && tar -xzvf "$BITCOIN_FILENAME" $BD/bitcoind $BD/bitcoin-cli --strip-components=1 \
     && mv bin/* /opt/local/bin/)
 
+RUN wget -qO /usr/bin/tini "https://github.com/krallin/tini/releases/download/v0.19.0/tini-amd64" \
+    && echo "93dcc18adc78c65a028a84799ecf8ad40c936fdfc5f2a57b1acda5a8117fa82c /usr/bin/tini" | sha256sum -c - \
+    && chmod +x /usr/bin/tini
+
 WORKDIR /opt/charged
 
 COPY package.json npm-shrinkwrap.json ./
@@ -76,6 +80,7 @@ RUN apt-get update \
 
 COPY --from=builder /opt/local /usr/local
 COPY --from=builder /opt/charged /opt/charged
+COPY --from=builder /usr/bin/tini /usr/bin/
 
-CMD [ "bin/docker-entrypoint.sh" ]
+CMD [ "tini", "-g", "--", "bin/docker-entrypoint.sh" ]
 EXPOSE 9112 9735

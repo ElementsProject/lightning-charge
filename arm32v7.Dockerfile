@@ -3,7 +3,11 @@ FROM node:12.16-slim as builder
 ARG STANDALONE
 
 RUN mkdir /opt/local && apt-get update && \
-  apt-get install -y --no-install-recommends git qemu qemu-user-static qemu-user binfmt-support
+  apt-get install -y --no-install-recommends git qemu qemu-user-static qemu-user binfmt-support wget ca-certificates
+
+RUN wget -qO /usr/bin/tini "https://github.com/krallin/tini/releases/download/v0.19.0/tini-armhf" \
+    && echo "5a9b35f09ad2fb5d08f11ceb84407803a1deff96cbdc0d1222f9f8323f3f8ad4 /usr/bin/tini" | sha256sum -c - \
+    && chmod +x /usr/bin/tini
 
 WORKDIR /opt/charged
 
@@ -33,6 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends inotify-tools \
 
 COPY --from=builder /opt/local /usr/local
 COPY --from=builder /opt/charged /opt/charged
+COPY --from=builder /usr/bin/tini /usr/bin/
 
-CMD [ "bin/docker-entrypoint.sh" ]
+CMD [ "tiny", "-g", "--", "bin/docker-entrypoint.sh" ]
 EXPOSE 9112 9735
