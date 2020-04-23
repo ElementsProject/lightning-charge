@@ -18,6 +18,8 @@ mixin css(path)
 +css('checkout.css')
 
 - opt = metadata && metadata.checkout || {}
+- unit = opt.display_unit in fmtbtc.units ? opt.display_unit : 'milli'
+- unit_label = ({ msat: 'millisatoshis', sat: 'satoshis', bit: 'bits', milli: 'mBTC', btc: 'BTC' })[unit]
 
 body: .checkout.container
   script window.parent != window && (document.body.className += ' iframed')
@@ -28,11 +30,11 @@ body: .checkout.container
       h4= opt.desc || 'Pay with Lightning'
     if msatoshi
       .amounts.col-sm-6
-        if quoted_currency
+        if quoted_currency && quoted_currency != 'BTC'
           h3 #{ quoted_amount } #{ quoted_currency }
-          h4 #{ formatMsat(msatoshi) }
+          h4 #{ fmtbtc.pfmt(msatoshi, 'msat', unit) } #{ unit_label }
         else
-          h3 #{ formatMsat(msatoshi) }
+          h3 #{ fmtbtc.pfmt(msatoshi, 'msat', unit) } #{ unit_label }
 
   if status == 'paid'
     p.thankyou= opt.thank_you || 'Thank you! Your payment has been received.'

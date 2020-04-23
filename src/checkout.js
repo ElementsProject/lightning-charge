@@ -13,7 +13,7 @@ module.exports = (app, payListen) => {
   app.set('view engine', 'pug')
   app.set('views', rpath('../views'))
 
-  app.locals.formatMsat = msat => fmtbtc.sat2milli(msat) + ' mBTC'
+  app.locals.fmtbtc = fmtbtc
 
   fs.existsSync(rpath('www')) // comes pre-built in dist/www
     ? app.use('/static', express.static(rpath('www')))
