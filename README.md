@@ -252,7 +252,7 @@ Created
 
 ### `GET /payment-stream`
 
-Subscribe to payment updates as a [server-sent events](https://streamdata.io/blog/server-sent-events/) stream.
+Subscribe to payment updates as a [server-sent events](https://apifriends.com/api-streaming/server-sent-events/) stream.
 
 ```bash
 $ curl $CHARGE/payment-stream
