@@ -46,8 +46,6 @@ else
     RPC_OPT="-datadir=/data/bitcoin"
 
     bitcoind $NETWORK_ARG $RPC_OPT $BITCOIND_OPT &
-    echo -n "waiting for cookie... "
-    sed --quiet '/^\.cookie$/ q' <(inotifywait -e create,moved_to --format '%f' -qmr /data/bitcoin)
   fi
 
   echo -n "waiting for RPC... "
