@@ -66,13 +66,16 @@ else
   lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
 fi
 
-if [ ! -S /etc/lightning/lightning-rpc ]; then
+LN_NET_PATH=$LN_PATH/$NETWORK
+
+if [ ! -S $LN_NET_PATH/lightning-rpc ]; then
   echo -n "waiting for RPC unix socket... "
-  sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
+  sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_NET_PATH)
 fi
+sleep 0.5
 
 if command -v lightning-cli > /dev/null; then
-  lightning-cli --rpc-file=$LN_PATH/lightning-rpc getinfo > /dev/null
+  lightning-cli --rpc-file=$LN_NET_PATH/lightning-rpc getinfo > /dev/null
   echo -n "c-lightning RPC ready."
 fi
 
@@ -80,11 +83,11 @@ echo -e "\nStarting Lightning Charge"
 
 if [ -z "$STANDALONE"  ]; then
     # when not in standalone mode, run spark-wallet as an additional background job
-  charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 "$@" $CHARGED_OPTS &
+  charged -d /data/charge.db -l $LN_NET_PATH -i 0.0.0.0 "$@" $CHARGED_OPTS &
 
   # shutdown the entire process when any of the background jobs exits (even if successfully)
   wait -n
   kill -TERM $$
 else
-  exec charged -d /data/charge.db -l $LN_PATH -i 0.0.0.0 "$@" $CHARGED_OPTS
+  exec charged -d /data/charge.db -l $LN_NET_PATH -i 0.0.0.0 "$@" $CHARGED_OPTS
 fi
