@@ -25,7 +25,7 @@ Setup [c-lightning](https://github.com/ElementsProject/lightning#getting-started
 ```bash
 $ npm install -g lightning-charge
 
-$ charged --api-token mySecretToken # defaults: --ln-path ~/.lightning --db-path ./charge.db --port 9112
+$ charged --api-token mySecretToken # defaults: --ln-path ~/.lightning/testnet --db-path ./charge.db --port 9112
 
 ```
 
@@ -38,7 +38,7 @@ You can access it at `http://localhost:9112` using the API access token configur
 Configuration options may alternatively be provided using environment variables:
 
 ```bash
-$ LN_PATH=~/.lightning DB_PATH=charge.db API_TOKEN=mySecretToken PORT=9112 charged
+$ LN_PATH=~/.lightning/testnet DB_PATH=charge.db API_TOKEN=mySecretToken PORT=9112 charged
 ```
 
 Listens for connections on `127.0.0.1` by default. Set `-i 0.0.0.0` to bind on all available interfaces.
