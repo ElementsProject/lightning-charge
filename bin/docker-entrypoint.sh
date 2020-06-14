@@ -65,6 +65,7 @@ else
 fi
 
 LN_NET_PATH=$LN_PATH/$NETWORK
+mkdir -p $LN_NET_PATH
 
 if [ ! -S $LN_NET_PATH/lightning-rpc ]; then
   echo -n "waiting for RPC unix socket... "
