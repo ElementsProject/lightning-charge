@@ -42,6 +42,7 @@ mkdir -p $BTC_DIR
 cat >$BTC_DIR/bitcoin.conf <<EOL
 regtest=1
 printtoconsole=0
+fallbackfee=0.00001
 
 [regtest]
 rpcport=`get-port`
