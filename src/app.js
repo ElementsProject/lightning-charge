@@ -37,6 +37,7 @@ const lnPath   = process.env.LN_PATH || join(require('os').homedir(), '.lightnin
 
   require('./invoicing')(app, payListen, model, auth, lnconf)
   require('./checkout')(app, payListen)
+  require('./lnurl')(app, payListen, model, auth)
 
   require('./sse')(app, payListen, auth)
   require('./webhook')(app, payListen, model, auth)
