@@ -13,17 +13,17 @@ module.exports = (app, payListen, model, auth) => {
   app.get('/endpoints', auth, wrap(async (req, res) =>
     res.status(200).send(
       (await listLnurlPayEndpoints())
-        .map(lnurlpay => addBech23Lnurl(req, lnurlpay))
+        .map(lnurlpay => addBech32Lnurl(req, lnurlpay))
     )))
 
   app.post('/endpoint', auth, wrap(async (req, res) =>
     res.status(201).send(
-      addBech23Lnurl(req, await setLnurlPayEndpoint(null, req.body))
+      addBech32Lnurl(req, await setLnurlPayEndpoint(null, req.body))
     )))
 
   app.put('/endpoint/:id', auth, wrap(async (req, res) =>
     res.status(200).send(
-      addBech23Lnurl(req, await setLnurlPayEndpoint(req.params.id, req.body))
+      addBech32Lnurl(req, await setLnurlPayEndpoint(req.params.id, req.body))
     )))
 
   app.delete('/endpoint/:id', auth, wrap(async (req, res) =>
@@ -31,7 +31,7 @@ module.exports = (app, payListen, model, auth) => {
 
   app.get('/endpoint/:id', auth, wrap(async (req, res) =>
     res.status(200).send(
-      addBech23Lnurl(req, await getLnurlPayEndpoint(req.params.id))
+      addBech32Lnurl(req, await getLnurlPayEndpoint(req.params.id))
     )))
 
   app.get('/endpoint/:id/invoices', auth, wrap(async (req, res) =>
@@ -107,7 +107,7 @@ function makeMetadata (lnurlpay) {
   return JSON.stringify(meta)
 }
 
-function addBech23Lnurl (req, lnurlpay) {
+function addBech32Lnurl (req, lnurlpay) {
   const hostname = req.hostname || req.params.hostname
   const url = `https://${hostname}/lnurl/${lnurlpay.id}`
   const words = bech32.toWords(Buffer.from(url))
