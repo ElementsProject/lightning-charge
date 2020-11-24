@@ -9,7 +9,6 @@ exports.up = async db => {
     t.string('image').nullable()
     t.string('other_metadata').nullable()
     t.string('success_text').nullable()
-    t.string('success_secret').nullable()
     t.string('success_url').nullable()
     t.integer('comment_length').notNullable().defaultTo(0)
     t.string('webhook').nullable()

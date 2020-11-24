@@ -113,9 +113,7 @@ module.exports = (app, payListen, model, auth, ln) => async {
       , url: endpoint.success_url
       , description: endpoint.success_text || ''
       }
-    } else if (lnurlpay.success_secret) {
-      // not implemented yet
-    } else if (endpoint.success_text) {
+    } else if (lnurlpay.success_text) {
       successAction = {tag: 'message', message: endpoint.success_text}
     }
 
