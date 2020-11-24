@@ -21,8 +21,8 @@ module.exports = (db, ln) => {
 
     const id       = nanoid()
         , msatoshi = props.msatoshi ? ''+props.msatoshi : currency ? await toMsat(currency, amount) : ''
-        , desc     = props.descriptionHash || (props.description ? ''+props.description : defaultDesc)
-        , method   = props.descriptionHash ? 'invoicewithdescriptionhash' : 'invoice'
+        , desc     = props.description_hash || (props.description ? ''+props.description : defaultDesc)
+        , method   = props.description_hash ? 'invoicewithdescriptionhash' : 'invoice'
         , lninv    = await ln.call(method, [msatoshi || 'any', id, desc, expiry])
 
     const invoice = {
@@ -63,8 +63,8 @@ module.exports = (db, ln) => {
       .then(rows => rows.map(format))
 
   const getLnurlPayEndpoint = async id => {
-    let lnurlpay = await db('lnurlpay_endpoint').where({ id }).first()
-    return formatLnurlpay(lnurlpay)
+    let endpoint = await db('lnurlpay_endpoint').where({ id }).first()
+    return endpoint && formatLnurlpay(endpoint)
   }
 
   const setLnurlPayEndpoint = async (id, props) => {
@@ -72,8 +72,7 @@ module.exports = (db, ln) => {
     if (id) {
       lnurlpay = await db('lnurlpay_endpoint').where({ id }).first()
       lnurlpay = { ...lnurlpay, ...props }
-    } else
-      lnurlpay = { ...props, id: nanoid() }
+    } else lnurlpay = { ...props, id: nanoid() }
 
     if (typeof props.metadata != 'undefined') {
       let metadata = JSON.stringify(props.metadata || {})

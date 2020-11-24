@@ -3,7 +3,19 @@ import wrap from './lib/promise-wrap'
 
 const debug = require('debug')('lightning-charge')
 
-module.exports = (app, payListen, model, auth) => {
+module.exports = (app, payListen, model, auth, ln) => async {
+  // check if method invoicewithdescriptionhash exists
+  let help = await ln.help()
+  let foundCommand
+  for (let i = 0; i < help.help.length; i++) {
+    let command = help.help[i].command
+    if (command.slice(0, 26) !== 'invoicewithdescriptionhash') continue
+    foundCommand = true
+    break
+  }
+  if (!foundCommand) return
+
+  // define routes
   const {
     newInvoice, listInvoicesByLnurlPayEndpoint
   , getLnurlPayEndpoint, listLnurlPayEndpoints
@@ -26,67 +38,85 @@ module.exports = (app, payListen, model, auth) => {
       addBech32Lnurl(req, await setLnurlPayEndpoint(req.params.id, req.body))
     )))
 
-  app.delete('/endpoint/:id', auth, wrap(async (req, res) =>
-    res.status(200).send(await delLnurlPayEndpoint(req.params.id))))
+  app.delete('/endpoint/:id', auth, wrap(async (req, res) => {
+    const deletedRows = await delLnurlPayEndpoint(req.params.id)
+    if (deletedRows) res.status(204)
+    else res.status(404)
+  }))
 
-  app.get('/endpoint/:id', auth, wrap(async (req, res) =>
-    res.status(200).send(
-      addBech32Lnurl(req, await getLnurlPayEndpoint(req.params.id))
-    )))
+  app.get('/endpoint/:id', auth, wrap(async (req, res) => {
+    const endpoint = await getLnurlPayEndpoint(req.params.id)
+    if (endpoint) res.status(200).send(addBech32Lnurl(req, endpoint))
+    else res.status(404)
+  }))
 
   app.get('/endpoint/:id/invoices', auth, wrap(async (req, res) =>
     res.send(await listInvoicesByLnurlPayEndpoint(req.params.id))))
 
   // this is the actual endpoint users will hit
   app.get('/lnurl/:id', wrap(async (req, res) => {
-    const lnurlpay = await getLnurlPayEndpoint(req.params.id)
+    const endpoint = await getLnurlPayEndpoint(req.params.id)
+
+    if (!endpoint) {
+      res.status(404)
+      return
+    }
 
     res.status(200).send({
       tag: 'payRequest'
-    , minSendable: lnurlpay.min
-    , maxSendable: lnurlpay.max
-    , metadata: makeMetadata(lnurlpay)
-    , commentAllowed: lnurlpay.comment
+    , minSendable: endpoint.min
+    , maxSendable: endpoint.max
+    , metadata: makeMetadata(endpoint)
+    , commentAllowed: endpoint.comment_length
     , callback: `https://${req.hostname}/lnurl/${lnurlpay.id}/callback`
     })
   }))
 
   app.get('/lnurl/:id/callback', wrap(async (req, res) => {
-    const lnurlpay = await getLnurlPayEndpoint(req.params.id)
+    const endpoint = await getLnurlPayEndpoint(req.params.id)
+    const amount = +req.query.amount
 
-    if (req.query.amount > lnurlpay.max)
-      return res.send({status: 'ERROR', reason: 'amount too large'})
-    if (req.query.amount < lnurlpay.min)
-      return res.send({status: 'ERROR', reason: 'amount too small'})
+    if (!amount)
+      return res.send({status: 'ERROR', reason: `invalid amount '${req.query.amount}'`})
+    if (amount > endpoint.max)
+      return res.send({status: 'ERROR', reason: `amount must be smaller than ${Math.floor(endpoint.max / 1000)} sat`})
+    if (amount < endpoint.min)
+      return res.send({status: 'ERROR', reason: `amount must be greater than ${Math.ceil(endpoint.min / 1000)} sat`})
 
     let invoiceMetadata = {...req.query}
     delete invoiceMetadata.amount
     delete invoiceMetadata.fromnodes
     delete invoiceMetadata.nonce
-    invoiceMetadata = {...lnurlpay.metadata, ...invoiceMetadata}
+    invoiceMetadata = {...endpoint.metadata, ...invoiceMetadata}
+
+    // enforce comment length
+    invoiceMetadata.comment =
+      (comment.comment && req.query.comment)
+      ? (''+req.query.comment).substr(0, endpoint.comment)
+      : undefined
 
     const invoice = await newInvoice({
-      descriptionHash: require('crypto')
+      description_hash: require('crypto')
         .createHash('sha256')
         .update(makeMetadata(lnurlpay))
         .digest('hex')
     , msatoshi: req.query.amount
     , metadata: invoiceMetadata
-    , webhook: lnurlpay.webhook
-    , lnurlpay_endpoint: lnurlpay.id
+    , webhook: endpoint.webhook
+    , lnurlpay_endpoint: endpoint.id
     })
 
     let successAction
-    if (lnurlpay.success_url) {
+    if (endpoint.success_url) {
       successAction = {
         tag: 'url'
-      , url: lnurlpay.success_url
-      , description: lnurlpay.success_text || ''
+      , url: endpoint.success_url
+      , description: endpoint.success_text || ''
       }
-    } else if (lnurlpay.success_value) {
+    } else if (lnurlpay.success_secret) {
       // not implemented yet
-    } else if (lnurlpay.success_text) {
-      successAction = {tag: 'message', message: lnurlpay.success_text}
+    } else if (endpoint.success_text) {
+      successAction = {tag: 'message', message: endpoint.success_text}
     }
 
     res.status(200).send({
@@ -98,18 +128,18 @@ module.exports = (app, payListen, model, auth) => {
   }))
 }
 
-function makeMetadata (lnurlpay) {
-  const text = lnurlpay.text
-
-  const meta = [['text/plain', text]]
-    .concat(lnurlpay.image ? ['image/png;base64', lnurlpay.image] : [])
-
-  return JSON.stringify(meta)
+function makeMetadata (endpoint) {
+  return JSON.stringify(
+    [['text/plain', endpoint.text]]
+      .concat(endpoint.image ? ['image/png;base64', endpoint.image] : [])
+      .concat(JSON.parse(endpoint.other_metadata || []))
+  )
 }
 
 function addBech32Lnurl (req, lnurlpay) {
-  const hostname = req.hostname || req.params.hostname
-  const url = `https://${hostname}/lnurl/${lnurlpay.id}`
+  let base = process.env.URL || `https://${req.hostname}`
+  base = base[base.length - 1] === '/' ? base.slice(0, -1) : base
+  const url = `${base}/lnurl/${lnurlpay.id}`
   const words = bech32.toWords(Buffer.from(url))
   lnurlpay.bech32 = bech32.encode('lnurl', words, 2500).toUpperCase()
   return lnurlpay

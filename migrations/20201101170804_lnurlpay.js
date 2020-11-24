@@ -7,10 +7,11 @@ exports.up = async db => {
     t.string('currency').nullable()
     t.string('text').notNullable()
     t.string('image').nullable()
+    t.string('other_metadata').nullable()
     t.string('success_text').nullable()
     t.string('success_secret').nullable()
     t.string('success_url').nullable()
-    t.integer('comment').notNullable().defaultTo(0)
+    t.integer('comment_length').notNullable().defaultTo(0)
     t.string('webhook').nullable()
   })
   await db.schema.table('invoice', t => {
