@@ -1,4 +1,4 @@
 require:
   - '@babel/polyfill'
   - '@babel/register'
-timeout: 5000
+timeout: 250000

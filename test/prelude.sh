@@ -67,6 +67,9 @@ btc generatetoaddress 101 $addr > /dev/null
 
 echo Setting up lightningd >&2
 
+mkdir -p $LN_ALICE_PATH/plugins/
+cp test/invoicewithdescriptionhash-mock.sh $LN_ALICE_PATH/plugins/
+
 LN_OPTS="$LN_OPTS --network=regtest --bitcoin-datadir=$BTC_DIR --log-level=debug --log-file=debug.log
   --fee-base 0 --fee-per-satoshi 0
   --allow-deprecated-apis="$([ -n "$ALLOW_DEPRECATED" ] && echo true || echo false)
@@ -104,7 +107,7 @@ sed $sedq '/State changed from CHANNELD_AWAITING_LOCKIN to CHANNELD_NORMAL/ q' <
 echo Setting up charged >&2
 
 DEBUG=$DEBUG,lightning-*,knex:query,knex:bindings \
-bin/charged -l $LN_ALICE_PATH -d $CHARGE_DB -t $CHARGE_TOKEN -p $CHARGE_PORT -e ${NODE_ENV:-test} &> $DIR/charge.log &
+bin/charged --url https://charge.example.com -l $LN_ALICE_PATH -d $CHARGE_DB -t $CHARGE_TOKEN -p $CHARGE_PORT -e ${NODE_ENV:-test} &> $DIR/charge.log &
 
 CHARGE_PID=$!
 sed $sedq '/HTTP server running/ q' <(tail -F -n+0 $DIR/charge.log 2> /dev/null)

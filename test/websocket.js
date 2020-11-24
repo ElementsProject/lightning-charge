@@ -17,8 +17,8 @@ describe('WebSocket API', function() {
 
     before(() =>
       setTimeout(async () => {
-        lnBob.pay(await mkInvoice({ msatoshi: '89' }).then(inv => inv.payreq))
-        lnBob.pay(await mkInvoice({ msatoshi: '98' }).then(inv => inv.payreq))
+        await lnBob.pay(await mkInvoice({ msatoshi: '89' }).then(inv => inv.payreq))
+        await lnBob.pay(await mkInvoice({ msatoshi: '98' }).then(inv => inv.payreq))
       }, 250)
     )
 

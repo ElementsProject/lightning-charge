@@ -4,6 +4,7 @@ import { toMsat } from './lib/exchange-rate'
 const debug  = require('debug')('lightning-charge')
     , status = inv => inv.pay_index ? 'paid' : inv.expires_at > now() ? 'unpaid' : 'expired'
     , format = inv => ({ ...inv, status: status(inv), msatoshi: (inv.msatoshi || null), metadata: JSON.parse(inv.metadata) })
+    , formatLnurlpay = lnurlpay => ({...lnurlpay, metadata: JSON.parse(lnurlpay.metadata)})
     , now    = _ => Date.now() / 1000 | 0
 
 // @XXX invoices that accept any amount are stored as msatoshi='' (empty string)
@@ -16,12 +17,13 @@ const defaultDesc = process.env.INVOICE_DESC_DEFAULT || 'Lightning Charge Invoic
 
 module.exports = (db, ln) => {
   const newInvoice = async props => {
-    const { currency, amount, expiry, description, metadata, webhook } = props
+    const { currency, amount, expiry, metadata, webhook, lnurlpay_endpoint } = props
 
     const id       = nanoid()
         , msatoshi = props.msatoshi ? ''+props.msatoshi : currency ? await toMsat(currency, amount) : ''
-        , desc     = props.description ? ''+props.description : defaultDesc
-        , lninv    = await ln.invoice(msatoshi || 'any', id, desc, expiry)
+        , desc     = props.description_hash || (props.description ? ''+props.description : defaultDesc)
+        , method   = props.description_hash ? 'invoicewithdescriptionhash' : 'invoice'
+        , lninv    = await ln.call(method, [msatoshi || 'any', id, desc, expiry])
 
     const invoice = {
       id, msatoshi, description: desc
@@ -29,6 +31,7 @@ module.exports = (db, ln) => {
     , rhash: lninv.payment_hash, payreq: lninv.bolt11
     , expires_at: lninv.expires_at, created_at: now()
     , metadata: JSON.stringify(metadata || null)
+    , lnurlpay_endpoint
     }
 
     debug('saving invoice:', invoice)
@@ -48,6 +51,65 @@ module.exports = (db, ln) => {
   const delInvoice = async (id, status) => {
     await ln.delinvoice(id, status)
     await db('invoice').where({ id }).del()
+  }
+
+  const listLnurlPayEndpoints = _ =>
+    db('lnurlpay_endpoint')
+      .then(rows => rows.map(formatLnurlpay))
+
+  const listInvoicesByLnurlPayEndpoint = lnurlpayId =>
+    db('invoice')
+      .where({ lnurlpay_endpoint: lnurlpayId })
+      .then(rows => rows.map(format))
+
+  const getLnurlPayEndpoint = async id => {
+    let endpoint = await db('lnurlpay_endpoint').where({ id }).first()
+    return endpoint && formatLnurlpay(endpoint)
+  }
+
+  const setLnurlPayEndpoint = async (id, props) => {
+    let lnurlpay
+    if (id) {
+      lnurlpay = await db('lnurlpay_endpoint').where({ id }).first()
+      lnurlpay = { ...lnurlpay, ...props }
+    } else lnurlpay = { ...props, id: nanoid() }
+
+    if (typeof props.metadata != 'undefined') {
+      let metadata = JSON.stringify(props.metadata || {})
+      if (metadata[0] != '{')
+        metadata = '{}'
+
+      lnurlpay.metadata = metadata
+    }
+
+    if (props.amount) {
+      lnurlpay.min = ''+props.amount
+      lnurlpay.max = ''+props.amount
+    } else if (props.min <= props.max) {
+      lnurlpay.min = ''+props.min
+      lnurlpay.max = ''+props.max
+    } else if (props.min > props.max) {
+      // silently correct a user error
+      lnurlpay.min = ''+props.max
+      lnurlpay.max = ''+props.min
+    }
+
+    if (lnurlpay.min && !lnurlpay.max)
+      lnurlpay.max = lnurlpay.min
+
+    if (lnurlpay.max && !lnurlpay.min)
+      lnurlpay.min = lnurlpay.max
+
+    await db('lnurlpay_endpoint')
+      .insert(lnurlpay)
+      .onConflict('id')
+      .merge()
+
+    return formatLnurlpay(lnurlpay)
+  }
+
+  const delLnurlPayEndpoint = async id => {
+    await db('lnurlpay_endpoint').where({ id }).del()
   }
 
   const markPaid = (id, pay_index, paid_at, msatoshi_received) =>
@@ -85,7 +147,8 @@ module.exports = (db, ln) => {
            : { requested_at: now(), success: false, resp_error: err })
 
   return { newInvoice, listInvoices, fetchInvoice, delInvoice
+         , listInvoicesByLnurlPayEndpoint, listLnurlPayEndpoints
+         , getLnurlPayEndpoint, setLnurlPayEndpoint, delLnurlPayEndpoint
          , getLastPaid, markPaid, delExpired
          , addHook, getHooks, logHook }
 }
-
