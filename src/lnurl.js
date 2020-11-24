@@ -4,7 +4,7 @@ import { toMsat } from './lib/exchange-rate'
 
 const debug = require('debug')('lightning-charge')
 
-module.exports = (app, payListen, model, auth, ln) => async {
+module.exports = async (app, payListen, model, auth, ln) => {
   // check if method invoicewithdescriptionhash exists
   let help = await ln.help()
   let foundCommand
@@ -70,13 +70,16 @@ module.exports = (app, payListen, model, auth, ln) => async {
     const min = currency ? await toMsat(currency, endpoint.min) : endpoint.min
     const max = currency ? await toMsat(currency, endpoint.max) : endpoint.max
 
+    let qs = new URLSearchParams(req.query).toString()
+    if (qs.length) qs = '?' + qs
+
     res.status(200).send({
       tag: 'payRequest'
     , minSendable: min
     , maxSendable: max
     , metadata: makeMetadata(endpoint)
     , commentAllowed: endpoint.comment_length
-    , callback: `https://${req.hostname}/lnurl/${lnurlpay.id}/callback`
+    , callback: `https://${req.hostname}/lnurl/${lnurlpay.id}/callback${qs}`
     })
   }))
 

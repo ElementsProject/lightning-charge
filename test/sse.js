@@ -17,8 +17,8 @@ describe('Server-Sent-Events', function() {
 
     before(() =>
       setTimeout(async () => {
-        lnBob.pay(await mkInvoice({ msatoshi: '87' }).then(inv => inv.payreq))
-        lnBob.pay(await mkInvoice({ msatoshi: '78' }).then(inv => inv.payreq))
+        await lnBob.pay(await mkInvoice({ msatoshi: '87' }).then(inv => inv.payreq))
+        await lnBob.pay(await mkInvoice({ msatoshi: '78' }).then(inv => inv.payreq))
       }, 250)
     )
 

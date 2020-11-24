@@ -83,15 +83,15 @@ module.exports = (db, ln) => {
     }
 
     if (props.amount) {
-      lnurlpay.min = props.amount
-      lnurlpay.max = props.amount
+      lnurlpay.min = ''+props.amount
+      lnurlpay.max = ''+props.amount
     } else if (props.min <= props.max) {
-      lnurlpay.min = props.min
-      lnurlpay.max = props.max
+      lnurlpay.min = ''+props.min
+      lnurlpay.max = ''+props.max
     } else if (props.min > props.max) {
       // silently correct a user error
-      lnurlpay.min = props.max
-      lnurlpay.max = props.min
+      lnurlpay.min = ''+props.max
+      lnurlpay.max = ''+props.min
     }
 
     if (lnurlpay.min && !lnurlpay.max)
