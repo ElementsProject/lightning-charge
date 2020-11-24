@@ -1,5 +1,6 @@
 import bech32 from 'bech32'
 import wrap from './lib/promise-wrap'
+import { toMsat } from './lib/exchange-rate'
 
 const debug = require('debug')('lightning-charge')
 
@@ -62,10 +63,14 @@ module.exports = (app, payListen, model, auth, ln) => async {
       return
     }
 
+    const current = endpoint.currency
+    const min = currency ? await toMsat(currency, endpoint.min) : endpoint.min
+    const max = currency ? await toMsat(currency, endpoint.max) : endpoint.max
+
     res.status(200).send({
       tag: 'payRequest'
-    , minSendable: endpoint.min
-    , maxSendable: endpoint.max
+    , minSendable: min
+    , maxSendable: max
     , metadata: makeMetadata(endpoint)
     , commentAllowed: endpoint.comment_length
     , callback: `https://${req.hostname}/lnurl/${lnurlpay.id}/callback`
@@ -78,10 +83,18 @@ module.exports = (app, payListen, model, auth, ln) => async {
 
     if (!amount)
       return res.send({status: 'ERROR', reason: `invalid amount '${req.query.amount}'`})
-    if (amount > endpoint.max)
-      return res.send({status: 'ERROR', reason: `amount must be smaller than ${Math.floor(endpoint.max / 1000)} sat`})
-    if (amount < endpoint.min)
-      return res.send({status: 'ERROR', reason: `amount must be greater than ${Math.ceil(endpoint.min / 1000)} sat`})
+
+    const current = endpoint.currency
+    let min = currency ? await toMsat(currency, endpoint.min) : endpoint.min
+    let max = currency ? await toMsat(currency, endpoint.max) : endpoint.max
+    // account for currency variation
+    min = min * 0.99
+    max = max * 1.01
+
+    if (amount > max)
+      return res.send({status: 'ERROR', reason: `amount must be smaller than ${Math.floor(max / 1000)} sat`})
+    if (amount < min)
+      return res.send({status: 'ERROR', reason: `amount must be greater than ${Math.ceil(min / 1000)} sat`})
 
     let invoiceMetadata = {...req.query}
     delete invoiceMetadata.amount
@@ -104,6 +117,7 @@ module.exports = (app, payListen, model, auth, ln) => async {
     , metadata: invoiceMetadata
     , webhook: endpoint.webhook
     , lnurlpay_endpoint: endpoint.id
+    , currency: endpoint.currency
     })
 
     let successAction
