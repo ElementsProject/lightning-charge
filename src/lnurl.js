@@ -23,35 +23,38 @@ module.exports = (app, payListen, model, auth, ln) => async {
   , setLnurlPayEndpoint, delLnurlPayEndpoint
   } = model
 
-  app.get('/endpoints', auth, wrap(async (req, res) =>
+  app.get('/lnurlpays', auth, wrap(async (req, res) =>
     res.status(200).send(
       (await listLnurlPayEndpoints())
         .map(lnurlpay => addBech32Lnurl(req, lnurlpay))
     )))
 
-  app.post('/endpoint', auth, wrap(async (req, res) =>
+  app.post('/lnurlpay', auth, wrap(async (req, res) =>
     res.status(201).send(
       addBech32Lnurl(req, await setLnurlPayEndpoint(null, req.body))
     )))
 
-  app.put('/endpoint/:id', auth, wrap(async (req, res) =>
+  app.put('/lnurlpay/:id', auth, wrap(async (req, res) => {
+    const endpoint = await getLnurlPayEndpoint(req.params.id)
+    const updated = {...endpoint, ...req.body}
     res.status(200).send(
-      addBech32Lnurl(req, await setLnurlPayEndpoint(req.params.id, req.body))
-    )))
+      addBech32Lnurl(req, await setLnurlPayEndpoint(req.params.id, updated))
+    )
+  }))
 
-  app.delete('/endpoint/:id', auth, wrap(async (req, res) => {
+  app.delete('/lnurlpay/:id', auth, wrap(async (req, res) => {
     const deletedRows = await delLnurlPayEndpoint(req.params.id)
     if (deletedRows) res.status(204)
     else res.status(404)
   }))
 
-  app.get('/endpoint/:id', auth, wrap(async (req, res) => {
+  app.get('/lnurlpay/:id', auth, wrap(async (req, res) => {
     const endpoint = await getLnurlPayEndpoint(req.params.id)
     if (endpoint) res.status(200).send(addBech32Lnurl(req, endpoint))
     else res.status(404)
   }))
 
-  app.get('/endpoint/:id/invoices', auth, wrap(async (req, res) =>
+  app.get('/lnurlpay/:id/invoices', auth, wrap(async (req, res) =>
     res.send(await listInvoicesByLnurlPayEndpoint(req.params.id))))
 
   // this is the actual endpoint users will hit
