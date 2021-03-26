@@ -64,7 +64,7 @@ else
   lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
 fi
 
-LN_NET_PATH=$LN_PATH/$NETWORK
+: ${LN_NET_PATH:=$LN_PATH/$NETWORK}
 mkdir -p $LN_NET_PATH
 
 if [ ! -S $LN_NET_PATH/lightning-rpc ]; then
