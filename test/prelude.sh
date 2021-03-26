@@ -29,7 +29,7 @@ CHARGE_PORT=`get-port`
 CHARGE_TOKEN=`head -c 10 /dev/urandom | base64 | tr -d '+/='`
 CHARGE_URL=http://api-token:$CHARGE_TOKEN@localhost:$CHARGE_PORT
 
-alias btc="bitcoin-cli --datadir=$BTC_DIR"
+alias btc="bitcoin-cli --datadir=$BTC_DIR --rpcwallet=miner"
 alias lna="lightning-cli --lightning-dir=$LN_ALICE_PATH --network regtest"
 alias lnb="lightning-cli --lightning-dir=$LN_BOB_PATH --network regtest"
 
@@ -57,6 +57,7 @@ command -v inotifywait > /dev/null \
   || sleep 2 # fallback to slower startup if inotifywait is not available
 
 btc -rpcwait getblockchaininfo > /dev/null
+btc createwallet miner > /dev/null
 
 addr=`btc getnewaddress`
 

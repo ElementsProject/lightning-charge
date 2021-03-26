@@ -1,4 +1,4 @@
-FROM node:12.16-slim as builder
+FROM node:14.15.5-slim as builder
 
 ARG STANDALONE
 
@@ -8,25 +8,23 @@ RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recomm
 
 ARG TESTRUNNER
 
-ENV LIGHTNINGD_VERSION=v0.8.2.1
-ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
+# v0.9.3
+ENV LIGHTNINGD_COMMIT=015ac37d924e31bb87b8597da9f863e82270657b
 
 RUN [ -n "$STANDALONE" ] || \
     (git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && cd /opt/lightningd \
-    && gpg --keyserver keyserver.ubuntu.com --recv-keys "$LIGHTNINGD_PGP_KEY" \
-    && git verify-tag $LIGHTNINGD_VERSION \
-    && git checkout $LIGHTNINGD_VERSION \
+    && git checkout $LIGHTNINGD_COMMIT \
     && DEVELOPER=$TESTRUNNER ./configure --prefix=./target \
     && make \
     && make install \
     && rm -r target/share \
     && mv -f target/* /opt/local/)
 
-ENV BITCOIN_VERSION 0.20.0
+ENV BITCOIN_VERSION 0.21.0
 ENV BITCOIN_FILENAME bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_FILENAME
-ENV BITCOIN_SHA256 35ec10f87b6bc1e44fd9cd1157e5dfa483eaf14d7d9a9c274774539e7824c427
+ENV BITCOIN_SHA256 da7766775e3f9c98d7a9145429f2be8297c2672fe5b118fd3dc2411fb48e0032
 ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN [ -n "$STANDALONE" ] || \
