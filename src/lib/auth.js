@@ -19,10 +19,11 @@ export const getToken = (apiToken, cookieFile) => {
 export const authMiddleware = (name, pass, realm='Lightning Charge') => (req, res, next) => {
   const cred = basicAuth(req)
 
-  if (!cred || cred.name !== name || cred.pass !== pass)
+  if (!cred || cred.name !== name || cred.pass !== pass) {
     res.set('WWW-Authenticate', `Basic realm="${realm}"`)
        .removeHeader('Access-Control-Allow-Origin')
-       .sendStatus(401)
-
-  else next()
+    res.sendStatus(401)
+  } else {
+    next()
+  }
 }
