@@ -14,7 +14,9 @@ class PaymentListener extends EventEmitter {
   }
 
   async pollNext(last_index) {
-    const { label: id, pay_index, paid_at, msatoshi_received } = await this.ln.waitanyinvoice(last_index)
+    const { label: id, pay_index, paid_at, ...cln_inv } = await this.ln.waitanyinvoice(last_index)
+    // named `msatoshi_received` in older core lightning releases, later renamed to `amount_received_msat`
+    const msatoshi_received = cln_inv.amount_received_msat || cln_inv.msatoshi_received
 
     if (await this.model.markPaid(id, pay_index, paid_at, msatoshi_received)) {
       const invoice = await this.model.fetchInvoice(id)
