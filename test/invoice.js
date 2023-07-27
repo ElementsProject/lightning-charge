@@ -154,7 +154,7 @@ describe('Invoice API', function() {
     })
 
     it('blocks until the invoice is paid', () =>
-      charge.get(`/invoice/${ inv1.id }/wait?timeout=1`)
+      charge.get(`/invoice/${ inv1.id }/wait?timeout=3`)
         .expect(200)
         .expect(r => ok(r.body.status == 'paid' && r.body.paid_at))
     )

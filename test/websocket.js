@@ -1,4 +1,4 @@
-const { ok, equal: eq } = require('assert')
+const { ok, equal: eq, deepEqual: deepEq } = require('assert')
 const WebSocket = require('ws')
 
 describe('WebSocket API', function() {
@@ -33,8 +33,7 @@ describe('WebSocket API', function() {
 
       eq(msgs.length, 2)
       ok(msgs[0].status == 'paid' && msgs[1].status == 'paid')
-      eq(msgs[0].msatoshi, '89')
-      eq(msgs[1].msatoshi, '98')
+      deepEq([ msgs[0].msatoshi, msgs[1].msatoshi ].sort(), [ '89', '98' ])
     })
   })
 

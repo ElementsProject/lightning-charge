@@ -38,7 +38,7 @@ echo Setting up test envirnoment in $DIR
 # Setup bitcoind
 
 echo Setting up bitcoind >&2
-mkdir -p $BTC_DIR
+mkdir -p $BTC_DIR $BTC_DIR/regtest
 cat >$BTC_DIR/bitcoin.conf <<EOL
 regtest=1
 printtoconsole=0

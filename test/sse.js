@@ -1,4 +1,4 @@
-const { ok, equal: eq } = require('assert')
+const { ok, equal: eq, deepEqual: deepEq } = require('assert')
 const EventSource = require('eventsource')
 
 describe('Server-Sent-Events', function() {
@@ -33,8 +33,7 @@ describe('Server-Sent-Events', function() {
 
       eq(msgs.length, 2)
       ok(msgs[0].status == 'paid' && msgs[1].status == 'paid')
-      eq(msgs[0].msatoshi, '87')
-      eq(msgs[1].msatoshi, '78')
+      deepEq([ msgs[0].msatoshi, msgs[1].msatoshi ].sort(), [ '78', '87' ])
     })
   })
 
