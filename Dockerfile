@@ -1,15 +1,14 @@
-FROM node:14.15.5-slim as builder
+FROM node:18-slim as builder
 
 ARG STANDALONE
 
 RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recommends git gpg dirmngr ca-certificates wget \
-    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
-                                     libsqlite3-dev python python3 python3-mako zlib1g-dev")
+    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential ca-certificates curl dirmngr gettext git gnupg libpq-dev libtool libsqlite3-dev  libffi-dev protobuf-compiler python3 python3-dev python3-mako python3-pip python3-venv python3-setuptools wget net-tools zlib1g-dev libsodium-dev libgmp-dev")
 
 ARG TESTRUNNER
 
-# v0.9.3
-ENV LIGHTNINGD_COMMIT=015ac37d924e31bb87b8597da9f863e82270657b
+# v23.05.2
+ENV LIGHTNINGD_COMMIT=e512f918fcaef276163b185cd712b89335424afd
 
 RUN [ -n "$STANDALONE" ] || \
     (git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
@@ -58,7 +57,7 @@ RUN npm run dist \
     && rm -rf src \
     && test -n "$TESTRUNNER" || (rm -rf test node_modules && mv -f node_modules.prod node_modules)
 
-FROM node:12.16-slim
+FROM node:18-slim
 
 WORKDIR /opt/charged
 ARG TESTRUNNER
@@ -69,7 +68,7 @@ ENV STANDALONE=$STANDALONE
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends inotify-tools \
-    && ([ -n "$STANDALONE" ] || apt-get install -y --no-install-recommends libgmp-dev libsqlite3-dev) \
+    && ([ -n "$STANDALONE" ] || apt-get install -y --no-install-recommends libgmp-dev libsqlite3-dev libpq-dev) \
     && ([ -z "$TESTRUNNER" ] || apt-get install -y --no-install-recommends jq procps curl) \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /opt/charged/bin/charged /usr/bin/charged \
