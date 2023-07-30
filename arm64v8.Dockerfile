@@ -3,7 +3,7 @@ FROM node:18-slim as builder
 ARG STANDALONE
 
 RUN mkdir /opt/local && apt-get update && \
-  apt-get install -y --no-install-recommends git qemu qemu-user-static qemu-user binfmt-support wget ca-certificates
+  apt-get install -y --no-install-recommends git qemu-user-static qemu-user binfmt-support wget ca-certificates
 
 RUN wget -qO /usr/bin/tini "https://github.com/krallin/tini/releases/download/v0.19.0/tini-arm64" \
     && echo "07952557df20bfd2a95f9bef198b445e006171969499a1d361bd9e6f8e5e0e81 /usr/bin/tini" | sha256sum -c - \

@@ -2,8 +2,8 @@ FROM node:18-slim as builder
 
 ARG STANDALONE
 
-RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recommends git gpg dirmngr ca-certificates wget \
-    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential ca-certificates curl dirmngr gettext git gnupg libpq-dev libtool libsqlite3-dev  libffi-dev protobuf-compiler python3 python3-dev python3-mako python3-pip python3-venv python3-setuptools wget net-tools zlib1g-dev libsodium-dev libgmp-dev")
+RUN mkdir /opt/local && apt-get update && apt-get install -y --no-install-recommends git gpg dirmngr ca-certificates wget python3 python3-dev  \
+    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential ca-certificates curl dirmngr gettext git gnupg libpq-dev libtool libsqlite3-dev  libffi-dev protobuf-compiler python3-mako python3-pip python3-venv python3-setuptools wget net-tools zlib1g-dev libsodium-dev libgmp-dev")
 
 ARG TESTRUNNER
 
