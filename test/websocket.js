@@ -1,6 +1,8 @@
 const { ok, equal: eq, deepEqual: deepEq } = require('assert')
 const WebSocket = require('ws')
 
+const WEBSOCKET_URL = process.env.CHARGE_URL.replace(/^http:/, 'ws:') + '/ws'
+
 describe('WebSocket API', function() {
   let charge, lnBob
   before(() => {
@@ -23,7 +25,7 @@ describe('WebSocket API', function() {
     )
 
     it('streams all incoming payments', async () => {
-      const ws   = new WebSocket(process.env.CHARGE_URL + '/ws')
+      const ws   = new WebSocket(WEBSOCKET_URL)
           , msgs = []
 
       await new Promise(resolve =>
