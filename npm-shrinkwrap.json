@@ -1,12 +1,12 @@
 {
   "name": "lightning-charge",
-  "version": "0.4.24",
+  "version": "0.4.25",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
       "name": "lightning-charge",
-      "version": "0.4.24",
+      "version": "0.4.25",
       "license": "MIT",
       "dependencies": {
         "@babel/polyfill": "^7.12.1",
