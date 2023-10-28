@@ -51,8 +51,10 @@ module.exports = (db, ln) => {
   }
 
   const markPaid = (id, pay_index, paid_at, msatoshi_received) =>
+    // The `msatoshi_received` column is defined as a VARCHAR, but the automatic casting
+    // done by knex behaves oddly so in needs to be casted explicitly to a string beforehand.
     db('invoice').where({ id, pay_index: null })
-                 .update({ pay_index, paid_at, msatoshi_received })
+                 .update({ pay_index, paid_at, msatoshi_received: msatoshi_received.toString() })
 
   const getLastPaid = _ =>
     db('invoice').max('pay_index as index')
